@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% include "count_chapters.html" %}
+<style>
+  h1::before {
+    content: "Chapter " counter(chapter) " - ";
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="title" id="chapter-{{ section.title | slugify }}">
+{{ section.title }}
+</h1>
+{{ section.content | safe }}
+{% endblock content %}
