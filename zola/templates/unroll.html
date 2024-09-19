@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block head %}
+{% include "count_chapters.html" %}
+<style>
+  h1::before {
+    content: "Chapter " counter(chapter) " - ";
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% set root = get_section(path="_index.md") %}
+
+{% for chapter_path in root.subsections %}
+    {% set chapter = get_section(path=chapter_path) %}
+    {{ macros::render_chapter(title=chapter.title, contents=chapter.content) }}
+    {% if chapter.pages %}
+        {% for section in chapter.pages %}
+            {{ macros::render_section(title=section.title, contents=section.content) }}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+{{ page.content | safe }}
+
+{% endblock %}

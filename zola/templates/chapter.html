@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% import "macros.html" as macros %}
+
 {% block head %}
 {% include "count_chapters.html" %}
 <style>
@@ -10,8 +12,5 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="title" id="chapter-{{ section.title | slugify }}">
-{{ section.title }}
-</h1>
-{{ section.content | safe }}
+{{ macros::render_chapter(title=section.title, contents=section.content) }}
 {% endblock content %}
