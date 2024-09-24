@@ -3,8 +3,18 @@
 <style>
     {% for chapter_path in root.subsections %}
       {% set chapter = get_section(path=chapter_path) %}
+      {% set chapter_index = loop.index %}
   #chapter-{{ chapter.title | slugify }} {
-    counter-set: chapter {{ loop.index }};
+    counter-set: chapter {{ chapter_index }};
   }
+      {% if chapter.pages %}
+        {% for section in chapter.pages %}
+          {% set section_index = loop.index %}
+  #section-{{ section.title | slugify }} {
+    counter-set: section {{ section_index }};
+    counter-set: chapter {{ chapter_index }};
+  }
+        {% endfor %}
+      {% endif %}
     {% endfor %}
 </style>

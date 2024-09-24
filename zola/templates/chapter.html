@@ -4,13 +4,11 @@
 
 {% block head %}
 {% include "count_chapters.html" %}
-<style>
-  h1::before {
-    content: "Chapter " counter(chapter) " - ";
-  }
-</style>
+{% include "text-styling.html" %}
 {% endblock %}
 
 {% block content %}
+<div class="page">
 {{ macros::render_chapter(title=section.title, contents=section.content) }}
+</div>
 {% endblock content %}

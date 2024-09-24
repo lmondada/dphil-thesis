@@ -10,13 +10,15 @@
   <ul class="toc-list">
     {% for chapter_path in section.subsections %}
       {% set chapter = get_section(path=chapter_path) %}
+      {% set chapter_index = loop.index %}
       <li class="toc-chapter">
-        <a href="{{ chapter.permalink }}">{{ chapter.extra.chapter }}. {{ chapter.title }}</a>
+        <a href="{{ chapter.permalink }}">{{ chapter_index }}. {{ chapter.title }}</a>
         {% if chapter.pages %}
           <ul class="toc-pages">
             {% for section in chapter.pages %}
+              {% set section_index = loop.index %}
               <li class="toc-section">
-                <a href="{{ section.permalink }}">{{ section.title }}</a>
+                <a href="{{ section.permalink }}">{{ section_index }}. {{ section.title }}</a>
               </li>
             {% endfor %}
           </ul>

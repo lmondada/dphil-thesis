@@ -3,19 +3,12 @@
 {% import "macros.html" as macros %}
 
 {% block head %}
-{% set parent = get_section(path=page.ancestors | last) %}
-<style>
-  body {
-    --chapter: "{{ parent.extra.chapter }}";
-    --section: "{{ page.extra.section }}";
-  }
-  
-  h2::before {
-    content: "Section " var(--chapter) "." var(--section) " - ";
-  }
-</style>
+{% include "count_chapters.html" %}
+{% include "text-styling.html" %}
 {% endblock %}
 
 {% block content %}
+<div class="page">
 {{ macros::render_section(title=page.title, contents=page.content) }}
+</div>
 {% endblock content %}

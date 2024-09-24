@@ -8,6 +8,9 @@
   h1::before {
     content: "Chapter " counter(chapter) " - ";
   }
+  h2::before {
+    content: "Section " counter(chapter) "." counter(section) " - ";
+  }
 </style>
 {% endblock %}
 
