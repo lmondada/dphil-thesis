@@ -8,7 +8,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="page">
-{{ macros::render_chapter(title=section.title, contents=section.content) }}
+<div class="content-wrapper">
+  <div class="page">
+    {{ macros::render_chapter(title=section.title, contents=section.content) }}
+    <sup class="footnote-ref" id="ref1"><a href="#note1">1</a></sup>.
+  </div>
+  <div class="margin-notes">
+  </div>
 </div>
 {% endblock content %}
