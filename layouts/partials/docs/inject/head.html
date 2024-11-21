@@ -1,0 +1,12 @@
+<style>
+    {{ if .File }}
+      {{ if findRE "^\\d+" .File.Dir }}
+        h1 {
+            counter-set: h1 {{ index (findRE "^\\d+" .File.Dir) 0 }};
+        }
+        h3 {
+            counter-set: h2 {{ index (findRE "^\\d+" .File) 0 }};
+        }
+      {{ end }}
+    {{ end }}
+</style>

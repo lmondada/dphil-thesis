@@ -1,0 +1,5 @@
+@import "plugins/_numbered.scss";
+
+.chapter-head::after {
+    content: counter(h1);
+}

@@ -1,6 +1,10 @@
 .DS_Store
 
-build
+# hugo
+.hugo_build.lock
+public
+resources
 
-# A file from the template used
-splitcolor.py
+# backups that we will probably never use
+tex-backup
+zola

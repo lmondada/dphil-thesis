@@ -1,0 +1,7 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'DPhil Thesis'
+theme = "hugo-book"
+
+[params]
+BookSection = '*'
