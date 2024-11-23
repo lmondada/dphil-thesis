@@ -1,7 +1,7 @@
 +++
 title = "Foundations of Quantum Computing"
 template = "section.html"
-weight = 1
+weight = 2
 +++
 
 todo
