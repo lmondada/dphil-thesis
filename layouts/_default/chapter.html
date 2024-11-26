@@ -1,0 +1,18 @@
+
+{{ define "main" }}
+
+{{ $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 }}
+
+<article class="markdown book-article">
+  <h1>Chapter {{ $chapternb }}</h1>
+  <h1>{{ .Title }}</h1>
+
+  {{- .Content -}}
+
+  {{ range $index, $page := .Pages }}
+    <h2>{{ $chapternb }}.{{ add $index 1 }}. <a href="{{ $page.Permalink }}">{{ $page.Title }}</a></h2>
+    <p>{{ .Content }}</p>
+  {{ end }}
+</article>
+
+{{ end }}

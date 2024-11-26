@@ -1,9 +1,10 @@
 +++
 title = "Quantum Computing: a Computer Scientist's Perspective"
-template = "chapter.html"
 sort_by = "weight"
 weight = 2
+layout = "chapter"
 +++
+
 Many (too many?) introductions to quantum computing have been written, and so
 we will refrain from adding yet another entry to the collection.
 Some basics will however prove useful to frame the conversation for the rest

@@ -1,6 +1,5 @@
 +++
 title = "A new compilation regime"
-template = "section.html"
 weight = 1
 +++
 
