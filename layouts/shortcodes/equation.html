@@ -1,0 +1,7 @@
+{{ $equationCount := add (default 0 (.Page.Store.Get "equationCount")) 1 }}
+{{ .Page.Store.Set "equationCount" $equationCount }}
+
+<div id="equation-{{ $equationCount }}" class="equation">
+    {{ .Inner }}
+  <span class="equation-number">({{ $equationCount }})</span>
+</div>

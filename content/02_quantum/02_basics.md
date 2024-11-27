@@ -88,7 +88,7 @@ the observations and properties that we have described so far.
 
 ### No-cloning theorem
 
-We are now entereing the (short) section of the thesis where we discuss some
+We are now entering the (short) section of the thesis where we discuss some
 ideas from quantum information theory -- so depending on your disposition, 
 either indulge yourself, or bear with me for a moment.
 The no-cloning theorem justifies and provides some semblance of a formalism to
@@ -128,3 +128,63 @@ that quantum information is a preserved quantity in quantum computations:
 its amount will never increase, nor will it ever decrease.
 
 ### Reversibility
+That the amount of quantum information can never increase by
+transforming quantum states matches our intuition:
+if no new information is added from outside the system,
+then the total information that is encoded should not be increasing.
+Why however is it impossible to erase some information and thus reduce
+the total amount of it?
+The answer is reversibility: it is another tenant of quantum physics that
+every quantum of operation must be undoable, i.e. it must have an
+inverse operation that recovers the input when applied to the output.
+If a quantum operation were thus to erase any information, then there
+would exist an inverse operation that creates information from nothing!
+The two halves of the no-cloning theorem as we presented it thus state
+the same principle once we consider that every operation must be reversible.
+
+---
+
+We have just spent a long while discussing reversibility and no-cloning.
+There is reason for it: these laws of physics
+that govern quantum computations and are absent from classical computer science
+turn out to be a great boon for quantum optimisation and compilation in general.
+ reversibility is the source of a lot of flexibility when expressing quantum programs.
+
+Reversibility is the source of a lot of flexibility when expressing quantum programs.
+ Suppose the user wants to execute an operation _A_ but it is more convenient,
+or the hardware is only capable of, executing a different gate _B_.
+Then using the inverse {{< katex >}}B^{-1}{{< /katex >}} of _B_, it is always possible to rewrite the program as
+
+{{< mermaid >}}
+graph LR
+  in --> G --> out
+  in --> H --> Hinv --> G --> out
+{{< /mermaid >}}
+
+where these diagrams should be read as operations to be executed from left
+to right.
+This is nothing but the mathematical trick of multiplying the right
+hand side with the identity operation expressed as
+{{< katex >}}H^{-1} \cdot H{{< /katex >}}.
+
+Now of course this rewrite is only sensible if the operation 
+{{< katex >}}G \circ H^{-1} {{< /katex >}}
+is reasonably cheap to perform.
+There are plenty of instances where this is indeed the case.
+Morally, the quantum compiler always has the freedom to execute
+any quantum operation -– at the risk of course of producing very
+inefficient code –- given that reversibility always guarantees that
+the operation can be reversed and the competition undone whenever necessary.
+
+No-cloning is also a very useful guarantee that the compiler can make use of.
+In chapter X we will see that it greatly simplifies pattern matching,
+useful to quickly identify all possible optimisations.
+More generally, no-cloning restricts the set of programs that the compiler
+must consider, resulting in simply compiler logic and better performance.
+ we will see examples of this in chapter 3. To do: add some state of the art.
+
+Universality?
+
+### The quantum circuit representation
+
+s
