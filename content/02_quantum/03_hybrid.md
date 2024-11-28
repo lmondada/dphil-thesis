@@ -120,18 +120,69 @@ $2^n \times 2^n$, where $n$ is the number of qubits
 in the state $\ket{\psi}$.
 Then, there is a neat trick that we can sometimes apply: instead of trying
 to execute $A$, we enlarge the matrix to a bigger $\tilde{A}$:
-$$\tilde{A} = 
-\begin{pmatrix}
-A & G_1\\
-G_2 & G_3\\
-\end{pmatrix}
-$$
+$$\tilde{A} = \begin{pmatrix}A & G_1\\ G_2 & G_3 \end{pmatrix}$$
 where $G_1, G_2$ and $G_3$ are garbage matrices that we do not care about, but
 should combine into a matrix $\tilde{A}$ that we know how to execute
 on a quantum computer.
 Quantum computations must be matrices with a row and column number that is a 
 power of two; so at a minimum, $\tilde{A}$ must be of size
 $2^{n+1} \times 2^{n+1}$, i.e. be a computation on $n + 1$ qubits.
+We thus need to add a qubit to our $\ket\psi$ state to be able to pass it to
+our new operation.
+Such qubits that are added temporarily to facilitate a computation are a
+recurring feature in quantum computing and have thus earned themselves a
+name---ancilla qubits.
+
+Let us take a look at the quantum states that result from executing $\tilde{A}$.
+If we add to $\ket \psi$ a $\ket 0$ ancilla state, our quantum operation
+acts as[^how]
+$$\tilde{A} (\ket 0 \otimes \ket \psi) = \ket 0 \otimes A \ket \psi + \ket 1 \otimes G_1 \ket \psi.$$
+The expression $A \ket \psi$ means the operation $A$ applied to
+$\ket \psi$---exactly the output state we are seeking.
+We can also input the ancilla qubit in state $\ket 1$, but what we then
+get is pure garbage:
+$$\tilde{A} (\ket 1 \otimes \ket \psi) = \ket 0 \otimes G_2 \ket \psi + \ket 1 \otimes G_3 \ket \psi.$$
+So $\ket 0 \otimes \ket \psi$ is definitely the input state we are more
+interested in.
+
+[^how]: This is obtained by a simple matrix multiplication. The vector
+representation of the quantum state $\ket 0 \otimes \psi$ is obtained using
+the Kronecker product. You can also just trust me that this works out
+this way :)
+
+How can we recover $A$ from (*)? This is precisely what measurements do!
+When quantum states are expressed as sum of states, the terms of the sum
+form the possible measurement outcomes[^orthogonal].
+If we only measure a subset of the qubits, then the term corresponding to that
+measurement is isolated and all other terms disappear.
+Hence, if we measure the first qubit (that we introduced ourselves) in the
+zero state, then the remaining $n$ qubits will be precisely in the desired
+state $A \ket \psi$. Success!
+
+[^orthogonal]: There is one requirement for this to be a valid measurement:
+the states must be orthogonal. This is satisfied here.
+
+Using this "term isolating" property of measurements, known as state collapse,
+we can thus effect computations that would have been otherwise difficult or
+impossible to perform.
+There is however one important wrinkle that we cannot forget about: measurements
+are non-deterministic!
+We cannot assume that all measurements of the ancilla qubit will return the 
+zero state. When $\ket 1$ is measured, the computation has failed and
+the execution must be aborted and restarted.
+How often the block-encoding protocol that we have presented fails depends
+on the details of $A$ and the choices of $G_1, G_2$ and $G_3$ and is the main
+disadvantage of an otherwise very powerful quantum technique.
+
+We will now explore two strategies to deal with "fails" in measurements.
+At the core of them is the idea of hybrid quantum-classical programs.
+
+SOTA: LCU, QSVT, etc.
+
+### Repeat until success: If you fail, retry!
+Classical computer science has a very simple solution whenever probabilistic
+computations that can fail are used: boosting.
+The idea is so simple that it barely deserves a name: if 
 
 
 ### Quantum teleportation
