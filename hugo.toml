@@ -6,5 +6,8 @@ theme = "hugo-book"
 [params]
 BookSection = '*'
 
-[markup.goldmark.renderer]
-  unsafe = true
+[markup.goldmark]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.goldmark.extensions.typographer]
+    emDash = '&nbsp;&ndash;&nbsp;'

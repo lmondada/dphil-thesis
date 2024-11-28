@@ -3,8 +3,8 @@ title = "Foundations of Quantum Computing"
 weight = 2
 +++
 
-The most widespread computational model in quantum computing
--- and arguably its simplest -- is built on the qubit abstraction.
+The most widespread computational model in quantum
+computing---and arguably its simplest---is built on the qubit abstraction.
 As its name suggests, it is the quantum analogue of the classical bit
 i.e. a value that can take the values `0` or `1`.
 
@@ -26,8 +26,8 @@ bits (i.e. the input and output wires) as physically distinct objects (the wires
 
 This is not the case in implementations of qubits.
 Unlike their classical counterparts, quantum gates must be understood as
-operations that modify -- or "mutate", to borrow a term from programming languages --
-the physical qubits themselves.
+operations that modify---or "mutate", to borrow a term from
+programming languages---the physical qubits themselves.
 An input qubit to a gate is thus submitted to physical interactions that change
 its internal state.
 After the gate execution is completed, the qubits that held the input states
@@ -89,7 +89,7 @@ the observations and properties that we have described so far.
 ### No-cloning theorem
 
 We are now entering the (short) section of the thesis where we discuss some
-ideas from quantum information theory -- so depending on your disposition, 
+ideas from quantum information theory---so depending on your disposition, 
 either indulge yourself, or bear with me for a moment.
 The no-cloning theorem justifies and provides some semblance of a formalism to
 many of the ideas and observations that we have introduced so far without
@@ -172,8 +172,8 @@ Now of course this rewrite is only sensible if the operation
 is reasonably cheap to perform.
 There are plenty of instances where this is indeed the case.
 Morally, the quantum compiler always has the freedom to execute
-any quantum operation -– at the risk of course of producing very
-inefficient code –- given that reversibility always guarantees that
+any quantum operation---at the risk of course of producing very
+inefficient code---given that reversibility always guarantees that
 the operation can be reversed and the competition undone whenever necessary.
 
 No-cloning is also a very useful guarantee that the compiler can make use of.

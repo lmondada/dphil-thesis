@@ -17,7 +17,7 @@ is the vast differences between proposed hardware architectures.
 Unlike classical computing 
 where silicon-based transistors have become the definitive physical foundation
 for all electronic chips, the search for the most scalable and reliable 
-technology for quantum computing is ongoing -- and doubtless one of the most
+technology for quantum computing is ongoing---and doubtless one of the most
 burning questions for the nascent industry.
 
 Quantum hardware designs are dictated on the one hand by the choice of the
@@ -98,7 +98,7 @@ phones to laptops, desktops and all the way to data centres. See the [Steam
 Hardware and Software survey](https://store.steampowered.com/hwsurvey/processormfg/)
 for detailed hardware market share, focused on gaming.
 Details on mobile market share can be found in
-[this survey](https://www.counterpointresearch.com/insight/global-smartphone-apsoc-market-share-quarterly) -- all of the listed
+[this survey](https://www.counterpointresearch.com/insight/global-smartphone-apsoc-market-share-quarterly)---all of the listed
 manufacturers use the ARM architecture.
 
 ### Asymmetric computational resources
@@ -117,13 +117,13 @@ practice](https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/).
 
 The situation is very different for quantum computing.
 Quantum computational resources are so limited that native compilation,
-in which the program is compiled and run on the same machine, is unfeasible
--- and will remain so for the foreseeable future[^qcomp].
+in which the program is compiled and run on the same machine, is
+unfeasible---and will remain so for the foreseeable future[^qcomp].
 
 Cross-compilation comes with its challenges, notably how to run and debug
 compiled programs in the absence of immediate (and inexpensive) access to
-the target hardware -- 
-this is the topic of quantum simulation, which is the topic for a (at least one)
+the target hardware---this
+is the topic of quantum simulation, which is the topic for a (at least one)
 thesis in itself.
 But it also comes with a giant opportunity for compilers: the computational
 resources available to the compiler are many orders of magnitude larger
