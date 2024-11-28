@@ -11,3 +11,6 @@ BookSection = '*'
     unsafe = true
   [markup.goldmark.extensions.typographer]
     emDash = '&nbsp;&ndash;&nbsp;'
+
+  [markup.goldmark.extensions]
+    katex = true

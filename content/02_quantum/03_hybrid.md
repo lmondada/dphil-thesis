@@ -39,12 +39,99 @@ states to project to.
 
 We model measurement as an operation that takes one qubit and outputs one
 purely classical bit[^disappear].
+In the circuit formalism, measurements are often implicitly added at the end
+of every qubit. If we wish to make them explicit or add them elsewhere in the
+circuit, we must introduce a graphical representation for the classical bit of
+data that is produced by the measurement.
+The field has adopted the double wire for this (SVG db-wire), even though
+a "half" wire would arguably have been more appropriate to reflect the reduced
+information density relative to quantum wires.
+Ladies and gentlemen, I present to you, the measurement box:
 
 [^disappear]: Where did the qubit go? It turns out that all the information
 that is contained in a qubit post measurement is also contained in the classical
 bit of output data---it is therefore redundant and renders the qubit useless.
 In our model wee therefore bundle measurement and qubit discard into
 one operation.
+
+{{< mermaid >}}
+graph LR
+  psi --> measurement --> bit
+{{< /mermaid >}}
+
+### Measurements as first class citizens
+
+It is very tempting to our feeble classical brains---and admittedly
+we just did it ourselves in the previous paragraphs---to view measurements 
+as merely a readout operation; an auxiliary operation that we are forced
+to perform at the end of a computation for operative reasons.
+This could not be further from the truth!
+In many ways, measurements are just as powerful tools as any other quantum
+operation---if not more so!
+
+One eye-opening perspective on this is the field of _measurement-based
+quantum computing_ (MBQC).
+Raussendorf and Briegel showed indeed that arbitrary quantum computations can
+be reproduced in the MBQC framework using only some resource quantum states
+that can be prepared ahead of time and measurements!
+In other words, given entangled qubits, measurements are all you need to perform
+quantum operations.
+
+We will not explore MBQC further in this chapter
+(nor in this thesis, for that matter)---rather we will use this
+as a motivation to explore further what we can achieve with measurements.
+We have so far spared you from any mathematical alphabet soup. 
+As we start discussing more concrete constructions of quantum computations,
+some basic linear algebra and conventions around notation will
+become unavoidable.
+
+{{% hint info %}}
+**Dirac formalism**. Quantum states are nearly unanimously
+written using _kets_: instead of referring to a quantum state as
+$\psi$, we write it wrapped in special brackets as $\ket{\psi}$.
+This notation is also used when referring to the 0 and 1 states of qubits,
+written $\ket{0}$ and $\ket{1}$.
+
+Several states can be joined and considered together, as one overall state.
+This is expressed using the tensor $\otimes$ symbol:
+$\ket{\psi_1} \otimes \ket{\psi_2}$ is the joint system of 
+$\ket{\psi_1}$ and $\ket{\psi_2}$.
+When the states in question are all explicitly qubit states,
+we use the shorthand binary notation
+$\ket{0} \otimes \ket{1} \otimes \ket{0} = \ket{010}$.
+
+We will introduce more notation along the way.
+{{% /hint %}}
+
+With this out of the way, let us look in more details at the first smart use 
+of measurements: the block-encoding technique.
+Consider the following scenario: you would like to perform an operation
+$A$ on an arbitrary
+quantum state $\ket{\psi}$.
+Now, there are unfortunately many cases where implementing $A$
+as a quantum circuit made of primitive gates that can be executed on hardware
+is very expensive[^impossible].
+[^impossible]: or outright impossible, in cases where $A$ is not a unitary
+linear operation, for example.
+
+However, what we can always do is express $A$
+as a matrix of dimensions
+$2^n \times 2^n$, where $n$ is the number of qubits
+in the state $\ket{\psi}$.
+Then, there is a neat trick that we can sometimes apply: instead of trying
+to execute $A$, we enlarge the matrix to a bigger $\tilde{A}$:
+$$\tilde{A} = 
+\begin{pmatrix}
+A & G_1\\
+G_2 & G_3\\
+\end{pmatrix}
+$$
+where $G_1, G_2$ and $G_3$ are garbage matrices that we do not care about, but
+should combine into a matrix $\tilde{A}$ that we know how to execute
+on a quantum computer.
+Quantum computations must be matrices with a row and column number that is a 
+power of two; so at a minimum, $\tilde{A}$ must be of size
+$2^{n+1} \times 2^{n+1}$, i.e. be a computation on $n + 1$ qubits.
 
 
 ### Quantum teleportation

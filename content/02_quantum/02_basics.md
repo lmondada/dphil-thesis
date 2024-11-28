@@ -151,9 +151,9 @@ turn out to be a great boon for quantum optimisation and compilation in general.
  reversibility is the source of a lot of flexibility when expressing quantum programs.
 
 Reversibility is the source of a lot of flexibility when expressing quantum programs.
- Suppose the user wants to execute an operation _A_ but it is more convenient,
-or the hardware is only capable of, executing a different gate _B_.
-Then using the inverse {{< katex >}}B^{-1}{{< /katex >}} of _B_, it is always possible to rewrite the program as
+ Suppose the user wants to execute an operation $A$ but it is more convenient,
+or the hardware is only capable of, executing a different gate $B$.
+Then using the inverse $B^{-1}$ of $B$, it is always possible to rewrite the program as
 
 {{< mermaid >}}
 graph LR
@@ -165,10 +165,10 @@ where these diagrams should be read as operations to be executed from left
 to right.
 This is nothing but the mathematical trick of multiplying the right
 hand side with the identity operation expressed as
-{{< katex >}}H^{-1} \cdot H{{< /katex >}}.
+$H^{-1} \cdot H$.
 
 Now of course this rewrite is only sensible if the operation 
-{{< katex >}}G \circ H^{-1} {{< /katex >}}
+$G \circ H^{-1}$
 is reasonably cheap to perform.
 There are plenty of instances where this is indeed the case.
 Morally, the quantum compiler always has the freedom to execute
