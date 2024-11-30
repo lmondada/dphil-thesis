@@ -21,3 +21,62 @@ function toggleFloatingFootnotes() {
 // Run the function on page load and on window resize
 toggleFloatingFootnotes();
 window.addEventListener('resize', toggleFloatingFootnotes);
+
+
+///////// Footnote placement ////////////
+
+// Computes an offset such that setting `top` on `footnote` will put it
+// in vertical alignment with targetAlignment.
+function computeOffsetForAlignment(footnote, targetAlignment) {
+    const offsetParentTop = footnote.offsetParent.getBoundingClientRect().top;
+    // Distance between the top of the offset parent and the top of the
+    // target alignment
+    return targetAlignment.getBoundingClientRect().top - offsetParentTop;
+}
+
+// Register ResizeObserver on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('article');
+
+    const resizeObserver = new ResizeObserver(() => {
+        const footnotes = document.querySelectorAll('div.footnotes');
+
+        // Collect all footnote tems and references
+        const allFootnotes = Array.from(footnotes).reduce((acc, footnote) => {
+            const listItems = footnote.querySelectorAll('ol > li');
+            return acc.concat(Array.from(listItems));
+        }, []);
+        const allReferences = container.querySelectorAll('.footnote-ref');
+        // Create a map from footnote IDs to their references
+        const footnoteToRef = new Map(
+            allFootnotes.map((footnote, index) => {
+                const id = footnote.id;
+                // Use index to find corresponding reference
+                const ref = allReferences[index];
+                return [id, ref];
+            })
+        );
+
+        footnotes.forEach(footnote => {
+            const listItems = footnote.querySelectorAll('ol > li');
+            if (!footnote.classList.contains('floating-footnotes')) {
+                // Clear top property
+                listItems.forEach(li => {
+                    li.style.removeProperty('top');
+                });
+            } else {
+                listItems.forEach(li => {
+                    const ref = footnoteToRef.get(li.id);
+                    if (ref) {
+                        // Find the first <p> ancestor of the footnote reference
+                        let refParagraph = ref.closest('p');
+                        const offset = computeOffsetForAlignment(li, refParagraph);
+                        li.style.top = `${offset}px`;
+                    }
+                });
+            }
+        });
+
+    });
+    resizeObserver.observe(container);
+});

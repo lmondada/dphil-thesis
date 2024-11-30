@@ -6,23 +6,26 @@ weight = 3
 
 ### Quantum measurements
 
-Our dicussion thus far has omitted one crucial step of the quantum computation
-story. Per se, quantum data is useless to humans: we cannot consume it!
+Until now, we have skipped over a crucial part of the quantum computation 
+process: the role of quantum measurements.
+Quantum data, in isolation, is inherently inaccessible to humans:
+we cannot consume it!
 A result from a quantum computation is only of value if we can probe it
 and get some readout value that we can display to the user or return to
 whomever launched the quantum computation.
-This is where the famous Schrödinger's cat of quantum mechanics comes in:
-we cannot know what data is within your qubits without performing a measurement,
-which is an action that will transform the quantum data: as a result of
+This is where the famous Schrödinger's cat thought experiment
+of quantum mechanics comes in:
+what data is within the qubits cannot be known until a measurement is performed.
+This act of observation will transform the quantum data: as a result of
 looking inside the proverbial box, the cat will either be killed or remain
 alive.
 
 We thus need to add the measurement operation as a special case to our computer
 scientist's model of quantum computing.
-Unlike every other "pure quantum" operation, measurements must by definition
-interact with their environment to obtain a readout and so the no-delete
-and the reversibility principles that we introduced in the previous section
-do not apply here.
+Unlike purely quantum operations, measurements inherently involve interaction
+with the environment to produce a readout.
+Consequently, the no-delete and reversibility principles
+discussed earlier do not apply.
 Indeed, measurement is a lossy (and therefore irreversible) operation that
 project the quantum state into one of a small subset of classical states.
 Which state the quantum state is projected into is non-deterministic.
@@ -159,8 +162,10 @@ Hence, if we measure the first qubit (that we introduced ourselves) in the
 zero state, then the remaining $n$ qubits will be precisely in the desired
 state $A \ket \psi$. Success!
 
-[^orthogonal]: There is one requirement for this to be a valid measurement:
-the states must be orthogonal. This is satisfied here.
+[^orthogonal]: This is simplifying slightly.
+There is a necessary condition for this to be a valid measurement:
+the states in the sum must form a measurement basis, i.e.
+they must be orthogonal. This is satisfied here.
 
 Using this "term isolating" property of measurements, known as state collapse,
 we can thus effect computations that would have been otherwise difficult or
@@ -179,11 +184,82 @@ At the core of them is the idea of hybrid quantum-classical programs.
 
 SOTA: LCU, QSVT, etc.
 
+### Who said quantum computers could not fix their mistakes
+
 ### Repeat until success: If you fail, retry!
 Classical computer science has a very simple solution whenever probabilistic
 computations that can fail are used: boosting.
-The idea is so simple that it barely deserves a name: if 
+The idea is so simple that it barely deserves a name:
+execute several independent runs of the computation and choose the most common
+outcome. If the probability of failure is below a certain threshold
+(e.g. 50% for a binary output), then with basic statistics one can extrapolate
+the number of runs required to obtain any desired accuracy[^Hoeffding].
 
+[^Hoeffding]: This is fiendishly effective: the Hoeffding bounds guarantee
+that the probability of success
+will converge to 1 exponentially with the number of runs.
+
+We have been ignoring this approach so far, since no-cloning prohibits us
+from repeating a procedure more than once on an input state $\ket\psi$.
+However, in the scenario that the computation should only be executed on a
+specific, known input state and the computation that prepares that state is
+known, then we _can_ recover from computation failures, by just prepare a new
+state identically.
+
+Suppose we know how to execute the quantum computation $P$
+mapping $\ket 0 \mapsto P \ket 0 = \ket \psi$.
+As before, we would like to compute $A$ given an implementation of
+the computation $\tilde{A}$ that acts on $\ket\psi$ and an ancilla qubit in the
+$\ket 0$ state.
+If the measurement of $\tilde{A}(\ket 0 \otimes \ket \psi)$ returns `1`, then
+the computation failed.
+We can then discard all qubits and restart from the $\ket 0$ state, applying
+$P$ followed by $\tilde{A}$ and an ancilla measurement, repeating until we
+measure 0. As a pseudo-quantum circuit, we could express this as:
+
+xxx
+
+But pseudo circuits do not run on hardware! The only way to express this
+computation as an actual circuit is to set a `max_iter` constant and to repeat
+the block within the loop that many times:
+
+yyy
+
+The resulting program is not only very hard to read, it also suffers
+from real issues in practice.
+For one, the program size becomes extremely bloated and beyond just slowing
+down the compiler, it will also cause a host of issues on the control hardware
+in real time,
+such as long load times, inefficient execution and low cache efficiency.
+
+Even more worryingly, when picking `max_iter` we are faced with an impossible
+tradeoff:
+if `max_iter` is small, then the probability of failure will remain
+non-negligible. As we scale this value up, however, we are introducing more
+and more gates into the program to cover the odd case of
+mutliple successive repeated failures. These are gates that we do not
+intend to execute on most runs of the computation, yet come at a significant
+cost to the runtime: for each gate listed in the circuit, the condition for the
+gate's execution must be checked, whether or not the gate ends up being
+executed. Furthermore, hardware schedulers might be forced to be pessimistic
+and schedule a time window for all conditional operations ahead of time.
+This will significantly delay any operation to be performed after the loop.
+
+We therefore argue that the quantum circuit model is ill-suited as the
+representation for quantum programs that combine classical and quantum
+data. Such programs, however, are a fundamental building block towards
+developing meaningful large scale quantum computations and
+are bound to become the norm.
+Beyond the examples that we touched on in the above paragraphs, which
+included
+block-encodings, repeat-until-success schemes, distributed quantum computing
+and measurement-based quantum computing,
+a major application of measurement-dependent classical operations
+in the coming years
+will be the implementation of quantum error correction (QEC) schemes.
+It is widely agreed that QEC will be critical to the large scale deployment
+of quantum computing---now is the time to build the tooling that will support
+these use cases.
 
 ### Quantum teleportation
 
