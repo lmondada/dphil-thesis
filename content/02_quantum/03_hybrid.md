@@ -217,7 +217,29 @@ We can then discard all qubits and restart from the $\ket 0$ state, applying
 $P$ followed by $\tilde{A}$ and an ancilla measurement, repeating until we
 measure 0. As a pseudo-quantum circuit, we could express this as:
 
-xxx
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1, "numChildren": 1 }],
+    "operations": [
+        {
+            "gate": "H",
+            "targets": [{ "qId": 0 }]
+        },
+        {
+            "gate": "X", 
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+        },
+        {
+            "gate": "Measure",
+            "isMeasurement": true,
+            "controls": [{ "qId": 1 }],
+            "targets": [{ "type": 1, "qId": 1, "cId": 0 }]
+        }
+    ]
+}
+{{< /qviz >}}
 
 But pseudo circuits do not run on hardware! The only way to express this
 computation as an actual circuit is to set a `max_iter` constant and to repeat
