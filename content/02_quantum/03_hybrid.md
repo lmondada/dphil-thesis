@@ -246,6 +246,11 @@ computation as an actual circuit is to set a `max_iter` constant and to repeat
 the block within the loop that many times:
 
 yyy
+```goat
+  .---.     .---.
+--+ A +-----+ B +--
+  .---.     .---.
+```
 
 The resulting program is not only very hard to read, it also suffers
 from real issues in practice.

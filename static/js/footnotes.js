@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         );
 
+        let lastOffset = null;
         footnotes.forEach(footnote => {
             const listItems = footnote.querySelectorAll('ol > li');
             if (!footnote.classList.contains('floating-footnotes')) {
@@ -70,8 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (ref) {
                         // Find the first <p> ancestor of the footnote reference
                         let refParagraph = ref.closest('p');
-                        const offset = computeOffsetForAlignment(li, refParagraph);
+                        let offset = computeOffsetForAlignment(li, refParagraph);
+                        if (lastOffset !== null) {
+                            offset = Math.max(offset, lastOffset);
+                        }
                         li.style.top = `${offset}px`;
+                        lastOffset = offset + li.offsetHeight;
                     }
                 });
             }
