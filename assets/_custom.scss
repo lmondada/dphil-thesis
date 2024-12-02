@@ -4,13 +4,16 @@
 //     content: counter(h1);
 // }
 
+$floating-footnotes-width: 20rem;
+
 .floating-footnotes {
     position: absolute;
-    left: calc(100% + 2em);
+    left: 100%;
+    margin: 0 2rem 0 1rem;
     top: 0;
-    /* Specify a width explicitly so that it wraps at some point
-    rather than just being infinitely wide. */
-    width: 14rem;
+    width: calc(#{$floating-footnotes-width} - 3rem);
+
+    font-size: 0.9rem;
 
     ol li {
         position: absolute;
@@ -20,8 +23,13 @@
     }
 }
 
-article {
+.book-page {
     position: relative;
+
+    @media screen and (min-width: 56rem) {
+        padding-right: 0;
+        margin-right: $floating-footnotes-width;
+    }
 }
 
 .qviz {

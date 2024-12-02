@@ -5,6 +5,7 @@ theme = "hugo-book"
 
 [params]
 BookSection = '*'
+BookToC = false
 
 [markup.goldmark]
   [markup.goldmark.renderer]
