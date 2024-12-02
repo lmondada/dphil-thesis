@@ -155,11 +155,11 @@ Reversibility is the source of a lot of flexibility when expressing quantum prog
 or the hardware is only capable of, executing a different gate $B$.
 Then using the inverse $B^{-1}$ of $B$, it is always possible to rewrite the program as
 
-{{< mermaid >}}
-graph LR
-  in --> G --> out
-  in --> H --> Hinv --> G --> out
-{{< /mermaid >}}
+```goat
+   .---.           .---.  .-----.  .---.
+---+ G +---  =  ---+ H +--+ H⁻¹ +--+ G +---
+   '---'           '---'  '-----'  '---'
+```
 
 where these diagrams should be read as operations to be executed from left
 to right.

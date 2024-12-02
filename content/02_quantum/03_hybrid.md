@@ -57,10 +57,19 @@ bit of output data---it is therefore redundant and renders the qubit useless.
 In our model wee therefore bundle measurement and qubit discard into
 one operation.
 
-{{< mermaid >}}
-graph LR
-  psi --> measurement --> bit
-{{< /mermaid >}}
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0, "numChildren": 1 }],
+    "operations": [
+        {
+            "gate": "Measure",
+            "isMeasurement": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "type": 1, "qId": 0, "cId": 0 }]
+        }
+    ]
+}
+{{< /qviz >}}
 
 ### Measurements as first class citizens
 
@@ -185,6 +194,133 @@ At the core of them is the idea of hybrid quantum-classical programs.
 SOTA: LCU, QSVT, etc.
 
 ### Who said quantum computers could not fix their mistakes
+Failed computations are an expensive mistake in quantum computing as the
+no-cloning theorem prevents us from keeping a "backup" of the initial state.
+The fact that "failures" are in fact unlucky measurement outputs 
+makes matters worse, given that measurements are the only irreversible
+quantum operation.
+It is therefore impossible in general to recover from a "wrong" measurement.
+
+There are, however, prominent cases in which the computation _can_ be corrected
+based on the measurement outcome, thus yielding deterministic results.
+Recall the general framework we introduced in the previous section: there is
+a computation $A$ on $n$ qubits, that can be probabilistically computed 
+using $m > n$ qubits using $\tilde{A}$:
+$$\tilde{A} (\ket 0 \otimes \ket \psi) \mapsto \ket 0 \otimes (A\ket\psi) + \ket 1 \otimes (G\ket\psi).$$
+for some "garbage" $G$.
+What if $G$ is a reversible operation, i.e. there is an operation $G^{-1}$
+to undo $G$?
+Well then, we can still, at least in theory, recover $A\ket \psi$ by applying
+$A \circ G^{-1}$:
+$$G \ket \psi \mapsto (A \circ G^{-1}) \circ G \ket \psi = A \ket \psi,$$
+but _only if_ `1` was measured on the ancilla qubit[^closeid]!
+
+[^closeid]: Notice that, informally, we would hope to get a computation $G$ such that
+$G \approx A$ in the sense that it should somehow be closely related to $A$.
+This way, the resulting correction $A \circ G^{-1} \approx Id$ would
+be close to the identity, and would be cheap to compute.
+
+This is the beginning of quantum-classical hybrid computing: we start by 
+performing quantum operations followed by measurements, the outcomes of which
+dictate what further quantum operations must be applied.
+We define the **classically controlled gate**, a quantum operation that
+is only executed if a certain classical bit (the _condition_) is set.
+This bit will typically be a value derived from a previous measurement: it
+could be as simple as the outcome that a previous measurement yield, or a
+function of multiple past outcomes that must be evaluated on classical
+hardware (e.g. a CPU).
+
+Mixing classical and quantum operations is a sure way to bring the quantum
+circuit representation to its knees.
+In this thesis, we adopt the following interactive representation to show
+the circuit and classically controlled operations that result from
+various measurement outcomes.
+{{< qviz file="figs/teleportation.json" />}}
+Clicking on the blue bill toggles the measurement outcome between `0` and `1`,
+and the corresponding classically controlled operations.
+
+#### Quantum Teleportation
+
+Quantum teleportation is a beautifully simple example of 
+performing classically controlled quantum operation to perform corrections
+in the circuit based on measurement outcomes.
+Coincidentally, it is one of the most fundamental protocols of quantum theory.
+Its name is slightly misleading.
+Think of it as data transfer for quantum data, with a slightly mind bending
+twist: at the time of the transfer, only classical data must be
+communicated between the sending and receiving parties.
+As a result of this protocol, quantum information can be transfered
+using plain old school classical communication channels!
+
+This is predicated on one crucial action being performed before the
+start of the communication: for every qubit that should be transmitted, the
+parties must beforehand create and share among themselves a pair of qubits 
+that will serve as the quantum resource during the protocol execution.
+This resource state is widespread enough that is
+got its own name, the Bell pair state.
+It is written in Dirac notation as $\ket{00} + \ket{11}$.
+As the notation indicates, it as a state with perfectly correlated measurements:
+when measured, the two qubits  will always yield the same outcome, either both
+`0` or both `1`.
+
+There turns out to be a very simple circuit that maps the two-qubit $\ket 00$,
+which every computation starts in, into the Bell pair state:
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }],
+    "operations": [
+        {
+            "gate": "Bell",
+            "children": [
+                {
+                    "gate": "H",
+                    "targets": [{ "qId": 0 }]
+                },
+                {
+                    "gate": "X",
+                    "isControlled": true,
+                    "controls": [{ "qId": 0 }],
+                    "targets": [{ "qId": 1 }]
+                }
+            ],
+            "targets": [{"qId": 0 }, { "qId": 1 }],
+            "conditionalRender": 1
+        }
+    ]
+}
+{{< /qviz >}}
+It is enough for us to think of it as a black box---or a blue box in this case.
+
+We are interested in "teleporting" an arbitrary, single-qubit quantum state.
+Such a state can always be expressed as
+$\ket \psi = \alpha \ket 0 + \beta \ket 1$, i.e. in the most general case,
+a one-qubit state will be in some superposition of the states
+$\ket 0$ and $\ket 1$.
+The paramenters $\alpha$ and $\beta$ are complex coefficients that encode the
+probabilities of measuring `0` or `1`---we can view them as the weights of a
+weighted sum.
+
+We are now interested in combining a Bell resource state in a joint system with
+the arbitrary state $\ket \psi$.
+The resulting three-qubit state is obtained with the $\otimes$ operation, which
+distributes over sums just like usual multiplication:
+$$ \underbrace{(\ket {00} + \ket {11})}_{\text{first two qubits}} \otimes \underbrace{(\alpha \ket 0 + \beta \ket 1)}_{\text{third qubit}} = \alpha \ket {000} + \alpha \ket {110} + \beta \ket {001} + \beta \ket {111}.$$
+We chose to place the Bell pair on the first two qubits
+and the arbitrary state on the third.
+The goal is to move the data that sits on that last qubit to the first qubit.
+Looking at the first qubit in the above expression, notice that the desired
+state $\ket \psi = \alpha \ket 0 + \beta \ket 1$ appears in the first qubit
+if we can discard the second and third terms:
+$$\alpha \ket{\underline{\mathbf{0}}00} + {\color{gray}(\alpha \ket {110} + \beta \ket {001})} + \beta \ket{\underline{\mathbf{1}}11} $$
+This sounds very much like the measurement operations we have used before
+to isolate terms---but we need to isolate two terms simultaneously.
+We can resolve this issue by reorganising the expression^[reorg]
+$$\alpha \ket{000} + \alpha \ket{110} + \beta \ket {001} + \beta \ket {111} = (\alpha \ket 0 + \beta \ket 1) \otimes ( \ket {00} + \ket {11}) + (\beta \ket 0 + \alpha \ket 1) \otimes (\ket {01} + \ket {10}) + \cdots$$
+
+^[reorg]: Apologies, it seems at this point that we are conjuring up a complex
+expression out of nowhere.
+It is in fact just a change of basis---plain old linear algebra.
+The formula can be obtained easily by writing out the basis change matrix.
 
 ### Repeat until success: If you fail, retry!
 Classical computer science has a very simple solution whenever probabilistic

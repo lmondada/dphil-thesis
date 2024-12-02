@@ -1,0 +1,83 @@
+{
+  "qubits": [
+    {
+      "id": 0,
+      "numChildren": 1
+    },
+    {
+      "id": 1,
+      "numChildren": 1
+    }
+  ],
+  "operations": [
+    {
+      "gate": "tilde A",
+      "targets": [
+        {
+          "qId": 0
+        },
+        {
+          "qId": 1
+        }
+      ]
+    },
+    {
+      "gate": "M",
+      "isMeasurement": true,
+      "controls": [
+        {
+          "qId": 0
+        }
+      ],
+      "targets": [
+        {
+          "type": 1,
+          "qId": 0,
+          "cId": 0
+        }
+      ]
+    },
+    {
+      "gate": "ApplyIfElseR",
+      "isConditional": true,
+      "controls": [
+        {
+          "type": 1,
+          "qId": 0,
+          "cId": 0
+        }
+      ],
+      "targets": [],
+      "children": [
+        {
+          "gate": "Ginv o A",
+          "controls": [
+            {
+              "type": 1,
+              "qId": 0,
+              "cId": 0
+            }
+          ],
+          "targets": [
+            {
+              "qId": 1
+            }
+          ],
+          "conditionalRender": 2
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "type": 1,
+      "qId": 0,
+      "cId": 0
+    }
+  ],
+  "targets": [
+    {
+      "qId": 1
+    }
+  ]
+}

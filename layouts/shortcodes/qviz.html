@@ -1,3 +1,9 @@
 <div class="qviz">
-    {{ .Inner }}
+    {{ if .Get "file" }}
+        {{ $file := .Get "file" }}
+        {{ $content := readFile $file }}
+        {{ $content | safeHTML }}
+    {{ else }}
+        {{ .Inner }}
+    {{ end }}
 </div>
