@@ -20,26 +20,6 @@ Strengthening the bridge between classical and quantum compilation research is o
 ### Other similar text
 
 
-This chapter is the story of how the expression and transformation of quantum computations is changing.
-As is often the case, this journey started with physicists in Oxford capturing thought experiments
-in quantum information theory as diagrams (Deutsch 1989, _Quantum computational networks_).
-The idea caught on, and soon software tools were created to facilitate
-building such diagrams (and printing them in papers)
-{% footnote(id="qcl") %}
-The _Quantum Computation Language_ (QCL, Omer, 1998) was in many ways ahead of its time, offering
-an advanced programming interface including loops and control flow, similar to some of
-the languages developed today.
-It presumably failed to gain traction as it did not support printing diagrams for
-papers :D
-{% end %}.
-
-As the possibility of actually *performing* these experiments on quantum hardware
-became more tangible,
-the need to automatically transform and *optimize* these diagrams became apparent.
-The result were software packages for quantum computing that for the first time
-aimed to create programs to be executed on real quantum hardware (projectq, qiskit, cirq, TKET).
-We called them quantum compilers.
-
 The analogy between traditional and quantum compilers holds up to the extent that
 both are concerned with abstracting away some of the low-level assembly-like details
 of the underlying hardware

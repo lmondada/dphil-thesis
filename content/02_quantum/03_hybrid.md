@@ -235,7 +235,7 @@ circuit representation to its knees.
 In this thesis, we adopt the following interactive representation to show
 the circuit and classically controlled operations that result from
 various measurement outcomes.
-{{< qviz file="figs/teleportation.json" />}}
+{{< qviz file="figs/blockenc.json" />}}
 Clicking on the blue bill toggles the measurement outcome between `0` and `1`,
 and the corresponding classically controlled operations.
 
@@ -263,7 +263,7 @@ As the notation indicates, it as a state with perfectly correlated measurements:
 when measured, the two qubits  will always yield the same outcome, either both
 `0` or both `1`.
 
-There turns out to be a very simple circuit that maps the two-qubit $\ket 00$,
+There turns out to be a very simple circuit that maps the two-qubit $\ket {00}$,
 which every computation starts in, into the Bell pair state:
 {{< qviz >}}
 {
@@ -314,13 +314,122 @@ if we can discard the second and third terms:
 $$\alpha \ket{\underline{\mathbf{0}}00} + {\color{gray}(\alpha \ket {110} + \beta \ket {001})} + \beta \ket{\underline{\mathbf{1}}11} $$
 This sounds very much like the measurement operations we have used before
 to isolate terms---but we need to isolate two terms simultaneously.
-We can resolve this issue by reorganising the expression^[reorg]
-$$\alpha \ket{000} + \alpha \ket{110} + \beta \ket {001} + \beta \ket {111} = (\alpha \ket 0 + \beta \ket 1) \otimes ( \ket {00} + \ket {11}) + (\beta \ket 0 + \alpha \ket 1) \otimes (\ket {01} + \ket {10}) + \cdots$$
+We can resolve this issue by reorganising the expression[^reorg]
+$$\begin{aligned}\alpha \ket{000} + \alpha \ket{110} + \beta \ket {001} + \beta \ket {111}=\ &\overbrace{(\alpha \ket 0 + \beta \ket 1)}^{= \ket \psi}\otimes \overbrace{( \ket {00} + \ket {11})}^{\text{Bell pair}}\\&+(\beta \ket 0 + \alpha \ket 1) \otimes (\ket {01} + \ket {10})\\&+(\alpha\ket 0 - \beta \ket 1) \otimes (\ket{01} - \ket {10})\\&+(\beta \ket 0 - \alpha \ket 1) \otimes (\ket {00} - \ket {11})\end{aligned}$$
+Obtaining the $\ket \psi$ state on the first qubit is thus as simple as
+isolating the first of these four terms.
+We do not know a priori how to measure $\ket {00} + \ket{11}$ but we do know
+how to map that state to $\ket {00}$: that's the inverse of the Bell pair state
+preparation circuit!
+This results in the following circuit:
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1, "numChildren": 1 }, { "id": 2, "numChildren": 1 }],
+    "operations": [
+        {
+            "gate": "Bell",
+            "children": [
+                {
+                    "gate": "H",
+                    "targets": [{ "qId": 0 }]
+                },
+                {
+                    "gate": "X",
+                    "isControlled": true,
+                    "controls": [{ "qId": 0 }],
+                    "targets": [{ "qId": 1 }]
+                }
+            ],
+            "targets": [{"qId": 0 }, { "qId": 1 }],
+            "conditionalRender": 1
+        },
+        {
+            "gate": "Bell-inv",
+            "children": [
+                {
+                    "gate": "X",
+                    "isControlled": true,
+                    "controls": [{ "qId": 1 }],
+                    "targets": [{ "qId": 2 }]
+                },
+                {
+                    "gate": "H",
+                    "targets": [{ "qId": 1 }]
+                }
+            ],
+            "targets": [{"qId": 1 }, { "qId": 2 }],
+            "conditionalRender": 1
+        },
+        {
+            "gate": "Measure",
+            "isMeasurement": true,
+            "controls": [{ "qId": 1 }],
+            "targets": [{ "type": 1, "qId": 1, "cId": 0 }]
+        },
+        {
+            "gate": "Measure",
+            "isMeasurement": true,
+            "controls": [{ "qId": 2 }],
+            "targets": [{ "type": 1, "qId": 2, "cId": 0 }]
+        }
+    ]
+}
+{{< /qviz >}}
+This brings us to the same situation as we had for the block encoding
+application above: conditioned on the measurement outcome of the second and
+third qubits being 0, the computation performs a state "teleportation", moving
+$\ket \psi$ from the third to the first qubit.
+We can compute the effect of $\text{Bell}^{-1}$ on the overall expression of
+(*) to find all possible output states:
+$$\begin{aligned}(\ast) \overset{\text{Bell}^{-1}}{\mapsto}&(\alpha \ket 0 + \beta \ket 1) \otimes \ket {00} \\&+ (\beta \ket 0 + \alpha \ket 1) \otimes \ket {01} \\& + (\alpha \ket 0 - \beta \ket 1) \otimes \ket {10} \\&+ (\beta \ket 0 - \alpha \ket 1) \otimes \ket {11}\end{aligned}$$
+As expected, we do get $\ket \psi$ on the first qubit for the measurement `00`
+(corresponding to the state $\ket {00}$),
+but as it stands, this only has a $\frac{1}{4}$ probability of success.
 
-^[reorg]: Apologies, it seems at this point that we are conjuring up a complex
+[^reorg]: Apologies, it seems at this point that we are conjuring up a complex
 expression out of nowhere.
 It is in fact just a change of basis---plain old linear algebra.
 The formula can be obtained easily by writing out the basis change matrix.
+
+You might notice, however, that the other states the first qubit can end
+up in look remarkably similar, up to some sign flips and
+swaps $\ket 0 \leftrightarrow \ket 1$.
+In particular, all states still have the amplitudes $\alpha$ and $\beta$
+somewhere, so it does not seem unfathomable that these "wrong" states can be
+mapped back to $\psi$.
+
+We can use the measurement outcomes of the second and third qubit to infer
+which of the "mistakes" occurred, and hence what state the first qubit has
+ended in.
+The `01` measurement outcome, for instance, results in the
+$\beta \ket 0 + \alpha \ket 1$ state---this is just a bit flip away from
+$\ket \psi$!
+This gate is known as $X$.
+Its colleague the $Z$ gate on the other hand leaves $\ket 0$ states untouched
+but flips the _sign_ of $\ket 1$.
+This would fix the `10` outcome. Finally, `11` requires both a `Z` and a `X`
+correction.
+
+Putting these observations together, we can leverage classically controlled
+operations to obtain a protocol that is fully deterministic!
+The correct circuit implementating quantum teleportation is given by
+{{< qviz file="figs/teleportation.json" />}}
+In the scenario where a first party (Alice) wants to send a
+one-qubit quantum state to Bob, they can achieve that by
+creating a Bell pair state, the first qubit of which is given to Bob and the
+second to Alice.
+When Alice then gets in possession of another qubit $\ket \psi$ whose data she
+wants to transmit to Bob, she can achieve that by executing $\text{Bell}^{-1}$,
+measuring her two qubits and finally communicating the (classical) measurement
+outcomes to Bob.
+Bob can perform the necessary corrections and will then be in possession of
+state $\ket \psi$.
+
+It is beautiful and often overlooked how one of the most fundamental protocols
+of quantum information theory is in fact a hybrid classical-quantum computation.
+Quantum teleportation without classical communication is physically impossible:
+it would let Aice communicate with Bob instantly, even as he could be light
+years away---in other words, it would fundamentally break relatively.
 
 ### Repeat until success: If you fail, retry!
 Classical computer science has a very simple solution whenever probabilistic
@@ -379,16 +488,11 @@ measure 0. As a pseudo-quantum circuit, we could express this as:
 
 But pseudo circuits do not run on hardware! The only way to express this
 computation as an actual circuit is to set a `max_iter` constant and to repeat
-the block within the loop that many times:
+the block within the loop that many times
+(here `max_iter=3`---expand the boxes at your own risk):
+{{< qviz file="figs/rus-unroll.json" />}}
 
-yyy
-```goat
-  .---.     .---.
---+ A +-----+ B +--
-  .---.     .---.
-```
-
-The resulting program is not only very hard to read, it also suffers
+The resulting program is not only hard to display and read, it also suffers
 from real issues in practice.
 For one, the program size becomes extremely bloated and beyond just slowing
 down the compiler, it will also cause a host of issues on the control hardware
@@ -423,11 +527,3 @@ will be the implementation of quantum error correction (QEC) schemes.
 It is widely agreed that QEC will be critical to the large scale deployment
 of quantum computing---now is the time to build the tooling that will support
 these use cases.
-
-### Quantum teleportation
-
-### MBQC
-
-### RUS-type stuff: magic state distillation
-
-### Error detection + correction

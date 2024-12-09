@@ -1,83 +1,87 @@
 {
-  "qubits": [
-    {
-      "id": 0,
-      "numChildren": 1
-    },
-    {
-      "id": 1,
-      "numChildren": 1
-    }
-  ],
-  "operations": [
-    {
-      "gate": "tilde A",
-      "targets": [
+    "qubits": [{ "id": 0 }, { "id": 1, "numChildren": 1 }, { "id": 2, "numChildren": 1 }],
+    "operations": [
         {
-          "qId": 0
+            "gate": "Bell",
+            "children": [
+                {
+                    "gate": "H",
+                    "targets": [{ "qId": 0 }]
+                },
+                {
+                    "gate": "X",
+                    "isControlled": true,
+                    "controls": [{ "qId": 0 }],
+                    "targets": [{ "qId": 1 }]
+                }
+            ],
+            "targets": [{"qId": 0 }, { "qId": 1 }]
         },
         {
-          "qId": 1
-        }
-      ]
-    },
-    {
-      "gate": "M",
-      "isMeasurement": true,
-      "controls": [
+            "gate": "Bell-inv",
+            "children": [
+                {
+                    "gate": "X",
+                    "isControlled": true,
+                    "controls": [{ "qId": 1 }],
+                    "targets": [{ "qId": 2 }]
+                },
+                {
+                    "gate": "H",
+                    "targets": [{ "qId": 1 }]
+                }
+            ],
+            "targets": [{"qId": 1 }, { "qId": 2 }]
+        },
         {
-          "qId": 0
-        }
-      ],
-      "targets": [
+            "gate": "Measure",
+            "isMeasurement": true,
+            "controls": [{ "qId": 1 }],
+            "targets": [{ "type": 1, "qId": 1, "cId": 0 }]
+        },
         {
-          "type": 1,
-          "qId": 0,
-          "cId": 0
-        }
-      ]
-    },
-    {
-      "gate": "ApplyIfElseR",
-      "isConditional": true,
-      "controls": [
+            "gate": "Measure",
+            "isMeasurement": true,
+            "controls": [{ "qId": 2 }],
+            "targets": [{ "type": 1, "qId": 2, "cId": 0 }]
+        },
         {
-          "type": 1,
-          "qId": 0,
-          "cId": 0
-        }
-      ],
-      "targets": [],
-      "children": [
+            "gate": "correction-q1",
+            "targets": [],
+            "isConditional": true,
+            "controls": [
+                {
+                    "type": 1,
+                    "qId": 1,
+                    "cId": 0
+                }
+            ],
+            "children": [
+                {
+                    "gate": "X",
+                    "targets": [{ "qId": 0 }],
+                    "conditionalRender": 2
+                }
+            ]
+        },
         {
-          "gate": "Ginv o A",
-          "controls": [
-            {
-              "type": 1,
-              "qId": 0,
-              "cId": 0
-            }
-          ],
-          "targets": [
-            {
-              "qId": 1
-            }
-          ],
-          "conditionalRender": 2
+            "gate": "correction-q2",
+            "targets": [],
+            "isConditional": true,
+            "controls": [
+                {
+                    "type": 1,
+                    "qId": 2,
+                    "cId": 0
+                }
+            ],
+            "children": [
+                {
+                    "gate": "Z",
+                    "targets": [{ "qId": 0 }],
+                    "conditionalRender": 2
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "controls": [
-    {
-      "type": 1,
-      "qId": 0,
-      "cId": 0
-    }
-  ],
-  "targets": [
-    {
-      "qId": 1
-    }
-  ]
+    ]
 }
