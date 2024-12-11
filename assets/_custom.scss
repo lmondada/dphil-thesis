@@ -4,6 +4,8 @@
 //     content: counter(h1);
 // }
 
+////// FLOATING FOOTNOTES //////
+
 $floating-footnotes-width: 20rem;
 
 .floating-footnotes {
@@ -32,7 +34,53 @@ $floating-footnotes-width: 20rem;
     }
 }
 
+////// QVIZ //////
+
 .qviz {
     display: block;
     margin: 0 auto;
+}
+
+////// CITATIONS //////
+.citation-key {
+    &:before {
+        content: '[';
+    }
+    &:after {
+        content: ']';
+    }
+    cursor: pointer;
+}
+
+.citation-key:hover {
+    text-decoration: underline;
+}
+
+.citation-key {
+    color: rgb(132, 64, 241);
+}
+
+.citation {
+    position: relative;
+}
+
+.citation-full {
+    display: none;
+    position: absolute;
+    border: 1px solid #000;
+    background-color: #fff;
+    padding: 2px 2px 2px 8px;
+    bottom: 1.4rem;
+    font-size: 0.9rem;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+    @media screen and (min-width: 56rem) {
+        right: 0rem;
+    }
+
+
+    .citation-key:hover + & {
+        display: block;
+    }
 }
