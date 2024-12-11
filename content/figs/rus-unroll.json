@@ -1,0 +1,109 @@
+{
+    "qubits": [{ "id": 0, "numChildren": 1 }, { "id": 1 }, { "id": 2 }],
+    "operations": [
+        {
+            "gate": "iter-1",
+            "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }],
+            "children": [
+                {
+                    "gate": "State Prep",
+                    "targets": [{"qId": 1 }, { "qId": 2 }]
+                },
+                {
+                    "gate": "tilde A",
+                    "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }]
+                },
+                {
+                    "gate": "Measure",
+                    "isMeasurement": true,
+                    "controls": [{ "qId": 0 }],
+                    "targets": [{ "type": 1, "qId": 0, "cId": 0 }]
+                }
+            ]
+        },
+        {
+            "gate": "iter-2",
+            "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }],
+            "children": [
+                {
+                    "gate": "iter-2-inner",
+                    "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }],
+                    "isConditional": true,
+                    "controls": [
+                        {
+                            "type": 1,
+                            "qId": 0,
+                            "cId": 0
+                        }
+                    ],
+                    "children": [
+                        {
+                            "gate": "Reset zero state",
+                            "conditionalRender": 2,
+                            "targets": [{"qId": 1 }, { "qId": 2 }]
+                        },
+                        {
+                            "gate": "State Prep",
+                            "conditionalRender": 2,
+                            "targets": [{"qId": 1 }, { "qId": 2 }]
+                        },
+                        {
+                            "gate": "tilde A",
+                            "conditionalRender": 2,
+                            "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }]
+                        },
+                        {
+                            "gate": "Measure",
+                            "conditionalRender": 2,
+                            "isMeasurement": true,
+                            "controls": [{ "qId": 0 }],
+                            "targets": [{ "type": 1, "qId": 0, "cId": 0 }]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "gate": "iter-3",
+            "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }],
+            "children": [
+                {
+                    "gate": "iter-3-inner",
+                    "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }],
+                    "isConditional": true,
+                    "controls": [
+                        {
+                            "type": 1,
+                            "qId": 0,
+                            "cId": 0
+                        }
+                    ],
+                    "children": [
+                        {
+                            "gate": "Reset zero state",
+                            "targets": [{"qId": 1 }, { "qId": 2 }],
+                            "conditionalRender": 2
+                        },
+                        {
+                            "gate": "State Prep",
+                            "targets": [{"qId": 1 }, { "qId": 2 }],
+                            "conditionalRender": 2
+                        },
+                        {
+                            "gate": "tilde A",
+                            "targets": [{"qId": 0 }, {"qId": 1 }, { "qId": 2 }],
+                            "conditionalRender": 2
+                        },
+                        {
+                            "gate": "Measure",
+                            "isMeasurement": true,
+                            "controls": [{ "qId": 0 }],
+                            "targets": [{ "type": 1, "qId": 0, "cId": 0 }],
+                            "conditionalRender": 2
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

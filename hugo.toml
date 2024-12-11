@@ -15,3 +15,6 @@ BookToC = false
 
   [markup.goldmark.extensions]
     katex = true
+  [markup.goldmark.extensions.bibtex]
+    enable = true
+    bibtexPath = "bibtex.bib"

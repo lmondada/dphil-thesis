@@ -187,4 +187,101 @@ Universality?
 
 ### The quantum circuit representation
 
-s
+We could not conclude our overview of the basics of quantum 
+computing without without a mention of the quantum circuit,
+a representation of quantum computation that is ubiquitous
+in the field.
+With the understanding that we have gained in the course of this
+section, the two building blocks of the circuit model and the
+conventions around their graphical representation should be
+of no surprise to the reader:
+1. The two building blocks of the circuit model and the conventions
+   around their graphical representation should be of no surprise to the reader: 
+   Qubits are represented by straight, horizontal lines. Their evolution through
+   time can be followed along the line from left to right: At the leftmost
+   point on the line, the qubit is in its input state; when the qubit reaches
+   its rightmost point, operations have mutated it into the output state of
+   the circuit.
+2. Gates on qubits are boxes placed vertically across one or multiple qubit
+   lines. The qubits it is on represents the set that the gate may act on
+   (and mutate), whereas the left-to-right ordering of the gates reflects
+   their ordering in time.
+
+A simple circuit composed of two qubits and three gates $G$, $H$ and $K$ could
+for instance look like this:
+
+```goat
+   .---.      .---.
+---+   +------+ H +--
+   |   |      '---'
+   | G |
+   |   |      .---.
+---+   +------+ K +--
+   '---'      '---'
+```
+In this case, $G$ would be executed before $H$ and $K$; $G$ would act on both
+qubits whereas $H$ and $K$ would only modify the first and second qubit
+respectively.
+Note that there is no ordering specified between $H$ and $K$: because they
+act on disjoint sets of qubits, their relative ordering makes no difference.
+It is thus common to display them as acting at the same time.
+We could have equivalently chosen to draw them as:
+```goat
+   .---.   .---.                        .---.         .---.
+---+   +---+ H +--------             ---+   +---------+ H +--
+   | G |   '---' .---.        or        | G |   .---. '---'
+---+   +---------+ K +--             ---+   +---+ K +--------
+   '---'         '---'                  '---'   '---'
+```
+All these circuits represent the same computation.
+
+Certain quantum gates are particularly useful and appear very regularly in
+practice. These have standard names that are widely used in the field.
+The most common single qubit gates are arguable the Hadamard, represented in
+circuits by a $H$ box, and the $X$, $Y$ and $Z$-axis rotations, drawn as
+$R_x(\theta)$, $R_y(\theta)$ and $R_z(\theta)$ boxes respectively.
+Note that rotation gates are parametrised by an angle $\theta \in [0, 4\pi)$
+that must be specified to actually execute the rotation.
+
+There are also commonly used multi-qubit gates. For these, it becomes slightly
+awkward to draw them as boxes, as they may act on qubits that are not drawn
+next to eachother in the circuit. This becomes immediately apparent if you
+attempt to draw a a gate that should act on the first and third qubit line of
+a circuit, but leave the second one untouched. As a solutuon to this, common
+gates were given disgnated representations that do not spell out their name,
+but clearly mark which qubit they are action on, and in what order.
+Here are the representations of three of the most famous ones: the Cnot (also
+known as CX) gate, the CZ and the Toffoli:
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
+    "operations": [
+        {
+            "gate": "X", 
+            "isControlled": true,
+            "controls": [{ "qId": 1 }],
+            "targets": [{ "qId": 2 }]
+        },
+        {
+            "gate": "Z", 
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+        },
+        {
+            "gate": "X", 
+            "isControlled": true,
+            "controls": [{ "qId": 0 }, { "qId": 1 }],
+            "targets": [{ "qId": 2 }]
+        }
+    ]
+}
+{{< /qviz >}}
+
+You will probably notice that there seems that there seems to be a system to
+this graphical notation. There is, but unfortunately explaining it would
+require us to discuss Pauli matrices, commutation relations, and quickly lead
+us astray.
+The references at the end of this chapter[^email] are a good starting point
+for further reading. 
+[^email]: Or my email!
