@@ -13,11 +13,11 @@ realisations of qubits in real world architectures, it is important to note
 one fundamental difference with classical systems.
 Classical bit values (the famous `0`s and `1`s of our computers) are typically
 encoded using two voltages; another way of saying this is that bit values, and
-hence data, correspond to electrical currents on the chip.
+hence data, correspond to electrical currents on a chip.
 Gates, i.e. the lowest level of operations that can be applied to bits,
 then correspond to barriers that either let the electrical current flow through,
 or block it.
-Generalising slightly, we can hence picture a classical gate as a box with
+Generalising slightly, we can hence picture a classical gate as a black box with
 `n` input wires going into the box and `m` output wires leaving it.
 For any combination of on and off voltages on the input wires,
 the box will turn on some of the output wires. The important points to take away
@@ -47,10 +47,13 @@ quantum programs and called X.
 At this point, taking the preservation of qubits just described seriously,
 we should justifiably be asking how a quantum computation can even come to be
 at all, given that no qubit can be created out of thin air.
-In keeping with our promise to remain blissfully ignorant of physical realities,
-we suggest to adopt the following abstracted mental model of qubits. Qubits
-can neither be created nor deleted[^del]; they simply exist at all times.
-For our convenience however, we can choose to ignore qubits that are of no
+In our attempt to remain blissfully ignorant of physical realities,
+we suggest to adopt the following abstracted mental model of qubits:
+qubits can neither be created nor deleted[^del], they simply
+_i)_ exist at all times, and
+_ii)_ can be reset to the 0 state.
+
+For our convenience, we can then choose to ignore qubits that are of no
 importance to us.
 If all we need are `n` qubits, then will limit our considerations to these and
 pretend none other exist.
@@ -60,10 +63,10 @@ If for instance a new qubit becomes useful halfway through our program execution
 we can enlarge the set of qubits we are keeping track of and refer to this as
 "creating" a qubit.
 Conversely, it often happens that qubits become irrelevant, in which case we 
-drop them and say that the qubits were discarded.
+move them outside of our field of consideration and say that the qubits were discarded.
 
 [^del]: This is indeed true physically: the carriers of quantum information,
-typically atoms of protons, live forever in the absence of interactions
+typically atoms or photons, live forever in the absence of interactions
 with their environment.
 However we would be seriously deluding ourselves if we believed that the control
 systems we use to manipulate and keep these particles trapped can do so for
@@ -76,10 +79,12 @@ A final consequence of mutating qubits that we will highlight is that once a
 gate has been applied, the input states to the gate no longer exist!
 In other words, any state that we reach throughout our execution can only be
 used at most once.
-Here, your classical intuition might kick in: can't we just make sure we maintain
-a copy of the original state before modifying it?
-This would allow us to do more than one computation from a temporary value.
-
+Here, your classical intuition might kick in:
+{{% hint info %}}
+Let us just maintain
+a copy of the original state before modifying it!
+{{% /hint %}}
+This would indeed allow us to do more than one computation from a temporary value.
 No, big no no!
 This is a profound restriction (or property, depending on your point of view)
 with deep roots in the physics of quantum mechanics.
@@ -91,17 +96,21 @@ the observations and properties that we have described so far.
 We are now entering the (short) section of the thesis where we discuss some
 ideas from quantum information theory---so depending on your disposition, 
 either indulge yourself, or bear with me for a moment.
-The no-cloning theorem justifies and provides some semblance of a formalism to
-many of the ideas and observations that we have introduced so far without
-much rigour.
+The no-cloning principle provides a formal foundation for the vague statement
+_"qubits live forever"_ that we made earlier.
+It is a fundamental tenant of quantum information,
+deserving of a more rigorous treatment that we are giving it here.
+We recommend that the curious reader refers themselves to more respectful 
+references such as @Nielsen2016[^pqp].
+[^pqp]: or, if you really must: @Coecke2017.
 
 **No-cloning theorem:** it is impossible to copy an arbitrary unknown state onto
 another (possibly known) qubit, or to copy a (possibly known) qubit to a qubit
  with unknown arbitrary state.
 
- Using $\ket{\psi}$ to denote an arbitrary state and $\ket{0}$ to denote a known
- state, the principle can be restated as: there are no quantum computations
- mapping $\ket{\psi}\ket{0} \mapsto \ket{\psi}\ket{\psi}$, nor
+If we use $\ket{\psi}$ to denote an arbitrary state and $\ket{0}$ to denote a known
+state, the principle can be restated as: there are no quantum computations
+mapping $\ket{\psi}\ket{0} \mapsto \ket{\psi}\ket{\psi}$, nor
 $\ket{\psi}\ket{0} \mapsto \ket{0}\ket{0}$.
 The consequences of this are profound.
 
@@ -134,9 +143,10 @@ if no new information is added from outside the system,
 then the total information that is encoded should not be increasing.
 Why however is it impossible to erase some information and thus reduce
 the total amount of it?
-The answer is reversibility: it is another tenant of quantum physics that
-every quantum of operation must be undoable, i.e. it must have an
+The answer is reversibility: it is another foundation of quantum physics that
+every quantum of operation must be undoable, i.e. a computation must have an
 inverse operation that recovers the input when applied to the output.
+
 If a quantum operation were thus to erase any information, then there
 would exist an inverse operation that creates information from nothing!
 The two halves of the no-cloning theorem as we presented it thus state
@@ -148,7 +158,6 @@ We have just spent a long while discussing reversibility and no-cloning.
 There is reason for it: these laws of physics
 that govern quantum computations and are absent from classical computer science
 turn out to be a great boon for quantum optimisation and compilation in general.
- reversibility is the source of a lot of flexibility when expressing quantum programs.
 
 Reversibility is the source of a lot of flexibility when expressing quantum programs.
  Suppose the user wants to execute an operation $A$ but it is more convenient,
@@ -157,47 +166,46 @@ Then using the inverse $B^{-1}$ of $B$, it is always possible to rewrite the pro
 
 ```goat
    .---.           .---.  .-----.  .---.
----+ G +---  =  ---+ H +--+ H⁻¹ +--+ G +---
+---+ A +---  =  ---+ B +--+ B⁻¹ +--+ A +---
    '---'           '---'  '-----'  '---'
 ```
 
 where these diagrams should be read as operations to be executed from left
 to right.
-This is nothing but the mathematical trick of multiplying the right
+This is nothing but the mathematical trick of multiplying the left
 hand side with the identity operation expressed as
-$H^{-1} \cdot H$.
+$B^{-1} \cdot B$.
 
 Now of course this rewrite is only sensible if the operation 
-$G \circ H^{-1}$
-is reasonably cheap to perform.
+$A \circ B^{-1}$ is reasonably cheap to perform[^matmul].
 There are plenty of instances where this is indeed the case.
 Morally, the quantum compiler always has the freedom to execute
 any quantum operation---at the risk of course of producing very
 inefficient code---given that reversibility always guarantees that
 the operation can be reversed and the competition undone whenever necessary.
 
+[^matmul]: The $\circ$ is maths for denoting the composition of functions, so
+unlike the left-to-right
+diagram, it must be read from right to left. Is your head spinning yet?
+
 No-cloning is also a very useful guarantee that the compiler can make use of.
 In chapter X we will see that it greatly simplifies pattern matching,
 useful to quickly identify all possible optimisations.
 More generally, no-cloning restricts the set of programs that the compiler
 must consider, resulting in simply compiler logic and better performance.
- we will see examples of this in chapter 3. To do: add some state of the art.
-
-Universality?
+ we will see examples of this in chapter 3.
 
 ### The quantum circuit representation
 
 We could not conclude our overview of the basics of quantum 
-computing without without a mention of the quantum circuit,
+computing without a mention of the quantum circuit,
 a representation of quantum computation that is ubiquitous
 in the field.
 With the understanding that we have gained in the course of this
 section, the two building blocks of the circuit model and the
 conventions around their graphical representation should be
 of no surprise to the reader:
-1. The two building blocks of the circuit model and the conventions
-   around their graphical representation should be of no surprise to the reader: 
-   Qubits are represented by straight, horizontal lines. Their evolution through
+1. Qubits are represented by straight, horizontal lines. Their evolution through
    time can be followed along the line from left to right: At the leftmost
    point on the line, the qubit is in its input state; when the qubit reaches
    its rightmost point, operations have mutated it into the output state of
@@ -212,11 +220,11 @@ for instance look like this:
 
 ```goat
    .---.      .---.
----+   +------+ H +--
+---+   +------+ B +--
    |   |      '---'
-   | G |
+   | A |
    |   |      .---.
----+   +------+ K +--
+---+   +------+ C +--
    '---'      '---'
 ```
 In this case, $G$ would be executed before $H$ and $K$; $G$ would act on both
@@ -237,7 +245,7 @@ All these circuits represent the same computation.
 
 Certain quantum gates are particularly useful and appear very regularly in
 practice. These have standard names that are widely used in the field.
-The most common single qubit gates are arguable the Hadamard, represented in
+The most common single qubit gates are arguably the Hadamard, represented in
 circuits by a $H$ box, and the $X$, $Y$ and $Z$-axis rotations, drawn as
 $R_x(\theta)$, $R_y(\theta)$ and $R_z(\theta)$ boxes respectively.
 Note that rotation gates are parametrised by an angle $\theta \in [0, 4\pi)$
@@ -245,13 +253,17 @@ that must be specified to actually execute the rotation.
 
 There are also commonly used multi-qubit gates. For these, it becomes slightly
 awkward to draw them as boxes, as they may act on qubits that are not drawn
-next to eachother in the circuit. This becomes immediately apparent if you
-attempt to draw a a gate that should act on the first and third qubit line of
-a circuit, but leave the second one untouched. As a solutuon to this, common
-gates were given disgnated representations that do not spell out their name,
+next to eachother in the circuit[^drawit].
+As a solution to this, common
+gates were given representations that do not spell out their name,
 but clearly mark which qubit they are action on, and in what order.
-Here are the representations of three of the most famous ones: the Cnot (also
-known as CX) gate, the CZ and the Toffoli:
+Here are the representations of three of the most famous ones, in order:
+the CX (also
+known as CNOT) gate, the CZ and the Toffoli:
+[^drawit]: This becomes immediately apparent if you
+attempt to draw a a gate that should act on the first and third qubit line of
+a circuit, but leave the second one untouched. 
+
 {{< qviz >}}
 {
     "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
@@ -285,3 +297,7 @@ us astray.
 The references at the end of this chapter[^email] are a good starting point
 for further reading. 
 [^email]: Or my email!
+
+### Universality
+
+todo.

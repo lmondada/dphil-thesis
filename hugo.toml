@@ -17,4 +17,4 @@ BookToC = false
     katex = true
   [markup.goldmark.extensions.bibtex]
     enable = true
-    bibtexPath = "bibtex.bib"
+    bibtexPath = "thesis.bib"

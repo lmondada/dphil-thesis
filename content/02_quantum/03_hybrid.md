@@ -13,12 +13,16 @@ we cannot consume it!
 A result from a quantum computation is only of value if we can probe it
 and get some readout value that we can display to the user or return to
 whomever launched the quantum computation.
-This is where the famous Schrödinger's cat thought experiment
-of quantum mechanics comes in:
-what data is within the qubits cannot be known until a measurement is performed.
-This act of observation will transform the quantum data: as a result of
-looking inside the proverbial box, the cat will either be killed or remain
-alive.
+
+Measurements in quantum physics are fundamentally different from our
+classical understanding of just "reading out" data that is already there.
+This is the famous Schrödinger's cat thought experiment
+of quantum mechanics:
+what data is within the qubits remains undefined until a measurement
+is performed.
+The act of observation will transform the quantum data:
+looking inside the proverbial box will at random
+either kill the cat or spare it.
 
 We thus need to add the measurement operation as a special case to our computer
 scientist's model of quantum computing.
@@ -34,7 +38,8 @@ the full state can be eventually reconstructed by repeating measurements and
 analysing the distribution of outcomes[^tomography].
 Given no-cloning, however, this is unlikely to be the case, and so the full
 quantum result is hardly ever known. We must instead rely on well-designed
-measurement schemes to extract useful information from the quantum result.
+measurement schemes to extract useful information from the partial access 
+we have to the quantum states.
 
 [^tomography]: This is known as _state tomography_. You will need to perform
 measurements in more than one basis, i.e. different choices of classical
@@ -44,7 +49,7 @@ We model measurement as an operation that takes one qubit and outputs one
 purely classical bit[^disappear].
 In the circuit formalism, measurements are often implicitly added at the end
 of every qubit. If we wish to make them explicit or add them elsewhere in the
-circuit, we must introduce a graphical representation for the classical bit of
+computation, we must introduce a graphical representation for the classical bit of
 data that is produced by the measurement.
 The field has adopted the double wire for this (SVG db-wire), even though
 a "half" wire would arguably have been more appropriate to reflect the reduced
@@ -83,7 +88,7 @@ operation---if not more so!
 
 One eye-opening perspective on this is the field of _measurement-based
 quantum computing_ (MBQC).
-Raussendorf and Briegel showed indeed that arbitrary quantum computations can
+Raussendorf and Briegel showed indeed @Raussendorf_2001 that arbitrary quantum computations can
 be reproduced in the MBQC framework using only some resource quantum states
 that can be prepared ahead of time and measurements!
 In other words, given entangled qubits, measurements are all you need to perform
@@ -182,8 +187,9 @@ impossible to perform.
 There is however one important wrinkle that we cannot forget about: measurements
 are non-deterministic!
 We cannot assume that all measurements of the ancilla qubit will return the 
-zero state. When $\ket 1$ is measured, the computation has failed and
-the execution must be aborted and restarted.
+zero state. When $\ket 1$ is measured on the ancilla, the remaining qubits
+are left in the $G_1 \ket\psi$ state. The computation has thus failed,
+and the execution must be aborted and restarted.
 How often the block-encoding protocol that we have presented fails depends
 on the details of $A$ and the choices of $G_1, G_2$ and $G_3$ and is the main
 disadvantage of an otherwise very powerful quantum technique.
@@ -196,7 +202,7 @@ SOTA: LCU, QSVT, etc.
 ### Who said quantum computers could not fix their mistakes
 Failed computations are an expensive mistake in quantum computing as the
 no-cloning theorem prevents us from keeping a "backup" of the initial state.
-The fact that "failures" are in fact unlucky measurement outputs 
+The fact that failures are in fact unlucky measurement outputs 
 makes matters worse, given that measurements are the only irreversible
 quantum operation.
 It is therefore impossible in general to recover from a "wrong" measurement.
@@ -236,7 +242,7 @@ In this thesis, we adopt the following interactive representation to show
 the circuit and classically controlled operations that result from
 various measurement outcomes.
 {{< qviz file="figs/blockenc.json" />}}
-Clicking on the blue bill toggles the measurement outcome between `0` and `1`,
+Clicking on the blue pill toggles the measurement outcome between `0` and `1`,
 and the corresponding classically controlled operations.
 
 #### Quantum Teleportation
@@ -244,19 +250,20 @@ and the corresponding classically controlled operations.
 Quantum teleportation is a beautifully simple example of 
 performing classically controlled quantum operation to perform corrections
 in the circuit based on measurement outcomes.
-Coincidentally, it is one of the most fundamental protocols of quantum theory.
+It is also coincidentally one of the most fundamental protocols of quantum theory.
 Its name is slightly misleading.
 Think of it as data transfer for quantum data, with a slightly mind bending
 twist: at the time of the transfer, only classical data must be
 communicated between the sending and receiving parties.
 As a result of this protocol, quantum information can be transfered
-using plain old school classical communication channels!
+using plain old school copper wires
+(or any other classical communication channels)!
 
 This is predicated on one crucial action being performed before the
 start of the communication: for every qubit that should be transmitted, the
 parties must beforehand create and share among themselves a pair of qubits 
 that will serve as the quantum resource during the protocol execution.
-This resource state is widespread enough that is
+This resource state is widespread enough that it
 got its own name, the Bell pair state.
 It is written in Dirac notation as $\ket{00} + \ket{11}$.
 As the notation indicates, it as a state with perfectly correlated measurements:
@@ -433,7 +440,7 @@ years away---in other words, it would fundamentally break relatively.
 
 ### Repeat until success: If you fail, retry!
 Classical computer science has a very simple solution whenever probabilistic
-computations that can fail are used: boosting.
+computations that can fail are used: probability amplification, or boosting @Scheideler2018.
 The idea is so simple that it barely deserves a name:
 execute several independent runs of the computation and choose the most common
 outcome. If the probability of failure is below a certain threshold
