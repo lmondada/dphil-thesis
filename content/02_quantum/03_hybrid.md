@@ -1,6 +1,5 @@
 +++
 title = "Rise of hybrid quantum-classical computation"
-template = "section.html"
 weight = 3
 +++
 

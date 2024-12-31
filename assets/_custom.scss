@@ -4,6 +4,10 @@
 //     content: counter(h1);
 // }
 
+article p {
+    hyphens: auto
+}
+
 ////// FLOATING FOOTNOTES //////
 
 $floating-footnotes-width: 20rem;

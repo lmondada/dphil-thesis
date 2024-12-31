@@ -1,5 +1,5 @@
 baseURL = 'https://example.org/'
-languageCode = 'en-us'
+languageCode = 'en-gb'
 title = 'DPhil Thesis'
 theme = "hugo-book"
 
