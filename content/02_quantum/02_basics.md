@@ -152,14 +152,50 @@ would exist an inverse operation that creates information from nothing!
 The two halves of the no-cloning theorem as we presented it thus state
 the same principle once we consider that every operation must be reversible.
 
+### Universality
+
+Finally, a third distinguishing property of quantum computation is how 
+arbitrarily large computations can be generated from just single qubit gates and
+pairwise interactions between qubits (called entangling operations) @Barenco_1995.
+We call a set of gates that can be used to construct any arbitrary quantum
+computation a **universal gate set**.
+
+This is a boon for hardware design, as manipulating single qubit systems
+is often much easier than controlling physical interactions between multiple
+entities. This decomposition into one and two-qubit gates means that the architecture
+_i)_ does not need to support interactions between $n > 2$ qubits, and
+_ii)_ can be specialised and hand tuned to execute the two-qubit interaction
+of choice as faithfully as possible.
+Having a two-qubit gate as the entangling operation is not the only choice
+either.
+Some architectures such as neutral atoms
+choose instead to replace it with a global entangling operation that
+applies to many qubits simultaneously @Evered2023, resulting in a universal
+gate set that is more convenient to implement experimentally in their system.
+
+Gate set universality can be generalised further to approximate universality,
+which is at the centre of the development of error correcting codes.
+Indeed, it turns out that any quantum computations can be approximated
+to arbitrary precision using only discrete finite sets of one and two-qubit
+gates @Kitaev2002 @Dawson_2006.
+This represents a significant simplification for error correction, as it removes
+the need for continuously parametrised gates and discretises the problem space.
+
 ---
 
-We have just spent a long while discussing reversibility and no-cloning.
+We have just spent a long while discussing universality, reversibility and no-cloning.
 There is reason for it: these laws of physics
 that govern quantum computations and are absent from classical computer science
 turn out to be a great boon for quantum optimisation and compilation in general.
 
-Reversibility is the source of a lot of flexibility when expressing quantum programs.
+As we have just discussed, the existence of a wide variety of universal gate sets
+are degrees of freedom that the compiler can take advantage of. Transpilation
+from one universal gate set to another
+to enable programmers to target different hardware is one of the first and most
+fundamental functions of quantum compilers @Sivarajah2020.
+
+Reversibility is also the source of a lot of flexibility
+when expressing quantum programs.
  Suppose the user wants to execute an operation $A$ but it is more convenient,
 or the hardware is only capable of, executing a different gate $B$.
 Then using the inverse $B^{-1}$ of $B$, it is always possible to rewrite the program as
@@ -297,7 +333,3 @@ us astray.
 The references at the end of this chapter[^email] are a good starting point
 for further reading. 
 [^email]: Or my email!
-
-### Universality
-
-todo.

@@ -41,7 +41,7 @@ quantum result is hardly ever known. We must instead rely on well-designed
 measurement schemes to extract useful information from the partial access 
 we have to the quantum states.
 
-[^tomography]: This is known as _state tomography_. You will need to perform
+[^tomography]: This is known as _state tomography_ @Allahverdyan2004. You will need to perform
 measurements in more than one basis, i.e. different choices of classical
 states to project to.
 

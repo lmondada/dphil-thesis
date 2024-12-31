@@ -93,5 +93,5 @@ correct the inferred errors).
 The QEC literature is vast and can get very technical very quickly, but 
 diving into it promises bountiful rewards.
 The field is one of the most fast evolving areas of research in the field.
-These work-in-progress lecture notes by a corrypheus of the field make
+These work-in-progress lecture notes by a coryphaeus of the field make
 for excellent introductory material.
