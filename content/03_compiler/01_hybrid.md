@@ -173,8 +173,8 @@ to study the decoder performance for this code.
 
 Consider first a "naive" compilation of the decoder---the kind of program that
 we could hope to get from a quantum compiler that "understands" classical
-operations but has not implemented every compiler optimisation under the sun, 
-given that it is chiefly built to reason and optimise quantum operations.
+operations but only implements optimisations directly relevant to quantum
+computations.
 Such a compiler does not currently exist, but the decoder being a C++ program,
 we can approximate what the compiled binary would look like by turning off
 all optimisations from an established classical compiler[^clang].
@@ -189,10 +189,21 @@ this can be contrasted with the program output by the same compiler,  but
 with optimisations activated: the average runtime is reduced by a factor close
 to 10x to $0.078\pm0.004\,ms$---still a factor 100x away from the required
 performance on superconductors, but huge gains nonetheless!
+The details of the experiment with all build flags, the hardware used and
+how to reproduce the results are available
+[here](https://github.com/lmondada/dphil-thesis/tree/main/scripts-datagen).
 
-There is no hope to obtain these types of speedups without an extreme in-depth
-understanding 
+There is no hope to obtain these types of speedups without an in-depth
+understanding of classical hardware and battle tested implementations for every
+optimisation pass under the sun---in short, the full thrust of a modern state of
+the art compiler such as `clang` or `gcc`.
 
-## Syndrome extraction: an expensive operation
+These observations will hopefully leave the reader convinced that in order
+to compile and realise the kind of hybrid quantum classical programs that
+we expect will become the norm in the field, quantum compilers will
+need to embrace and encompass the full breadth and depth of classical compilers.
+This leaves us with no choice but to fully transform and integrate the existing
+quantum tooling and quantum optimisation research into the established compilers
+ecosystem.
+What this means exactly is the subject of the rest of this chapter. 
 
-Benchmark classical code, with and without optimisations enabled. -> Motivate the need for classical compiler optimisations.
