@@ -91,4 +91,5 @@ along with all the infrastructure compilers typically require:
 IR transformation tooling, translation into hardware-specific
 assembly, efficient serialisations, in-memory formats etc.
 
+
 The idea of adopting LLVM for quantum was championed by QIR @qir
