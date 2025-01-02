@@ -70,7 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const ref = footnoteToRef.get(li.id);
                     if (ref) {
                         // Find the first <p> ancestor of the footnote reference
-                        let refParagraph = ref.closest('p');
+                        if (!ref.closest('p')) {
+                            console.log(ref);
+                        }
+                        let refParagraph = ref.closest('p') || ref;
                         let offset = computeOffsetForAlignment(li, refParagraph);
                         if (lastOffset !== null) {
                             offset = Math.max(offset, lastOffset);

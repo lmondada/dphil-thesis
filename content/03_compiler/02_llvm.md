@@ -1,6 +1,5 @@
 +++
 title = "Programming languages and Internal Representations"
-template = "section.html"
 weight = 2
 +++
 
@@ -100,19 +99,3 @@ proposed in @Hugr, with additional soundness guarantees based among others
 on the no-cloning principle of quantum information.
 In parallel, projects with similar aims have also emerged @McCaskey2021 @Ittah_2022
 that make use of the full MLIR and LLVM toolchain.
-
-### Quantum Toy IR
-
-Describing the specifics of any one quantum programming language or compiler IR
-is beyond our scope and would force us to restrict our considerations
-to a narrow subset of the options that are still being actively explored and
-developed.
-For the purposes of this thesis, it is sufficient to introduce a simplified "toy"
-IR. 
-It captures all the expressiveness that we require for hybrid programs whilst
-remaining sufficiently abstract [^underspec] to be applicable to a variety
-of IRs and, by extension, programming languages.
-
-We will 
-
-[^underspec]: A critic would say "under-specified".
