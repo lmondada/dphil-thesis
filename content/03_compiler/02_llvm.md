@@ -91,5 +91,28 @@ along with all the infrastructure compilers typically require:
 IR transformation tooling, translation into hardware-specific
 assembly, efficient serialisations, in-memory formats etc.
 
+The idea of adopting LLVM for quantum was championed by QIR @qir, a standard 
+introducing quantum primitives into the LLVM IR. 
+This was subsequently adopted by many quantum hardware providers for its
+superior expressive power compared to circuit-based formats @qirall.
+Building on top of QIR, an IR specifically for quantum-classical programs was
+proposed in @Hugr, with additional soundness guarantees based among others
+on the no-cloning principle of quantum information.
+In parallel, projects with similar aims have also emerged @McCaskey2021 @Ittah_2022
+that make use of the full MLIR and LLVM toolchain.
 
-The idea of adopting LLVM for quantum was championed by QIR @qir
+### Quantum Toy IR
+
+Describing the specifics of any one quantum programming language or compiler IR
+is beyond our scope and would force us to restrict our considerations
+to a narrow subset of the options that are still being actively explored and
+developed.
+For the purposes of this thesis, it is sufficient to introduce a simplified "toy"
+IR. 
+It captures all the expressiveness that we require for hybrid programs whilst
+remaining sufficiently abstract [^underspec] to be applicable to a variety
+of IRs and, by extension, programming languages.
+
+We will 
+
+[^underspec]: A critic would say "under-specified".

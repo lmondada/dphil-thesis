@@ -1,7 +1,7 @@
 +++
 title = "Equality Saturation: A Promising Solution?"
-template = "section.html"
-weight = 4
+template = "section"
+weight = 5
 +++
 
 ## Term rewriting with equality saturation is the most promising technique

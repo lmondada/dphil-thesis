@@ -1,7 +1,7 @@
 +++
 title = "Limitation of Existing Techniques"
-template = "section.html"
-weight = 3
+template = "section"
+weight = 4
 +++
 
 Possibly split into
