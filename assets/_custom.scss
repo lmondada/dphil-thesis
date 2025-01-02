@@ -47,13 +47,22 @@ $floating-footnotes-width: 20rem;
 
 ////// CITATIONS //////
 .citation-key {
-    &:before {
+    &.citation-single:before {
         content: '[';
     }
-    &:after {
+    &.citation-single:after {
         content: ']';
     }
     cursor: pointer;
+    &.citation-left:before {
+        content: '[';
+    }
+    &.citation-right:after {
+        content: ']';
+    }
+    &.citation-middle:before {
+        content: ', ';
+    }
 }
 
 .citation-key:hover {
@@ -62,6 +71,9 @@ $floating-footnotes-width: 20rem;
 
 .citation-key {
     color: rgb(132, 64, 241);
+    a {
+        color: inherit;
+    }
 }
 
 .citation {
