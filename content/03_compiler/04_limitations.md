@@ -1,11 +1,21 @@
 +++
-title = "Limitation of Existing Techniques"
+title = "Review of quantum compiler optimisations"
 template = "section"
 weight = 4
 +++
 
-Possibly split into
+### The best: unitary synthesis
 
-## Classical Optimisation
 
-## Quantum Optimisation
+### The search for scalable representations
+
+#### Phase Polynomials and Pauli Gadgets
+
+#### Clifford synthesis
+
+#### Reversible circuit synthesis
+
+#### Diagrammatic representations
+
+
+### Resorting to peephole optimisations

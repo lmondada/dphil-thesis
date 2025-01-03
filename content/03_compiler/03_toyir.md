@@ -386,7 +386,7 @@ In this sense, our toy IR serves as the minimum denominator across IRs and
 compiler technologies, so that proposals and contributions we are about to make
 can be applied regardless of the underlying technical details.
 
-But begfore we proceed to doing that, a burning question must be addressed:
+But before we proceed to doing that, a burning question must be addressed:
 how will all the advanced quantum compiler optimisations developed so far with
 mostly a circuit model in mind transfer to IR-based representations?
 To answer this, let us spend the rest of this chapter surveying some of

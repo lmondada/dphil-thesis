@@ -76,6 +76,13 @@ algorithms @Corcoles2021, two of the most fundamental computation primitives
 for quantum algorithms.
 
 TODO: refs in the Younis paper for hybrid @Niu2024.
+hybrid, aka "dynamic circuits", "adaptive circuits", "circuits with measurements
+and feedforward", or circuits assisted by
+local operations and classical communication (LOCC).
+
+> "dynamic quantum circuits
+> are a crucial milestone on the roadmap to fault-tolerant
+> quantum computers" (Faisal 2024)
 
 Repeat until success schemes on the other hand
 are very common in state preparation routines and will play a key role in fault
