@@ -46,38 +46,42 @@ $floating-footnotes-width: 20rem;
 }
 
 ////// CITATIONS //////
+.citation {
+    position: relative;
+}
+
+.citation-key, .citation-number {
+    cursor: pointer;
+    color: rgb(132, 64, 241);
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    a {
+        color: inherit;
+    }
+}
+
 .citation-key {
-    &.citation-single:before {
+    &:before {
         content: '[';
     }
-    &.citation-single:after {
+    &:after {
         content: ']';
     }
-    cursor: pointer;
+}
+
+.citation-number {
     &.citation-left:before {
         content: '[';
     }
     &.citation-right:after {
         content: ']';
     }
-    &.citation-middle:before {
-        content: ', ';
+    &.citation-middle:after {
+        content: ',';
     }
-}
-
-.citation-key:hover {
-    text-decoration: underline;
-}
-
-.citation-key {
-    color: rgb(132, 64, 241);
-    a {
-        color: inherit;
-    }
-}
-
-.citation {
-    position: relative;
 }
 
 .citation-full {
@@ -95,8 +99,8 @@ $floating-footnotes-width: 20rem;
         right: 0rem;
     }
 
-
-    .citation-key:hover + & {
+    .citation-key:hover + &,
+    .citation-number:hover + & {
         display: block;
     }
 }
