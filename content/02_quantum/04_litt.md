@@ -53,7 +53,8 @@ advent of programmable, albeit small and noisy, quantum computers.
 [^mainstr]: Or at least, as mainstream as can be within such a niche field.
 
 A more recent development for quantum compilers is the focus on scalability
-and first class support for hybrid quantum-classical computations.
+and first class support for hybrid quantum-classical computations, which
+followed improvements in quantum hardware @Corcoles2021 @Graham2023 @Pino2021.
 We have started to see in this chapter that in this new light, quantum
 circuits may not be the ideal representation for quantum computations.
 Moving away from circuits however requires us to rebuild our quantum
@@ -65,9 +66,16 @@ We have covered some examples of applications of hybrid quantum classical
 computations.
 Quantum teleportation (citation?) is certainly one of the oldest instances
 of this.
+A whole host of applications for teleportation.
 Measurement-based quantum computing (MBQC) was introduced in xyz etc.
 More recently, MBQC were shown to be executable in practice and Will also did
 some work on this.
+Hybrid programs have also been shown to be useful for implementing
+the Quantum Fourier Transform (QFT) @Baeumer2024 and the Quantum Phase Estimation (QPE)
+algorithms @Corcoles2021, two of the most fundamental computation primitives
+for quantum algorithms.
+
+TODO: refs in the Younis paper for hybrid @Niu2024.
 
 Repeat until success schemes on the other hand
 are very common in state preparation routines and will play a key role in fault
