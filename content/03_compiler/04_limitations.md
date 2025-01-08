@@ -116,7 +116,9 @@ success might vary depending on the circuit representation,
 the inital parameters and the local optimisation landscape @Wu2020,
 circuits that are resynthesised from unitaries will always be unique.
 
-Using results from linear algebra, one can find general unitary decomposition schemes that will break down
+Early work explored general unitary decompositions obtained analytically 
+from linear algebra.
+By tailoring these decompositions
 arbitrary unitaries into product of unitaries expressible as one and two-qubit
 gates in the quantum circuit model @Iten2019.
 Approaches using the Cosine-Sine decomposition @Mottonen2004, the Quantum Shanon decomposition @Krol2021
