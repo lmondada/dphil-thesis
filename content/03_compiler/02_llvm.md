@@ -84,6 +84,7 @@ that are emitted differ between hardare targets,
 much of the compiler middleware can be broadly shared between use
 cases.
 
+
 This gave rise to the LLVM @Lattner2004, and more recently,
 the MLIR @Lattner_2021 projects, which provide common compiler IRs,
 along with all the infrastructure compilers typically require:

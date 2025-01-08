@@ -1,5 +1,5 @@
 +++
-title = "A Quantum-Classical Toy IR"
+title = "A minimimal Quantum-Classical IR"
 weight = 3
 +++
 
@@ -8,13 +8,13 @@ is beyond our scope and would force us to restrict our considerations
 to a narrow subset of the options that are still being actively explored and
 developed.
 For the purposes of this thesis, it is sufficient to introduce a simplified "toy"
-IR. 
+IR that we will call `minIR`. 
 It captures all the expressiveness that we require for hybrid programs whilst
 remaining sufficiently abstract [^underspec] to be applicable to a variety
 of IRs and, by extension, programming languages.
 [^underspec]: A critic would say "under-specified".
 
-Our toy IR is built from statements of the form
+MinIR is built from statements of the form
 ```
 x, y, ... := op<T1, T2, ...>(a, b, c, ...)
 ```
@@ -55,7 +55,7 @@ the following computation:
            '----'   '---'
 ```
 <--->
-**Toy IR (SSA)**<br/>
+**minIR (SSA)**<br/>
 _in_ : `q0_0`, `q1_0`
 _out_ : `q0_2`, `q1_2`
 ```
@@ -87,7 +87,7 @@ All that matters is to connect each use of a value (i.e. occurrence as an input
 on the right hand side of an IR statement) with its _unique_ definition on
 the left hand side of another statement.
 
-In our toy IR, a program is thus defined by a set of statements, with no explicit
+In minIR, a program is thus defined by a set of statements, with no explicit
 ordering defined between them.
 The program is well-defined if
 
@@ -356,7 +356,7 @@ the last evaluation of the block.
 {{% /columns %}}
 This approach can be extended to support virtually any control flow primitives,
 as required by the available programming language abstractions.
-For the purposes of our toy IR, we will contend ourselves with the three constructs
+For the purposes of minIR, we will contend ourselves with the three constructs
 just introduced.
 
 ---
@@ -381,7 +381,7 @@ hardware, higher dimensional qudits, continuous variable quantum data, etc.
 
 These new possibilities bring with them a host of new challenges. The main focus
 of the rest of this thesis is to build a new platform form quantum compiler 
-optimisations on top of our toy IR.
+optimisations on top of minIR.
 In this sense, our toy IR serves as the minimum denominator across IRs and
 compiler technologies, so that proposals and contributions we are about to make
 can be applied regardless of the underlying technical details.

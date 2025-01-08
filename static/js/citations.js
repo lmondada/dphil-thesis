@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Second pass: replace citation keys with numbered links
-    // First pass: Replace citation keys with numbered links
     citations.forEach(citation => {
         const keyElement = citation.querySelector('.citation-key');
         if (keyElement) {
@@ -72,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Group citations and apply CSS classes
-    console.log(citations);
     const citationGroups = Array.from(citations).reduce((groups, citation, index, array) => {
         if (index === 0 || !hasOnlyWhitespaceBetween(array[index - 1], citation)) {
             groups.push([citation]);
@@ -81,8 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return groups;
     }, []);
-
-    console.log(citationGroups);
 
     citationGroups.forEach(group => {
         group.forEach((citation, index) => {
