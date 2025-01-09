@@ -96,7 +96,7 @@ the observations and properties that we have described so far.
 We are now entering the (short) section of the thesis where we discuss some
 ideas from quantum information theory---so depending on your disposition, 
 either indulge yourself, or bear with me for a moment.
-The no-cloning principle provides a formal foundation for the vague statement
+The no-cloning principle @Wootters1982 provides a formal foundation for the vague statement
 _"qubits live forever"_ that we made earlier.
 It is a fundamental tenant of quantum information,
 deserving of a more rigorous treatment that we are giving it here.

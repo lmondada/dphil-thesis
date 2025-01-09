@@ -110,11 +110,12 @@ any two equivalent computations will be mapped to the same matrix.
 which can be expressed as a new, equivalent quantum circuit.
 
 The uniqueness of the unitary matrix representation
-makes it invaluable as a resource for computation optimisation:
-unlike most heuristic optimisation approaches whose
-success might vary depending on the circuit representation,
-the inital parameters and the local optimisation landscape @Wu2020,
-circuits that are resynthesised from unitaries will always be unique.
+makes it invaluable as a resource for computation optimisation.
+Not only does it reduce any potentially large collection of equivalent
+inputs to a single form;
+it also---crucially---provides a sound metric on the space of all circuits
+that can be used to measure the distance between synthesised
+circuits and direct the search towards the optimal solution.
 
 Early work explored general unitary decomposition schemes obtained analytically 
 from linear algebra.
@@ -132,20 +133,24 @@ making most such schemes impractical beyond three qubits.
 Unitary matrix decomposition can also be combined with tools from classical 
 circuit design:
 in @Loke2014, Loke et al. proposed an approach merging
-reversible circuit, a classical compilation problem, with unitary
-matrix synthesis .
+reversible circuit (see below), a classical compilation problem,
+with unitary matrix synthesis.
 They show that searching for decompositions $U = PU'Q$, where $P$ and $Q$ are
 classical reversible circuits can yield shorter circuits when
 using the Cosine-Sine decomposition for the unitaries $U$ and $U'$.
 
 To address the shortcomings of analytical decompositions,
 search-based approaches have been developed.
-Search-based circuit synthesis explores the space of all possible quantum 
-circuits and finds the one that implements the desired unitary whilst
+Unlike the algebraic approaches, 
+in search-based circuit synthesis the circuit decomposition problem is viewed
+as an
+optimisation problem. The space of all possible quantum 
+circuits is explored to find the one that implements the desired unitary whilst
 minimising the cost function.
 The major challenge of such methods is the gigantic (typically super-exponential)
 size of the search space of all possible programs:
-most work in this space struggle to scale beyond a handful of qubits.
+without mitigation, most work in this space struggle to scale
+beyond a handful of qubits.
 
 Up to 3 qubits, T-depth optimal circuits can be found
 using exhaustive brute force search first proposed in @Amy2013 and improved
@@ -170,25 +175,174 @@ performance that the boundaries of the partitioned circuits introduce,
 the combination of circuit partitioning with the techniques listed above
 yields some of the best performing circuit optimisation techniques developed to date @bqskit.
 
+However, a fundamental flaw of all unitary synthesis schemes is the
+$4^n$-scaling in the number of qubits $n$ of the unitary
+representation itself. This
+means that no matrix-based synthesis method, however efficient, will ever be
+able to handle computations with much more than a dozen qubits.
+Circuit partitioning schemes do not solve this problem as much as they avoid
+it, by considering only a subset of the computation---at the cost of inferior
+performance.
+
+Closer to the concerns of this thesis, the unitary representation is also
+a poor candidate to express hybrid computations.
+In an exciting recent development, first studies of synthesis
+schemes in the presence of mid-circuit measurements have been performed
+that generalise search-based circuit synthesis to reason about measurements
+and conditional gates @Alam2024 @Niu2024.
+They present promising results, with significant reductions in circuit
+depth for state preparation and circuit synthesis.
+However, the expressiveness of the programs considered in these recent advances
+remains limited to circuit-based representations.
+It is unclear if and how these techniques could be extended to synthesise
+more complex hybrid programs, such as repeat-until-success schemes, let alone
+the kind of arbitrary hybrid programs expressible in `minIR`.
+
+{{% hint danger %}}
 See @Ge2024 for a recent review of work in this space. IS THIS ANY GOOD? Should I just read it?
-
-
-
------- Take over here 
-However, unitary decomposition (as well as unitary computation itself) is challenging and scales very poorly.
-Finding any decomposition has exponential cost in the average case and finding efficient decompositions
-is even harder.
+{{% /hint %}}
 
 
 ### The search for scalable representations
 
+Our study of unitary synthesis introduced us to a convenient two-step approach
+to quantum computation optimisation. The input computation
+(circuits, for the most part) is first transformed into a "global" 
+representation that captures the computation as a whole, abstracting away
+the precise sequences of gates that composed the original circuit.
+This representation is then the input for the second half of the problem, which
+produces a circuit of the desired shape, equivalent to the original input but
+with reduced cost.
+
+In addition to simplifying the original problem, such global intermediate
+representations are also well positioned to leverage the quantum-specific
+structure and symmetries in the computation.
+They can thus enable more advanced optimisations
+and are robust to varying circuit representation and local optimisation landscape.
+
+The unitary matrix is the most common representation of quantum computations,
+but as we have seen it suffers from severe scaling problems in the number of
+qubits.
+The problem is not so much that arbitrary quantum computations require
+exponential space to be described---the space of all $n$-qubit unitaries
+$SU(2^n)$ is after all exponentially large.
+Rather, the issue is that the set of unitaries implementable in practice
+will be restricted to quantum computations
+with a polynomial number of gates;
+these only form a tiny subset of $SU(2^n)$[^su2n].
+[^su2n]: Polynomial sized quantum circuits constitute a polynomial-dimensional submanifold of the exponential-dimensional $SU(2^n)$ Lie group. They are hence
+a measure zero subset of $SU(2^n)$ with respect to the Haar measure.
+
+Another fruitful avenue of work for quantum optimisation has thus been
+the development of alternative representations for quantum computations that
+can encode polynomially sized quantum programs efficiently 
+whilst enabling novel optimisations.
+
 #### Phase Polynomials and Pauli Gadgets
+
+A particularly convenient global representation of many quantum computations
+is as products of Pauli exponentials, also known as Pauli "Gadgets" @Cowtan2019.
+These unitaries are of the form
+$$U = \prod_{s \in P} exp(i \alpha_s \cdot s)$$
+where $\alpha_s \in \mathbb [0, 2\pi)$ are real coefficients and
+$s \in \{I, X, Y, Z\}^n$ are strings of length $n$ of the four Pauli
+matrices---so called Pauli strings.
+In this formulation, $n$ fixes the number of qubits of the computation.
+
+These exponentials are always valid $n$-qubit unitaries and can
+express entangling operations across any number of
+qubits: the qubits on which an operation $exp(i \alpha \cdot s)$ acts 
+non-trivially are given by the indices of the characters in $s$ that are
+not the identity $I$. For instance, the exponential
+$$exp(i \frac\pi2 XIZ)$$
+is a valid quantum computation on 3 qubits, entangling the first and third
+qubits.
+Beyond useful abstractions for optimisation, such entangling operations
+appear naturally when simulating quantum systems, for example in quantum
+chemistry @McClean2016.
+
+The use of these primitives for quantum compilation was first explored
+in @Cowtan2019, and further generalised in @Cowtan2020.
+Starting from an (unordered) sequence of Pauli gadgets, the gadgets
+are clustered into sets of mutually commuting gadgets. 
+These can then be jointly synthesised into a circuit, markedly reducing
+the number of entangling operations as compared to naively implementing
+one exponential at a time.
+
+Further improvements to this work have since been presented in @Huang2024
+and @Schmitz2024, where new heuristics are
+introduced to choose the Pauli gadget ordering. In @Huang2024,
+the hardware-specific connectivity constraints between qubits is also taken
+into account to produce programs that can be executed on the targetted
+architecture without overhead.
+
+A close relative of Pauli gadgets---a strict smaller subset of it, to
+be precise---are the so-called phase polynomials @Amy2018,
+obtained when restricting
+the Pauli strings $s \in \{I, Z\}^n$ to combinations of Z Pauli matrices and
+identities.
+These are particularly amenable to optimisation as in this case, all
+exponential terms commute. This gives the compiler a lot of freedom during
+circuit synthesis.
+
+The action of phase polynomials on quantum states is actually quite easy
+to understand. Instead of the exponentials of $I$ and $Z$-based Pauli string,
+the computation can equivalently be given by its action on the basis states
+$$\ket{b_1 \cdots b_n} \mapsto \underbrace{\exp(i \cdot \sum_{s \in P} a_s \cdot (s_1 b_1 \oplus \cdots \oplus s_n b_n))}_{\in\,\mathbb{R}} \ket{b_1 \cdots b_n}$$
+where $b_1 \cdots b_n$ is a bitstring of booleans $b_i \in \{0, 1\}$,
+$s_i \in \{0, 1\}$ is also a boolean with value `1`
+if and only if the $i$-th character in $s$ is
+$Z$, and $\oplus$ denotes the boolean XOR operation.
+
+The exponential expression is just a real number---indeed each term in the
+sum simply evaluates to either $a_i$ or $0$.
+A phase polynomial is thus a diagonal unitary matrix: it maps
+every basis state $\ket {b_1 \cdots b_n}$ to itself, multiplied by 
+some phase $e^{i \theta}$.
+
+Polynomially-sized circuits that implement diagonal matrices
+correspond to phase polynomials with $k = \mathcal{O}(n^p) \ll 2^n$,
+i.e. they can represent quantum computations efficiently and scale well
+with the number of qubits---thus allowing
+efficient algorithms that scale polynomially in the number of qubits $n$.
+
+The Graysynth algorithm, as presented in @Amy2018, has become _the_ reference
+synthesis method for phase polynomials.
+The key observation that the authors made was that all terms of the sum within
+the exponential can be cycled through and obtained following the binary
+Gray codes @Gray1953.
+The Hamming distance of one that separates successive bitstrings in the code
+translate into a single two-qubit CX gate in Graysynth.
+
+This approach was adapted to work with hardware connectivity constraints @Degriend2020 and @Vandaele2022.
+An up-to-date study of performance of phase polynomial-based compiler
+ optimisations and comparisons with other approaches is performed in @Griend2025.
+
+The study of phase polynomials can also be generalised to arbitrary
+diagonal operators.
+An asymptotically tight bound of the resource requirements
+for arbitrary diagonal operator implementations
+was recently given in @Sun_2023.
+The authors propose using a smart meshing of different Gray codes in parallel,
+as well as,
+where available, additional qubits as ancilla registers to further parallelise
+computations and minimise circuit depth.
+The resulting general purpose decomposition of arbitrary
+diagonal operators yields circuits of depth $\mathcal O(\frac{2^n}{n})$
+and size $\mathcal O(\frac{n^2}{\log n}) + 2^{n+3}$, as well as
+improved bounds in the presence of $m \geq 2n$ ancilla qubits.
 
 #### Clifford synthesis
 
 #### Reversible circuit synthesis
 
 #### Diagrammatic representations
+
+
+In summary, phase polynomials and Pauli gadgets offer a good balance between
+non-local optimisations that such global representations of quantum computation
+ enable and efficient synthesis perforance.
+However, they are just as vulnerable to hybrid computation 
 
 
 ### Resorting to peephole optimisations
