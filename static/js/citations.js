@@ -121,4 +121,22 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('Main article element not found');
     }
+
+    // Shorten the inline citation-full elements
+    const inlineCitations = document.querySelectorAll('.citation-full');
+    inlineCitations.forEach(citation => {
+        const authorsSpan = citation.querySelector('.authors');
+        if (authorsSpan) {
+            const authors = authorsSpan.textContent.split(',').map(author => author.trim());
+            if (authors.length > 5) {
+                authorsSpan.textContent = authors.slice(0, 5).join(', ') + ', et al.';
+            }
+        }
+
+        const doiSpan = citation.querySelector('.doi');
+        if (doiSpan) {
+            const br = document.createElement('br');
+            doiSpan.parentNode.insertBefore(br, doiSpan);
+        }
+    });
 });

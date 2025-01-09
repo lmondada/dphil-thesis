@@ -116,44 +116,69 @@ success might vary depending on the circuit representation,
 the inital parameters and the local optimisation landscape @Wu2020,
 circuits that are resynthesised from unitaries will always be unique.
 
-Early work explored general unitary decompositions obtained analytically 
+Early work explored general unitary decomposition schemes obtained analytically 
 from linear algebra.
-By tailoring these decompositions
-arbitrary unitaries into product of unitaries expressible as one and two-qubit
-gates in the quantum circuit model @Iten2019.
+These express arbitrary unitaries as a a product of unitaries that typically
+correspond to one and two-qubit
+gates in the quantum circuit model @Iten2016 @Iten2019.
 Approaches using the Cosine-Sine decomposition @Mottonen2004, the Quantum Shanon decomposition @Krol2021
 and the QR decomposition @Sedlak2008 have been proposed.
-While asymptotically efficient for almost all unitaries, such strategies typically generate fixed-sized circuits
+While some schemes have been shown to be asymptotically efficient for almost
+all unitaries @Item2016, such strategies typically generate fixed-sized circuits
 and fail to synthesise short circuits when such circuits exist.
-This makes this approach inadequate for circuit resynthesis optimisation use cases, as well as for circuits beyond three qubits.
+The size of synthesised circuits grows exponentially with the number of qubits,
+making most such schemes impractical beyond three qubits.
 
-To find optimal or near-optimal circuits, search-based approaches have been developed.
-Exhaustive brute force search in circuit space has been performed in @Amy2013,
-finding T-depth optimal circuits for up to 3 qubits.
-More recently, more elaborate search-based approaches with pruning heuristics such as the A*
-algorithm have been successfully applied to this problem @Smith2023 @Davis2020 @Gheorghiu2022.
-
-An alternative approach in @Madden2022 is to fix a circuit template and
-optimise continuous parameters to approximate the target unitary.
-This makes it possible to synthesise circuits with device constraints in mind and to trade off
-decomposition accuracy for shallower circuit depth and lower noise.
-Using regularisers, this approach can also optimise for sparse results that reduce gate
-count, especially when followed up by local optimisations.
-
-Loke et al. have also proposed an approach merging reversible circuit and unitary
-matrix synthesis in @Loke2014.
+Unitary matrix decomposition can also be combined with tools from classical 
+circuit design:
+in @Loke2014, Loke et al. proposed an approach merging
+reversible circuit, a classical compilation problem, with unitary
+matrix synthesis .
 They show that searching for decompositions $U = PU'Q$, where $P$ and $Q$ are
-reversible circuits can yield shorter circuits when using the Cosine-Sine decomposition for the unitaries $U$ and $U'$.
+classical reversible circuits can yield shorter circuits when
+using the Cosine-Sine decomposition for the unitaries $U$ and $U'$.
 
+To address the shortcomings of analytical decompositions,
+search-based approaches have been developed.
+Search-based circuit synthesis explores the space of all possible quantum 
+circuits and finds the one that implements the desired unitary whilst
+minimising the cost function.
+The major challenge of such methods is the gigantic (typically super-exponential)
+size of the search space of all possible programs:
+most work in this space struggle to scale beyond a handful of qubits.
+
+Up to 3 qubits, T-depth optimal circuits can be found
+using exhaustive brute force search first proposed in @Amy2013 and improved
+in @Gheorghiu2022.
+To scale to 4 qubits and handle gate sets with continuous parameters, required
+for non-fault tolerant circuits, an A* search with smart pruning heuristics
+was proposed in @Davis2020.
+Outputs of this approach are no longer provably optimal but the results match
+optimal decompositions in all known instances.
+This line of work has subsequently be further refined with heuristics
+based on pre-defined circuit templates @Smith2023 @Madden2022,
+parameter instantiation @Younis2022 @qfast @Rakyta_2022, 
+machine learning @Weiden2023 and tensor networks @qfactor.
+
+Some of these heuristics also make it possible to synthesise circuits
+with device constraints in mind and to trade off
+decomposition accuracy for shallower circuit depth and lower noise.
+In @Wu2020 @qfactor, the authors have also explored partitioning the circuit into smaller
+parts that are optimised independently to scale these techniques to large
+circuit sizes. Despite the reduced optimisation
+performance that the boundaries of the partitioned circuits introduce,
+the combination of circuit partitioning with the techniques listed above
+yields some of the best performing circuit optimisation techniques developed to date @bqskit.
+
+See @Ge2024 for a recent review of work in this space. IS THIS ANY GOOD? Should I just read it?
+
+
+
+------ Take over here 
 However, unitary decomposition (as well as unitary computation itself) is challenging and scales very poorly.
 Finding any decomposition has exponential cost in the average case and finding efficient decompositions
 is even harder.
 
-Such optimised unitary synthesis approaches yield efficient circuits but scale poorly
-beyond a handful of qubits.
-They can still be used on larger problems, however, by partitioning large circuits
-into smaller local subcircuits that can be resynthesised individually, yielding
-some of the best scalable circuit optimisation techniques developed to date @Wu2020.
 
 ### The search for scalable representations
 
