@@ -130,7 +130,7 @@ is a topic we will return to in the next sections.
 Cross-compilation presents significant challenges.
 As quantum programs grow in size and complexity, debugging and verifying
 their correctness without access to the target hardware becomes
-increasingly difficult.
+increasingly difficult @Rovara2024.
 Pursuing this would lead us into the domain of quantum simulation, a
 vibrant research area that has been and will continue to be the
 subject of theses in its own right.

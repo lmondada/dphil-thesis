@@ -155,6 +155,9 @@ beyond a handful of qubits.
 Up to 3 qubits, T-depth optimal circuits can be found
 using exhaustive brute force search first proposed in @Amy2013 and improved
 in @Gheorghiu2022.
+Aymptotic bounds on the number of T gates required for general unitary
+synthesis was recently given in @Gosset2024.
+
 To scale to 4 qubits and handle gate sets with continuous parameters, required
 for non-fault tolerant circuits, an A* search with smart pruning heuristics
 was proposed in @Davis2020.
@@ -314,14 +317,15 @@ Gray codes @Gray1953.
 The Hamming distance of one that separates successive bitstrings in the code
 translate into a single two-qubit CX gate in Graysynth.
 
-This approach was adapted to work with hardware connectivity constraints @Degriend2020 and @Vandaele2022.
+This approach was adapted to work with hardware connectivity constraints
+in @Degriend2020, @Gogioso2022 and @Vandaele2022.
 An up-to-date study of performance of phase polynomial-based compiler
- optimisations and comparisons with other approaches is performed in @Griend2025.
+ optimisations and comparisons with standard approaches is performed in @Griend2025.
 
 The study of phase polynomials can also be generalised to arbitrary
 diagonal operators.
-An asymptotically tight bound of the resource requirements
-for arbitrary diagonal operator implementations
+Tight asymptotic bounds on the resource requirements
+for arbitrary diagonal operator synthesis, along with their implementation,
 was recently given in @Sun_2023.
 The authors propose using a smart meshing of different Gray codes in parallel,
 as well as,
@@ -333,10 +337,132 @@ and size $\mathcal O(\frac{n^2}{\log n}) + 2^{n+3}$, as well as
 improved bounds in the presence of $m \geq 2n$ ancilla qubits.
 
 #### Clifford synthesis
+The group of all $n$-qubit unitaries $SU(2^n)$ contains a subgroup that has
+become an object of study across
+many domains of quantum computing science: the Clifford group.
+We have already mentioned that it is at the centre of quantum error correction
+theory @Bravyi2005;
+it is also a cornerstone of measurement-based quantum computing @Raussendorf_2001
+and graph states @Hein2004, as well as one of the most promising approaches
+for fast quantum simulations @Gottesman1999 @Bravyi_2019 @Kissinger_2022.
 
-#### Reversible circuit synthesis
+It has also given rise to a quantum program representation that has been used
+profusely for compiler optimistaion.
+Indeed, the Clifford fragment, i.e. the quantum circuits with unitaries
+in the Clifford group,
+admit an efficient, $\Theta(2n^2)$-sized representation,
+known as a **Clifford tableau** @Aaronson_2004.
+
+In @Aaronson_2004 the first Clifford circuit synthesis procedure is given, using
+an analytical decomposition of clifford tableaus 
+into $O(n^2 /\log n)$ one and two-qubit gates.
+An improved, Bruhat-based decomposition that is optimal in the number
+of Hadamard gates was subsequently proposed in @Maslov2018.
+In the case of a clifford fragment directly followed by measurements, 
+the procedure can be further refined to replace gates with classical
+computation on the measurement outcomes @Bravyi_2021.
+Finally, an alternative normal form that is well-suited to hardware with
+limited nearest neighbours connectivity was also derived using a diagrammatic
+approach @Duncan2020.
+
+Just as in unitary synthesis, circuit decompositions more efficient than the
+general analytical expressions can be obtained
+on a case-by-case basis using search and optimisation.
+The pendant to the provably optimal decompositions of unitaries obtained through
+brute force search @Amy2013 also exists for Clifford circuits @Kliuchnikov2013.
+Due to the more efficient representation and smaller search space, all optimal
+Clifford circuits could be found up to 6 qubits.
+Using modern SAT solvers, optimal clifford synthesis has recently been pushed
+much further, with known optimal circuits beyond 20 qubits @Peham2023 @Schneider2023.
+
+Heuristic optimisation approaches have also been shown to be effective on 
+Clifford optimisation @Bravyi_2021 @Fagan2018 and scale to larger systems.
+For Clifford computations on devices with restricted connectivity, an
+architecture-aware synthesis method was proposed in @Winderl2024.
 
 #### Diagrammatic representations
+Quantum computer science and quantum mechanics in general
+have a rich history in diagrammatic
+representations @Feynman1949 @Coecke2017 @Backens2019.
+These have allowed to picture complex physical processes as intuitive operations
+in a graphical language and have---as a nice side-effect---led to a plethoral of
+state of the art quantum circuit optimisation techniques!
+
+A diagrammatic representation of a quantum computation is obtained
+by lifting the gates 
+that form a quantum circuit into the nodes of a more abstract graph-based 
+graphical calculus.
+The most commonly used flavour of calculus used for circuit optimisation
+is the ZX calculus @Coecke2008 @Coecke2012 @vandewetering2020.
+
+By breaking up multi-qubit gates into several non-unitary tensors, the ZX
+calculus and related variants @Roy2011 @Backens2019 @Felice2023
+lay bare some of the
+symmetry and structure of quantum physics in the form of simple and intuitive
+ graphical rules.
+This has enabled the discovery of many quantum optimisation
+techniques (e.g @Duncan2019 @Wetering2024),
+some of which we have already reviewed
+@Huang2024 @Gogioso2022 @Degriend2020 @Cowtan2019 @Cowtan2020.
+This selection of papers is not _quite_ exhaustive---there are currently
+over 300 hundred papers on the topic as indexed by
+[zxcalculus.com](https://zxcalculus.com/).
+
+Aside from being a invaluable tool for research and compiler pass design,
+a major contribution of these diagrammatic representations
+is the introduction of graph rewriting systems to quantum computing.
+
+
+
+#### Reversible classical circuits
+There are many more representations, that have either been taken over from
+classical compiler optimsations or were developed for specific purposes.
+The last we will mention is reversible circuits synthesis, a
+fully classical circuit design problem
+which can draw from results of decades of research.
+From a quantum perspective, reversible classical circuits correspond
+to unitaries (and more generally,
+isometries) that send basis states to basis states---and thus do not
+introduce any entanglement @Shende2002.
+We highlight a selection of the more recent work in the field and
+refer the reader to the
+much more complete, albeit ageing, survey of @Saeedi2013.
+
+Up to 4 (qu)bits, all reversible circuits and their optimal synthesis can
+be generated by brute force @Li2014.
+Viewing reversible circuits as a permutation of all $2^n$ bitstrings, 
+Susam et al. pre-compute optimal circuits only
+for swaps of two bitstrings (transpositions).
+These can then be used as part of a standard selection sort to synthesise arbitrary permutations.
+The number of such permutations scales much more favourably compared to
+arbitrary permutation, allowing for fast circuit synthesis up to 20+ (qu)bits
+in a fraction of a second, with good performance.
+
+Truth-table or matrix representations of reversible circuits suffer from the
+same exponential scaling as unitaries.
+To address these, other representations that have been used include
+exclusive sums of product terms (ESOP) @Fazel2007 @Bandyopadhyay2014, 
+positive polarity Reed-Müller codes (PPRM) @Jegier2017 and
+decision diagrams @Stojkovic2019 @Wille2010 @Pang2011.
+
+The quantum framework is strictly more general than the classical regime
+the problem was originally studied in.
+This affords additional freedom for decomposition schemes, such as decompositions
+of CCX gates on 3 qubits into single and two-qubit gates @Shende2008.
+Various optimised decompositions for sequences of Toffoli gates
+have also been similarly
+developed @Scott2008 @Arabzadeh2010 @Datta2013 @Rahman2014 @Datta2015 @Arpita2015 @Abdessaied2016 @Gado2021.
+Mohammadi and Eshghi introduced 4-valued truth tables to extend classical
+circuit synthesis to include $\sqrt{X}$ (also known as V) gates @Mohammadi2008.
+References @Soeken2012 as well as @Rahman2012 incorporated controlled-V gates
+into template matching strategies and showed significant improvements
+in synthesised gate count .
+Finally, @Maslov2016 proposed decomposing Toffolis only up to relative
+phase, introducing  a lot of freedom in the quantum decompositions
+that are required compared to the traditional
+classical decompositions.
+
+
 
 
 In summary, phase polynomials and Pauli gadgets offer a good balance between
@@ -346,3 +472,9 @@ However, they are just as vulnerable to hybrid computation
 
 
 ### Resorting to peephole optimisations
+
+To scale to larger qubit counts, Bravyi et al. studied Clifford circuit
+optimisations using 
+
+
+peephole @Bravyi_2021
