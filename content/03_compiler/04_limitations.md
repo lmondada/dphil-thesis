@@ -363,7 +363,7 @@ the procedure can be further refined to replace gates with classical
 computation on the measurement outcomes @Bravyi_2021.
 Finally, an alternative normal form that is well-suited to hardware with
 limited nearest neighbours connectivity was also derived using a diagrammatic
-approach @Duncan2020.
+approach @jk.
 
 Just as in unitary synthesis, circuit decompositions more efficient than the
 general analytical expressions can be obtained
@@ -393,26 +393,54 @@ by lifting the gates
 that form a quantum circuit into the nodes of a more abstract graph-based 
 graphical calculus.
 The most commonly used flavour of calculus used for circuit optimisation
-is the ZX calculus @Coecke2008 @Coecke2012 @vandewetering2020.
+is the ZX calculus @Coecke2008 @Coecke2012 @vandewetering2020 @Yeung2024.
 
 By breaking up multi-qubit gates into several non-unitary tensors, the ZX
 calculus and related variants @Roy2011 @Backens2019 @Felice2023
-lay bare some of the
+expose some of the
 symmetry and structure of quantum physics in the form of simple and intuitive
  graphical rules.
 This has enabled the discovery of many quantum optimisation
 techniques (e.g @Duncan2019 @Wetering2024),
 some of which we have already reviewed
 @Huang2024 @Gogioso2022 @Degriend2020 @Cowtan2019 @Cowtan2020.
-This selection of papers is not _quite_ exhaustive---there are currently
+This selection of papers is not _quite_ exhaustive[^arb]---there are currently
 over 300 hundred papers on the topic as indexed by
 [zxcalculus.com](https://zxcalculus.com/).
+[^arb]: and arbitrary
 
-Aside from being a invaluable tool for research and compiler pass design,
+Aside from being an invaluable tool for research and compiler pass design,
 a major contribution of these diagrammatic representations
-is the introduction of graph rewriting systems to quantum computing.
+is the introduction of graph rewriting systems @Ehrig1973 @Rozenberg1997 @Koenig2018
+to quantum computing.
+Rewriting systems were first introduced on strings @Dershowitz1990, then
+generalised to trees and terms @Bezem2003.
 
+From a formal point of view, rewrite systems endow quantum compilation with
+well-defined semantics and strong theoretical foundations @Lack2005.
+Just as importantly (or more so), they establish a practical, purely
+declarative framework in which compiler transformations can be defined, debugged
+and analysed.
+System properties such as completeness, confluence and termination
+of rewriting systems @Verma1995 @Backens2014 @Biamonte2023
+can be analytically studied, proven and then be relied on by compilers
+for soundness and performance guarantees @Duncan2020 @Kissinger2020 @Sivarajah2020 @Borgna2023.
 
+However, there is an apparent tension in the integration of
+diagrammatic calculi into compilers
+between the search for abstract primitives admitting a simple rewriting
+logic  @Heurtel2024 @Booth2024 @Felice2023a @Carette2023
+and the requirement to capture all the expressivity and constraints of
+hardware targets.
+
+An example of this is the ZX circuit extraction problem @Quanz2024 @Backens2021:
+it is in general hard to recover an executable quantum circuit from a ZX
+diagram as the latter are strictly more general and primitives do not map
+one-to-one.
+Similarly, while simple quantum-classical hybrid computations can be expressed
+using extensions of ZX @Borgna2021 @Carette2021 @KoziellPipe2024, it will
+never be possible to capture the full breadth and generality of classical CPU
+instruction sets in a practical and extensible (and algebraically satisfying) way.
 
 #### Reversible classical circuits
 There are many more representations, that have either been taken over from
