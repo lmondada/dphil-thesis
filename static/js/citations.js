@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fullElement = citation.querySelector('.citation-full');
         
         if (keyElement && fullElement) {
-            const citationKey = keyElement.textContent;
+            const citationKey = keyElement.getAttribute('data-bibtex-key');
             if (!citationKeyToId.has(citationKey)) {
                 citationKeyToId.set(citationKey, index);
                 const clonedElement = fullElement.cloneNode(true);
@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
     citations.forEach(citation => {
         const keyElement = citation.querySelector('.citation-key');
         if (keyElement) {
-            const originalId = citationKeyToId.get(keyElement.textContent);
+            const citationKey = keyElement.getAttribute('data-bibtex-key');
+            const originalId = citationKeyToId.get(citationKey);
             const numberedIndex = idToOrderedIndex.get(originalId);
             
             const span = document.createElement('span');
