@@ -1,0 +1,5 @@
+{{- $uri := .Get 0 -}}
+{{- with .Site.GetPage $uri -}}
+  {{- $refname := .Params.refname | default .Title -}}
+  <a href="{{ .RelPermalink }}">{{ $refname }}</a>
+{{- end -}}
