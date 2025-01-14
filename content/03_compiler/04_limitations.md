@@ -571,7 +571,7 @@ This is often refered to in compiler research as the phase ordering
 problem @Click1995&#x200B;: 
 whenever a compiler can rewrite code in more than one way, it must
 decide which transformations should be applied and in which order, to obtain
-the most optimised result @Liang2023.
+the most optimised result @Whitfield1997 @Liang2023.
 This issue is also a key challenge within quantum compilation:
 unitary sythesis tools can sometimes outperform current, mostly peephole-based
 compilers @Sivarajah2020

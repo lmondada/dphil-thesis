@@ -61,9 +61,9 @@ transformations @Bansal2006 @Sasnauskas2017.
 
 A particularly simple superoptimising compiler design was proposed in @Jia2019,
 specially for the purposes of computation graph optimisation @Fang2020
-for deep learning.
-The set of all small programs, up to a threshold, is generated and
-partitioned into disjoint classes of equivalent programs ahead of time.
+in deep learning.
+The set of all small programs, up to a threshold, is generated ahead of time and
+partitioned into disjoint classes of equivalent programs.
 This concisely expresses every possible peephole optimisation up to the specified
 size: for every small enough subset of instructions of an input program,
 its equivalence class can be determined.
@@ -71,10 +71,11 @@ Any replacement of that set of instructions with another program in the same
 equivalence class 
 is a valid transformation, and thus a potential peephole optimisation.
 
-This framework was also adapted for quantum circuit optimisation
+This framework was adapted to quantum circuit optimisation
 in @Xu2022 and separately in @Xu2023.
 On top of excellent performance, this approach is extremely flexible.
-For any supplied cost function, the compiler can find all valid program transformations
+For any supplied cost function, the compiler can explore all valid
+program transformations
 to find the sequence of transforms that minimise cost.
 This keeps the cost function-specific logic separate from the transformation
 semantics of the program, making it straightforward to replace or update the
@@ -89,3 +90,58 @@ set of valid transformations.
 
 ### Equality saturation
 
+Superoptimisation resolves half of the phase ordering problem: it stops the
+proliferation of a multitude of hardware or input specific passes, replacing
+it instead with one, extensible and unified local rewrite-based compiler platform.
+However, it made in sense the other half of the problem worse: instead of 
+building a compilation pipeline from a library of manually written passes,
+superoptimising compilers must discover sequences of rewrites that minimise
+their cost function, out of a much larger pool of automatically generated
+transformations!
+
+Equality saturation removes the phase ordering problem altogether.
+The technique was first proposed in @Tate2009.
+A modern implementation of it was presented in @Willsey2021.
+We follow the presentation of @Willsey2021, albeit in much fewer details---the
+interested reader is highly encouraged to refer to the original document,
+as well as its implementation @Willsey2025 and this blog
+discussion @Bernstein2024.
+Finally, in spite its theoretical origins, equality saturation is also
+(slowly) making it into production compilers @Fallin2022.
+
+Unlike a general purpose compiler utility, equality saturation is specifically
+a technique for term rewriting.
+Terms[^ast], are algebraic expressions represented as trees, in which tree
+nodes correspond to operations, the children of an operation are the subterms
+passed as arguments to the operation and leaf nodes are either constants
+or unbound variables
+[^ast]: Depending on the context, computer scientists also call them
+abstract syntax trees (AST)---it's the same thing.
+```goat
+                      .-.
+                     | f |                                 
+                      '+'
+                       |
+                       +
+                      / \
+                   .-.   .-.
+                  | ✱ | | 3 |       The term f(x ✱ 2, 3)                            
+                   '+'   '-'
+                    |
+                    +
+                   / \
+                .-.   .-.
+               | x | | 2 |
+                '-'   '-'
+```
+This representation is particularly suited representation for any functional
+(i.e. side effect free) classical computation.
+Every node of a term is identified with a term of its own: the subterm given
+by the subtree the node is the root of.
+Given equivalences between terms, term rewriting consists of finding 
+subterms that match known equivalences. The matching subtrees are then be
+replaced with the new equivalent trees.
+
+The core of equality saturation is a tree-like data structure that encodes the
+term being compiler---but also captures every possible rewrite that could be
+applied to it.
