@@ -23,6 +23,7 @@ $floating-footnotes-width: 20rem;
 
     ol li {
         position: absolute;
+
         p {
             margin-top: 0px;
         }
@@ -45,12 +46,44 @@ $floating-footnotes-width: 20rem;
     margin: 0 auto;
 }
 
+////// FIGURES //////
+/// 
+.markdown figure {
+    background-color: #f5f5f0;
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.05);
+    padding: 1rem 0;
+
+    .figure-div {
+        display: block;
+        margin: 0 auto;
+
+        img {
+            width: 100%;
+        }
+
+        figcaption {
+            font-style: italic;
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+////// References //////
+.markdown details summary {
+    font-size: 1.2rem;
+    
+}
+
 ////// CITATIONS //////
 .citation {
     position: relative;
 }
 
-.citation-key, .citation-number {
+.citation-key,
+.citation-number {
     cursor: pointer;
     color: rgb(132, 64, 241);
 
@@ -67,6 +100,7 @@ $floating-footnotes-width: 20rem;
     &:before {
         content: '[';
     }
+
     &:after {
         content: ']';
     }
@@ -76,9 +110,11 @@ $floating-footnotes-width: 20rem;
     &.citation-left:before {
         content: '[';
     }
+
     &.citation-right:after {
         content: ']';
     }
+
     &.citation-middle:after {
         content: ',';
     }
@@ -99,8 +135,8 @@ $floating-footnotes-width: 20rem;
         right: 0rem;
     }
 
-    .citation-key:hover + &,
-    .citation-number:hover + & {
+    .citation-key:hover+&,
+    .citation-number:hover+& {
         display: block;
     }
 }

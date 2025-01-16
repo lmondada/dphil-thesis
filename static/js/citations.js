@@ -11,19 +11,19 @@ function hasOnlyWhitespaceBetween(elem1, elem2) {
 }
 
 // Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Maps to store citation data
     const citationKeyToId = new Map();
     const idToCitation = new Map();
-    
+
     // Get all citation elements
     const citations = document.querySelectorAll('.citation');
-    
+
     // First pass: collect all unique citations
     citations.forEach((citation, index) => {
         const keyElement = citation.querySelector('.citation-key');
         const fullElement = citation.querySelector('.citation-full');
-        
+
         if (keyElement && fullElement) {
             const citationKey = keyElement.getAttribute('data-bibtex-key');
             if (!citationKeyToId.has(citationKey)) {
@@ -40,17 +40,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Sort citations by author names
     const sortedCitations = Array.from(idToCitation.entries())
         .sort((a, b) => a[1].authors.localeCompare(b[1].authors));
-    
+
     // Create mapping from old IDs to new ordered indices
     const idToOrderedIndex = new Map();
     sortedCitations.forEach((entry, index) => {
         idToOrderedIndex.set(entry[0], index + 1);
     });
-    
+
     // Second pass: replace citation keys with numbered links
     citations.forEach(citation => {
         const keyElement = citation.querySelector('.citation-key');
@@ -58,14 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const citationKey = keyElement.getAttribute('data-bibtex-key');
             const originalId = citationKeyToId.get(citationKey);
             const numberedIndex = idToOrderedIndex.get(originalId);
-            
+
             const span = document.createElement('span');
             span.classList.add('citation-number');
-            
+
             const link = document.createElement('a');
             link.href = '#ref-' + numberedIndex;
             link.textContent = numberedIndex.toString();
-            
+
             span.appendChild(link);
             keyElement.replaceWith(span);
         }
@@ -97,30 +97,33 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
-    // Create and append the references section
-    const referencesSection = document.createElement('div');
-    referencesSection.id = 'references';
-    
-    const referencesTitle = document.createElement('h2');
-    referencesTitle.textContent = 'References';
-    referencesSection.appendChild(referencesTitle);
-    
-    const referencesList = document.createElement('ol');
-    sortedCitations.forEach((entry, index) => {
-        const listItem = document.createElement('li');
-        listItem.id = 'ref-' + (index + 1);
-        listItem.appendChild(entry[1].full);
-        referencesList.appendChild(listItem);
-    });
-    
-    referencesSection.appendChild(referencesList);
-    
-    const mainArticle = document.querySelector('main article');
-    if (mainArticle) {
-        mainArticle.appendChild(referencesSection);
-    } else {
-        console.error('Main article element not found');
+
+    if (sortedCitations.length > 0) {
+        // Create and append the references section
+        const referencesSection = document.createElement('details');
+        referencesSection.id = 'references';
+
+        const referencesTitle = document.createElement('summary');
+        referencesTitle.textContent = 'References';
+        referencesSection.appendChild(referencesTitle);
+
+        const referencesList = document.createElement('ol');
+        sortedCitations.forEach((entry, index) => {
+            const listItem = document.createElement('li');
+            listItem.id = 'ref-' + (index + 1);
+            listItem.appendChild(entry[1].full);
+            referencesList.appendChild(listItem);
+        });
+
+        referencesSection.appendChild(referencesList);
+
+        const mainArticle = document.querySelector('main article');
+        if (mainArticle) {
+            mainArticle.appendChild(referencesSection);
+        } else {
+            console.error('Main article element not found');
+        }
+
     }
 
     // Shorten the inline citation-full elements

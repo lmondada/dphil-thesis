@@ -1,6 +1,7 @@
 +++
 title = "A minimimal Quantum-Classical IR"
 weight = 3
+refname = "Section 3.3"
 +++
 
 Describing the specifics of any one quantum programming language or compiler IR

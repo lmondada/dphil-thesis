@@ -87,6 +87,21 @@ Any input using this extended set of primitives can thus be successfully compile
 and any output program format constraints can be enforced by restricting the
 set of valid transformations.
 
+The adaptation of superoptimisation to quantum optimisation of @Xu2022 and
+@Xu2023 is however showing scaling difficulties:
+unlike classical superoptimisation which is usually designed to optimise
+small subroutines within programs, e.g. focusing on arithmetic instructions,
+single instruction multiple data (SIMD) etc., the technique should in principle
+be able to optimise quantum programs in their entirety. This leads to
+much larger programs that superoptimisation does not scale well to.
+An orthogonal scaling challenge has also been observed: in @Xu2022,
+optimisation performance was observed to improve markedly with
+larger sets of rewrite rules.
+However, each rewrite rule requires a separate run of pattern matching to
+find all possible applications.
+As a result, performance peaks at around 50 000 rewrite rules, after which the
+additional overhead from pattern matching becomes dominant, deteriorating the
+compilation results.
 
 ### Equality saturation
 
@@ -290,3 +305,239 @@ for instance,
 then finding the optimal solution will require more expensive computations such
 as solving boolean satisfiability (SAT) or Satisfiability Modulo Theories (SMT)
 problem instances @Biere2021.
+
+#### Quantum programs: trouble in paradise?
+
+Equality saturation is a fast developing subfield of compilation sciences with
+a growing list of applications.
+Unfortunately for us[^thesis], adapting the ideas to
+quantum computation presents several unsolved challenges.
+[^thesis]: but fortunately for this thesis
+
+The root of the problem lies in the program representation.
+Fundamentally, the `minIR` representation we sketched out in
+{{< reflink "/03_compiler/03_toyir" >}}---but also the quantum circuit
+representation---capture quantum computations, not as a term, but in a
+directed acyclic graph (DAG) structure.
+
+This issue was studied by @Yang2021 in the context of tensor graphs optimisation.
+They propose decomposing computation DAGs into a tuple of (overlapping) terms,
+one for each output of the computation.
+In theory, this should allow for the full use of the equality saturation
+workhorse with very minimal adjustements.
+In their application, however, they found exponential size increases in the term data
+structure used as a result of the
+cartesian product between the decomposed terms of DAG rewrite rules and had
+to limit the number of applications of multi-term rewrite rules to 2 for
+performance reasons.
+
+DAG rewriting also introduces new issues in the extraction phase of equality
+saturation.
+The authors of @Yang2021 show that multi-term rewrites can introduce
+cycles in the term data
+structure, which are expensive to detect and account for in the extraction algorithm.
+Finally, such rewrites result in large overlaps between terms. This means that
+greedy divide-and-conquer extraction heuristics that do not model cost
+savings from subexpression sharing perform poorly, necessitating the use of
+more compute intensive SMT techniques for competitive results.
+
+To make matters worse, there are also quantum-specific difficulties in using
+equality saturation.
+Term sharing and the hash-based uniqueness invariant enforced by the term data
+structure is fundamentally at odds with the linearity of quantum resources.
+At extraction time, all linear resources would have to be carefully tracked.
+Additional constraints would have to be added to ensure that expressions that
+depend on the same linear resources are mutually exclusive. Conversely, we would have
+to guarantee that for all terms that make up a multi-term rewrite, the linear
+resources used on their overlaps coincide.
+
+Consider for instance the following simple rewrite that pushes X gates ($\oplus$)
+from the right of a CX gate to the left:
+<div class="book-columns flex" style="align-items: center;">
+  <div class="flex-even markdown-inner">
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }],
+    "operations": [
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "targets": [{ "qId": 0 }]
+         }
+    ]
+}
+{{< /qviz >}} 
+  </div>
+  <div style="min-width: 16px; margin: 0 -40px;">
+    <svg width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 2L6 4L4 6" stroke="#666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="flex-even markdown-inner">
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }],
+    "operations": [
+         {
+            "gate": "X",
+            "targets": [{ "qId": 0 }]
+         },
+         {
+            "gate": "X",
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+         }
+    ]
+}
+{{< /qviz >}}
+  </div>
+</div>
+
+Both the left and right hand sides would be decomposed into two terms, one
+for each output qubit. The left terms could be written as
+$$X(CX0(0, 1)) \quad\textrm{and}\quad CX1(0, 1)$$
+whereas the right terms would be
+$$CX0(X(0), X(1)) \quad\textrm{and}\quad CX1(X(0), X(1))$$
+where we introduced the term $X(\cdot)$ for the single-qubit X gate
+and two terms $CX1(\cdot, \cdot)$ and $CX2(\cdot, \cdot)$ for the terms
+that produce the first, repsectively second, output of the two-qubit
+CX gate. $1$ and $0$ denote the input qubits of the computation.
+This would be interpreted as two different rewrites
+$$\begin{aligned}X(CX0(0, 1)) &\mapsto CX0(X(0), X(1))\\\textrm{and}\quad CX1(0, 1) &\mapsto CX1(X(0), X(1))\end{aligned}$$
+but the crucial point is: unlike classical computations,
+we would have to enforce at extraction time that for every set of applicable gates,
+either both or none of these rewrites are applied.
+Otherwise, the extracted program would be unphysical.
+
+This problem is further compounded by quantum entanglement.
+Indeed, consider the rewrite rule above applied to the second and third gate
+of the following circuit:
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }],
+    "operations": [
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "targets": [{ "qId": 0 }]
+         }
+    ]
+}
+{{< /qviz >}} 
+With some creative drawing, we can represent the resulting equality saturation
+data structure containing both the circuit before and after the rewrite as
+follows.
+{{< figure
+  src="svg/superposed.svg"
+  alt="A superposed circuit"
+  caption="A sketch of an equality saturation data structure containing two versions of a circuit, before and after a rewrite. The two alternatives are represented by \"splitting\" each qubit wire. The top-most split wires correspond to the original circuit, the bottom-most split wires correspond to the circuit after the rewrite."
+  width="70%"
+>}}
+Now, suppose the existence of another rewrite rule, given by
+<div class="book-columns flex" style="align-items: center;">
+  <div class="flex-even markdown-inner">
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
+    "operations": [
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 2 }]
+         },
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "targets": [{ "qId": 0 }]
+         },
+         {
+            "gate": "X",
+            "targets": [{ "qId": 2 }]
+         }
+    ]
+}
+{{< /qviz >}} 
+  </div>
+  <div style="min-width: 16px; margin-left: -40px; margin-right: -20px;">
+    <svg width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 2L6 4L4 6" stroke="#666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="flex-even markdown-inner">
+{{< qviz >}}
+{
+    "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
+    "operations": [
+         {
+            "gate": "X",
+            "targets": [{ "qId": 0 }]
+         },
+         {
+            "gate": "X",
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 2 }],
+            "targets": [{ "qId": 1 }]
+         },
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 0 }],
+            "targets": [{ "qId": 2 }]
+         },
+         {
+            "gate": "X",
+            "isControlled": true,
+            "controls": [{ "qId": 2 }],
+            "targets": [{ "qId": 1 }]
+         }
+    ]
+}
+{{< /qviz >}}
+  </div>
+</div>
+
+If during rewriting we ignore the linearity constraint that we mentioned above
+in the context of the extraction procedure, the part of the diagram highlighted
+in red would be a valid match of the left hand side.
+Applying the rewrite to this match is not only unphysical, it is plain nonsensical:
+{{< figure
+  src="svg/superposed-rewritten.svg"
+  alt="A superposed circuit"
+  caption="The same equality saturation data structure after a second rewrite. For simplicity, we are not overlaying in the illustration the circuit between the first and second rewrite."
+  width="70%"
+>}}
+This applies entangling gates between different versions of the same qubit!
+In other words, linearity constraints would not only have to be taken into account
+during extraction, but also to restrict pattern matching and rewriting during
+exploration.
