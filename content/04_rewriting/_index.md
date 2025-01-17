@@ -6,4 +6,7 @@ sort_by = "weight"
 weight = 4
 +++
 
-Present the architecture that we propose.
+With this chapter we are arriving at the core of our thesis:
+a proposal for a new quantum compilation framework. It aims
+to solve the challenges that we have identified in estiblished techniques
+over the previous chapters.
