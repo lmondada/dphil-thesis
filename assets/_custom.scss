@@ -140,3 +140,7 @@ $floating-footnotes-width: 20rem;
         display: block;
     }
 }
+
+@media print {
+    @use 'print.scss';
+}
