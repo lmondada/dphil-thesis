@@ -149,7 +149,7 @@ In the absence of conditional branching, this is a very simple verification
 pass to perform on our IR, the exact converse of checking that each value
 is defined exactly once.
 [^linear]: The terminology comes from "linear" logic @Girard_1987.
-We apologise for slamming on more semantics on an already very
+We apologise for slamming additional semantics on an already very
 overloaded term.
 
 However, as conditional branching is introduced into the IR, the linearity 

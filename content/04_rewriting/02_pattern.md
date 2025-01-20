@@ -1,5 +1,5 @@
 +++
-title = "Set of rewrite rules"
+title = "Pattern Matching Engine"
 template = "section.html"
 weight = 2
 +++
