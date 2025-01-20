@@ -1,0 +1,2 @@
+- [ ] Citations do not render on GH Pages
+- [ ] Bottom of chapter pages, link to next chapter
