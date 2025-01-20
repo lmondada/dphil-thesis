@@ -1,11 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+
+
 // @import "plugins/_numbered.scss";
+
+.chapter-number {
+  font-size: 1.8em;
+  font-style: italic;
+  margin-bottom: -1em;
+  color: #666;
+  font-family: "Shadows Into Light", serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.07em;
+}
+
+h1.chapter {
+    margin-bottom: 1.5em;
+}
 
 // .chapter-head::after {
 //     content: counter(h1);
 // }
 
 article {
-    hyphens: auto
+  hyphens: auto;
 }
 
 ////// FLOATING FOOTNOTES //////
@@ -13,134 +31,133 @@ article {
 $floating-footnotes-width: 20rem;
 
 .floating-footnotes {
+  position: absolute;
+  left: 100%;
+  margin: 0 2rem 0 1rem;
+  top: 0;
+  width: calc(#{$floating-footnotes-width} - 3rem);
+
+  font-size: 0.9rem;
+
+  ol li {
     position: absolute;
-    left: 100%;
-    margin: 0 2rem 0 1rem;
-    top: 0;
-    width: calc(#{$floating-footnotes-width} - 3rem);
 
-    font-size: 0.9rem;
-
-    ol li {
-        position: absolute;
-
-        p {
-            margin-top: 0px;
-        }
+    p {
+      margin-top: 0px;
     }
+  }
 }
 
 .book-page {
-    position: relative;
+  position: relative;
 
-    @media screen and (min-width: 56rem) {
-        padding-right: 0;
-        margin-right: $floating-footnotes-width;
-    }
+  @media screen and (min-width: 56rem) {
+    padding-right: 0;
+    margin-right: $floating-footnotes-width;
+  }
 }
 
 ////// QVIZ //////
 
 .qviz {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 ////// FIGURES //////
-/// 
+///
 .markdown figure {
-    background-color: #f5f5f0;
-    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.05);
-    padding: 1rem 0;
+  background-color: #f5f5f0;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  padding: 1rem 0;
 
-    .figure-div {
-        display: block;
-        margin: 0 auto;
+  .figure-div {
+    display: block;
+    margin: 0 auto;
 
-        img {
-            width: 100%;
-        }
-
-        figcaption {
-            font-style: italic;
-
-            p {
-                margin-bottom: 0;
-            }
-        }
+    img {
+      width: 100%;
     }
+
+    figcaption {
+      font-style: italic;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 ////// References //////
 .markdown details summary {
-    font-size: 1.2rem;
-    
+  font-size: 1.2rem;
 }
 
 ////// CITATIONS //////
 .citation {
-    position: relative;
+  position: relative;
 }
 
 .citation-key,
 .citation-number {
-    cursor: pointer;
-    color: rgb(132, 64, 241);
+  cursor: pointer;
+  color: rgb(132, 64, 241);
 
-    &:hover {
-        text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
+  }
 
-    a {
-        color: inherit;
-    }
+  a {
+    color: inherit;
+  }
 }
 
 .citation-key {
-    &:before {
-        content: '[';
-    }
+  &:before {
+    content: "[";
+  }
 
-    &:after {
-        content: ']';
-    }
+  &:after {
+    content: "]";
+  }
 }
 
 .citation-number {
-    &.citation-left:before {
-        content: '[';
-    }
+  &.citation-left:before {
+    content: "[";
+  }
 
-    &.citation-right:after {
-        content: ']';
-    }
+  &.citation-right:after {
+    content: "]";
+  }
 
-    &.citation-middle:after {
-        content: ',';
-    }
+  &.citation-middle:after {
+    content: ",";
+  }
 }
 
 .citation-full {
-    display: none;
-    position: absolute;
-    border: 1px solid #000;
-    background-color: #fff;
-    padding: 2px 2px 2px 8px;
-    bottom: 1.4rem;
-    font-size: 0.9rem;
-    width: 300px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  display: none;
+  position: absolute;
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 2px 2px 2px 8px;
+  bottom: 1.4rem;
+  font-size: 0.9rem;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-    @media screen and (min-width: 56rem) {
-        right: 0rem;
-    }
+  @media screen and (min-width: 56rem) {
+    right: 0rem;
+  }
 
-    .citation-key:hover+&,
-    .citation-number:hover+& {
-        display: block;
-    }
+  .citation-key:hover + &,
+  .citation-number:hover + & {
+    display: block;
+  }
 }
 
 @media print {
-    @use 'print.scss';
+  @use "print.scss";
 }

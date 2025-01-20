@@ -1,9 +1,9 @@
 +++
-title = "Graph Rewriting-based Superoptimisation"
-template = "chapter.html"
-refname = "Chapter 4"
+title = "A New Quantum Compilation Framework"
 sort_by = "weight"
 weight = 4
+layout = "chapter"
+refname = "Chapter 4"
 +++
 
 With this chapter we are arriving at the core of our thesis:

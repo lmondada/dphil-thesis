@@ -4,8 +4,8 @@
 {{ $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 }}
 
 <article class="markdown book-article">
-  <h1>Chapter {{ $chapternb }}</h1>
-  <h1>{{ .Title }}</h1>
+  <p class="chapter-number">Chapter {{ $chapternb }}</p>
+  <h1 class="chapter">{{ .Title }}</h1>
 
   {{- .Content -}}
 
