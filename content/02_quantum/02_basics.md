@@ -1,6 +1,7 @@
 +++
 title = "Foundations of Quantum Computing"
 weight = 2
+layout = "section"
 +++
 
 The most widespread computational model in quantum

@@ -1,6 +1,7 @@
 +++
 title = "A new compilation regime"
 weight = 1
+layout = "section"
 +++
 
 We have introduced quantum compilation by drawing an analogy with the

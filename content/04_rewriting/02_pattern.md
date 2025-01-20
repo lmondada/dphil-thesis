@@ -1,5 +1,5 @@
 +++
 title = "Pattern Matching Engine"
-template = "section.html"
+layout = "section"
 weight = 2
 +++

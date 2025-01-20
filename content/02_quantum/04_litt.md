@@ -2,6 +2,7 @@
 title = "Summary and further reading"
 template = "section.html"
 weight = 4
+layout = "section"
 +++
 
 This introductory chapter covered some of the basic principles of

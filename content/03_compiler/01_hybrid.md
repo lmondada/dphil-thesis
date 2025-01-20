@@ -1,6 +1,7 @@
 +++
 title = "Quantum compilers cannot do it alone"
 weight = 1
+layout = "section"
 +++
 
 We have convinced ourselves in the previous chapter that quantum

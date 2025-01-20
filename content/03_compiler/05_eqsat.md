@@ -1,6 +1,6 @@
 +++
 title = "Selected techniques in modern classical compilation"
-template = "section"
+layout = "section"
 weight = 5
 +++
 

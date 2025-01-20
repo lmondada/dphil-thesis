@@ -1,0 +1,25 @@
+{{ define "return-link" }}
+{{ $sectionnb := .sectionnb }}
+<p class="return-link">
+  <a href="{{ .context.Parent.Permalink }}#sec{{ $sectionnb }}" style="color: #666; font-style: italic; text-decoration: none;">
+    <span style="margin-right: 5px;">&#8592;</span>Return to chapter
+  </a>
+</p>
+{{ end }}
+
+{{ define "main" }}
+
+{{ $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 }}
+{{ $sectionnb := index (findRESubmatch `^0*(\d+)` .File.BaseFileName) 0 1 }}
+
+<article class="markdown book-article">
+  {{ template "return-link" (dict "context" . "sectionnb" $sectionnb) }}
+
+  <h2>{{ $chapternb }}.{{ $sectionnb }}. {{ .Title }}</h2>
+
+  {{- .Content -}}
+
+  {{ template "return-link" (dict "context" . "sectionnb" $sectionnb) }}
+</article>
+
+{{ end }}

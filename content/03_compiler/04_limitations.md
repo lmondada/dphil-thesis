@@ -1,6 +1,6 @@
 +++
 title = "Review of quantum compiler optimisations"
-template = "section"
+layout = "section"
 weight = 4
 +++
 

@@ -1,6 +1,7 @@
 +++
 title = "Programming languages and Internal Representations"
 weight = 2
+layout = "section"
 +++
 
 Before jumping into what merging with classical compiler technologies means
