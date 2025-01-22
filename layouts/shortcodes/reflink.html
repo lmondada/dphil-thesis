@@ -1,5 +1,64 @@
-{{- $uri := .Get 0 -}}
-{{- with .Site.GetPage $uri -}}
-  {{- $refname := .Params.refname | default .Title -}}
-  <a href="{{ .RelPermalink }}">{{ $refname }}</a>
+{{- $capitalize := false -}}
+{{- $paths := .Params -}}
+{{- if and (gt (len .Params) 0) (eq (index .Params 0) "upper") -}}
+  {{- $capitalize = true -}}
+  {{- $paths = after 1 .Params -}}
+{{- end -}}
+
+{{- $links := slice -}}
+{{- $firstIsSection := true -}}
+
+{{- with $.Site.GetPage (index $paths 0) -}}
+  {{- $firstIsSection = .IsSection -}}
+{{- end -}}
+{{- range $paths -}}
+  {{- with $.Site.GetPage . -}}
+    {{- $isSection := .IsSection -}}
+    {{- if ne $isSection $firstIsSection -}}
+      {{- errorf "Cannot mix sections and regular pages in the same reference" -}}
+    {{- end -}}
+    {{- $weight := .Weight -}}
+    {{- if $isSection -}}
+      {{- $link := printf `<a href="%s">%d</a>` .RelPermalink $weight | safeHTML -}}
+      {{- $links = $links | append $link -}}
+    {{- else -}}
+      {{- with .Parent -}}
+        {{- $parentWeight := .Weight -}}
+        {{- $link := printf `<a href="%s">%d.%d</a>` .RelPermalink $parentWeight $weight | safeHTML -}}
+        {{- $links = $links | append $link -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $count := len $links -}}
+
+{{- $prefix := "" -}}
+{{- if $firstIsSection -}}
+  {{- if eq $count 1 -}}
+    {{- $prefix = "chapter " -}}
+  {{- else -}}
+    {{- $prefix = "chapters " -}}
+  {{- end -}}
+{{- else -}}
+  {{- if eq $count 1 -}}
+    {{- $prefix = "section " -}}
+  {{- else -}}
+    {{- $prefix = "sections " -}}
+  {{- end -}}
+{{- end -}}
+{{- if $capitalize -}}
+  {{- $prefix = $prefix | title -}}
+{{- end -}}
+{{- printf "<span>%s</span>" $prefix | safeHTML -}}
+
+{{- if eq $count 1 -}}
+  {{- index $links 0 -}}
+{{- else if eq $count 2 -}}
+  {{- index $links 0 -}}{{- print " and " | safeHTML -}}{{- index $links 1 -}}
+{{- else -}}
+  {{- range $i, $link := first (sub $count 1) $links -}}
+    {{- $link -}}{{- print ", " | safeHTML -}}
+  {{- end -}}
+  {{- print "and " | safeHTML -}}{{- index $links (sub $count 1) -}}
 {{- end -}}

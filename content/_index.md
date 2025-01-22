@@ -29,7 +29,9 @@ Hilary 2024
 
 ---
 {{% hint danger %}}
-This is very very work in progress. Currently worth reading: chapters [2](/02_quantum) and [3](/03_compiler); chapter [4](/04_rewriting) is coming along and will be ready next.
+This is very very work in progress. Currently worth reading:
+{{< reflink "/02_quantum" "/03_compiler" >}}; {{< reflink "/04_rewriting" >}}
+is coming along and will be ready next.
 {{% /hint %}}
 ---
 
