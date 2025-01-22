@@ -18,3 +18,7 @@ BookToC = false
   [markup.goldmark.extensions.bibtex]
     enable = true
     bibtexPath = "thesis.bib"
+  [markup.goldmark.parser]
+    [markup.goldmark.parser.attribute]
+        block = true
+        title = true
