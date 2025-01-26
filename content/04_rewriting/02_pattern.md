@@ -375,7 +375,9 @@ for (cls, constraints) in class_to_constraints {
 }
 ```
 We will see an example implementation of the various functions
-called in this pseudo-code in the next section.
+called in this pseudo-code 
+(`nominate_constraints`, `constraint_classes` and `expansion_factor`)
+in the next section.
 
 ### An example
 
