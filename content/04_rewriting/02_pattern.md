@@ -374,11 +374,110 @@ for (cls, constraints) in class_to_constraints {
     }
 }
 ```
-We will see an example implementation of the various functions
-called in this pseudo-code 
+This has certainly all been very abstract---and probably rather confusing.
+To illustrate the ideas we just presented, the next section presents
+an implementation of this interface for string pattern matching.
+Among others this will include concrete implementations for the various functions
 (`nominate_constraints`, `constraint_classes` and `expansion_factor`)
-in the next section.
+called in the pseudo-code.
 
 ### An example
+The pattern matching framework we are proposing can of course model the
+matching problems on graphs and compiler IRs that we are mostly interested in.
+It can however be applied just as well to other domains.
+
+Among the simplest possible use cases of this is pattern matching on strings.
+Over the course of the previous paragraphs, we introduced all the main ideas
+and concepts using a mathematical language.
+In this section, we will use string matching as an excuse to revisit the same
+ideas, this time staying much closer to the perspective of the user and the
+actual programming interface as implemented in the Rust library `portmatching`[^portm].
+I suspect the reader will fall into one of two camps---either excited that
+the rumblings in this thesis might at last show some early signs of coherence,
+or utter disbelief that the presentation is about to become more applied still.
+In either case, rest assured that no knowledge of Rust is expected---we will
+mimick the real interface as much as possible, but the "code" we will write
+will be straight-forward pseudo-code[^fullex]
+
+[^portm]: Available at ??
+[^fullex]: Call it pseudo-Rust if you will---pseudo-code with a Rust-inspired
+syntax, but  simple enough for anyone to follow. The complete, working
+implementation of this example is available
+within the portmatching crate in the module `portmatching::concrete::string`.
+
+Let us start with the indexing scheme. For this we propose integer valued key
+and value sets $\mathcal K \simeq \mathbb N$, $\mathcal V \simeq \mathbb N$.
+To distinguish between $\mathcal K$ and $\mathcal V$, we will write their
+elements as `PatternPos(i)` and `DataPos(i)` respectively.
+We use the indices to refer to the position of characters within the pattern
+and data strings.
+
+For a pattern $p$ and a data string $D$ with $|P|$ and $|D|$ characters
+respectively, a pattern embedding is thus a map
+$$\{\,\texttt{PatternPos}(i) \mid 0 \leqslant i < |P| \}\to\{\texttt{PatternPos}(i + s) \mid 0 \leqslant i < |P|\}$$
+that maps `PatternPos(i)` to `DataPos(s + i)` for some $s \in \mathbb N$
+and such that the pattern
+matches the characters in $D$ between positions $s$ and $s+|P|$, i.e. $P = D[s:s+i]$.
+
+To define the indexing scheme, we provide the following two functions:
+```rust
+fn required_bindings(key: PatternPos) -> [PatternPos] {
+    if key == PatternPos(0) {
+        return []
+    } else {
+        return [PatternPos(0)]
+    }
+}
+
+fn list_bind_options(
+    key: PatternPos, data: String, known_bindings: Map<PatternPos, DataPos>
+) -> [DataPos] {
+    if key == PatternPos(0) {
+        // Every position in data is valid
+        return [DataPos(i) for i in [0, 1, .. data.len() - 1] ]
+    } else {
+        PatternPos(pattern_offset) = key
+        DataPos(root_binding) = map.get(PatternPos(0))
+        if root_binding + key < data.len() {
+            // Valid position is obtained by adding offset to root binding
+            return [DataPos(root_binding + pattern_offset)]
+        } else {
+            // The only valid position would be beyond the end of data
+            return []
+        }
+    }
+}
+```
+The first is independent of the `data` string being matched.
+It is thus sufficient to call it once for each pattern key in the offline
+precomputation phase.
+The keys returned are the dependency of the `key` passed as argument:
+they must be bound before `key` can itself be bound.
+This defines a dependency graph of all key bindings, from which a total order
+of key bindings can be determined (assuming the dependency graph is acyclic).
+In our case, we declare that before any index $i > 0$ can be bound,
+first a binding for the index $0$ must be provided.
+The latter index, on the other hand, can be bound without requiring any
+prior bindings.
+
+The second function captures the binding logic proper and corresponds to the
+$\textrm{expand}_k$ function introduced in the previous section.
+The user implementing this function may safely assume that all required bindings,
+as returned by `required_bindings`, have already been bound and can be accessed
+using the binding map passed as third argument.
+We see in the implementation why we made every other binding depend on
+`PatternPos(0)`: once the latter is bound (to any position in the data string),
+all other pattern posistions resolve to a unique `DataPos`[^mayormaynotexist], making the implementation
+of `list_bind_options` very simple.
+[^mayormaynotexist]: That may or may not exist in $D$.
+
+We now turn to the set of valid predicates, from which pattern
+constraints are defined.
+To add a bit of spice here (and incidentally support string matching capabilities
+more powerful than regular expressions), we consider a somewhat extended pattern
+language. 
+Suppose our data strings are drawn from an alphabet $\Sigma$, i.e. $D \in \Sigma^*$.
+Instead of taking pattern strings in $\Sigma^*$, we instead extend the
+alphabet with a set of symbols $X$ and take patterns in $P \in (\Sigma \cup X)^*$.
 
 ### Rewriting rule used in practice
