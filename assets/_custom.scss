@@ -161,8 +161,4 @@ $floating-footnotes-width: 20rem;
   }
 }
 
-@media print {
-  @use "print.scss";
-}
-
 @import "titlepage";

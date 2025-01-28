@@ -36,55 +36,59 @@ function computeOffsetForAlignment(footnote, targetAlignment) {
 
 // Register ResizeObserver on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('article');
+    let containers = document.querySelectorAll('pagedjs_pagebox');
+    if (containers.length === 0) {
+        containers = document.querySelectorAll('article');
+    }
+    containers.forEach(container => {
+        const resizeObserver = new ResizeObserver(() => {
+            const footnotes = container.querySelectorAll('div.footnotes');
 
-    const resizeObserver = new ResizeObserver(() => {
-        const footnotes = document.querySelectorAll('div.footnotes');
+            // Collect all footnote items and references
+            const allFootnotes = Array.from(footnotes).reduce((acc, footnote) => {
+                const listItems = footnote.querySelectorAll('ol > li');
+                return acc.concat(Array.from(listItems));
+            }, []);
+            const allReferences = container.querySelectorAll('.footnote-ref');
+            // Create a map from footnote IDs to their references
+            const footnoteToRef = new Map(
+                allFootnotes.map((footnote, index) => {
+                    const id = footnote.id;
+                    // Use index to find corresponding reference
+                    const ref = allReferences[index];
+                    return [id, ref];
+                })
+            );
 
-        // Collect all footnote tems and references
-        const allFootnotes = Array.from(footnotes).reduce((acc, footnote) => {
-            const listItems = footnote.querySelectorAll('ol > li');
-            return acc.concat(Array.from(listItems));
-        }, []);
-        const allReferences = container.querySelectorAll('.footnote-ref');
-        // Create a map from footnote IDs to their references
-        const footnoteToRef = new Map(
-            allFootnotes.map((footnote, index) => {
-                const id = footnote.id;
-                // Use index to find corresponding reference
-                const ref = allReferences[index];
-                return [id, ref];
-            })
-        );
-
-        let lastOffset = null;
-        footnotes.forEach(footnote => {
-            const listItems = footnote.querySelectorAll('ol > li');
-            if (!footnote.classList.contains('floating-footnotes')) {
-                // Clear top property
-                listItems.forEach(li => {
-                    li.style.removeProperty('top');
-                });
-            } else {
-                listItems.forEach(li => {
-                    const ref = footnoteToRef.get(li.id);
-                    if (ref) {
-                        // Find the first <p> ancestor of the footnote reference
-                        if (!ref.closest('p')) {
-                            console.log(ref);
+            let lastOffset = null;
+            footnotes.forEach(footnote => {
+                const listItems = footnote.querySelectorAll('ol > li');
+                if (!footnote.classList.contains('floating-footnotes') && !footnote.classList.contains('paged-footnotes')) {
+                    // Clear top property
+                    listItems.forEach(li => {
+                        li.style.removeProperty('top');
+                    });
+                } else {
+                    listItems.forEach(li => {
+                        const ref = footnoteToRef.get(li.id);
+                        if (ref) {
+                            // Find the first <p> ancestor of the footnote reference
+                            let refParagraph = ref.closest('p') || ref;
+                            let offset = computeOffsetForAlignment(li, refParagraph);
+                            if (lastOffset !== null) {
+                                offset = Math.max(offset, lastOffset);
+                            }
+                            li.style.top = `${offset}px`;
+                            lastOffset = offset + li.offsetHeight;
                         }
-                        let refParagraph = ref.closest('p') || ref;
-                        let offset = computeOffsetForAlignment(li, refParagraph);
-                        if (lastOffset !== null) {
-                            offset = Math.max(offset, lastOffset);
-                        }
-                        li.style.top = `${offset}px`;
-                        lastOffset = offset + li.offsetHeight;
-                    }
-                });
-            }
+                    });
+                }
+            });
+
         });
-
+        if (container !== null) {
+            resizeObserver.observe(container);
+        }
     });
-    resizeObserver.observe(container);
+
 });
