@@ -347,38 +347,59 @@ The following pseudo-code summarises the constraint selection procedure.
 Given a list of patterns, it returns a list of constraints from one constraint
 class such that the expansion factor is minimised.
 ```rust
-in:     patterns
-return: best_constraints
-
-// For each pattern, collect all constraints that it nominates
-// and group by constraint class
-class_to_constraints = {}
-for p in patterns {
-    for c in nominate_constraints(p) {
-        for cls in constraint_classes(c) {
-            constraints = class_to_constraints[cls] or []
-            constraints.append(c)
-            class_to_constraints[cls] = constraints
+fn best_constraints(patterns: [Pattern]) -> [Constraint] {
+    // For each pattern, collect all constraints that it nominates
+    // and group by constraint class
+    class_to_constraints = {}
+    for p in patterns {
+        for c in nominate_constraints(p) {
+            for cls in constraint_classes(c) {
+                constraints = class_to_constraints[cls] or []
+                constraints.append(c)
+                class_to_constraints[cls] = constraints
+            }
         }
     }
-}
 
-// Find class with smallest expansion factor
-best_constraints = None
-best_ef = None
-for (cls, constraints) in class_to_constraints {
-    ef = expansion_factor(cls, constraints)
-    if best_ef == None || ef < best_ef {
-        best_constraints = constraints
-        best_ef = ef
+    // Find class with smallest expansion factor
+    best_constraints = None
+    best_ef = None
+    for (cls, constraints) in class_to_constraints {
+        ef = expansion_factor(cls, constraints)
+        if best_ef == None || ef < best_ef {
+            best_constraints = constraints
+            best_ef = ef
+        }
     }
+    return best_constraints
 }
 ```
+Finally, after selecting the constraints to be applied, the patterns are
+updated by applying the constraints one-by-one and constructing the pattern
+matcher for the (now simplified) patterns recursively:
+```rust
+fn build_matcher(patterns: [Pattern], root = None) -> Tree {
+    if root == None {
+        root = new_tree()
+    }
+    for c in best_constraints {
+        new_patterns = [condition_on(p, c) for p in patterns]
+        child = root.add_child(c)
+        build_matcher(new_patterns, child)
+    }
+    return root
+}
+```
+Of course, the real implementation must keep track of additional information, such
+as the set of bound keys and the pattern matching at each node. Nodes that 
+represent the same pattern matching state are also merged to reduce the size
+of the data structure.
+
 This has certainly all been very abstract---and probably rather confusing.
 To illustrate the ideas we just presented, the next section presents
 an implementation of this interface for string pattern matching.
 Among others this will include concrete implementations for the various functions
-(`nominate_constraints`, `constraint_classes` and `expansion_factor`)
+(`nominate_constraints`, `constraint_classes`, `expansion_factor`, `condition_on` etc.)
 called in the pseudo-code.
 
 ### An example
@@ -398,12 +419,11 @@ or utter disbelief that the presentation is about to become more applied still.
 In either case, rest assured that no knowledge of Rust is expected---we will
 mimick the real interface as much as possible, but the "code" we will write
 will be straight-forward pseudo-code[^fullex]
-
-[^portm]: Available at ??
+[^portm]: Available on [crates.io](https://crates.io/crates/portmatching).
 [^fullex]: Call it pseudo-Rust if you will---pseudo-code with a Rust-inspired
 syntax, but  simple enough for anyone to follow. The complete, working
 implementation of this example is available
-within the portmatching crate in the module `portmatching::concrete::string`.
+within the portmatching crate in the module [`portmatching::concrete::string`](https://github.com/lmondada/portmatching/blob/main/src/concrete/string.rs).
 
 Let us start with the indexing scheme. For this we propose integer valued key
 and value sets $\mathcal K \simeq \mathbb N$, $\mathcal V \simeq \mathbb N$.
@@ -471,13 +491,139 @@ all other pattern posistions resolve to a unique `DataPos`[^mayormaynotexist], m
 of `list_bind_options` very simple.
 [^mayormaynotexist]: That may or may not exist in $D$.
 
-We now turn to the set of valid predicates, from which pattern
+We now turn to the set of valid **predicates**, from which pattern
 constraints are defined.
 To add a bit of spice here (and incidentally support string matching capabilities
 more powerful than regular expressions), we consider a somewhat extended pattern
 language. 
 Suppose our data strings are drawn from an alphabet $\Sigma$, i.e. $D \in \Sigma^*$.
 Instead of taking pattern strings in $\Sigma^*$, we instead extend the
-alphabet with a set of symbols $X$ and take patterns in $P \in (\Sigma \cup X)^*$.
+alphabet with a (disjoint) set of symbols $X$ and take patterns in $P \in (\Sigma \cup X)^*$.
+Characters of a pattern in $\Sigma$ must match the character they are mapped to in $D$
+exactly.
+Characters in $\mathcal X$, meanwhile, can match any character; however,
+any two occurences of the same symbol in a pattern must map to identical characters
+in $D$.
+
+In our implementation, we fix $\Sigma$ to be lowercase letters `'a'` -- `'z'` and identify
+symbols in $\mathcal X$ by prefixing a character with `$`, e.g. `$x` and `$y`.
+For instance, the pattern `ab$xc$x` will match `fooabccc` starting from
+position 3 (i.e. mapping `PatternPos(0)` to `DataPos(3)`),
+but will not match `abccd`, as `$x` would have to be assigned once to `c` and
+once to `d`.
+
+To capture these matching semantics we introduce two predicates[^tobeprecise]
+- `ConstVal(c)` for all `c` in $\Sigma$
+- `BindingEq`
+
+The first predicate is of arity 1: given an index `DataPos(i)`, it will evaluate
+to true if `d[i] == c` is satisfied.
+This corresponds to matching characters of the pattern string within $\Sigma$.
+On the other hand, `BindingEq`, of arity 2, compares the characters at
+two positions `DataPos(i)` and `DataPos(j)` for equality: `d[i] == d[j]`.
+Such a predicate is used for every occurence of a symbol of $\mathcal X$ in the
+pattern beyond the first one.
+[^tobeprecise]: To be precise, `ConstVal` is an entire family of predicates.
+
+We provide this predicate evaluation in the simple function `check`.
+```rust
+fn check(predicate, args: [DataPos], data: String) -> bool {
+    if predicate == ConstVal(c) {
+        [DataPos(i)] = args
+        return d[i] == c
+    } else {  // predicate == BindingEq
+        [DataPos(i), DataPos(j)] = args
+        return d[i] == d[j]
+    }
+}
+```
+We then define our pattenrs by a set of constraints that must be satisfied.
+Each constraint is expressed by a predicate along with one or two pattern keys
+`PatternPos(i)`, indicating which characters the predicate applies to.
+Continuing the example of the pattern, `ab$xc$x`, we can express it by the
+set of constraints
+```
+[
+  (ConstVal('a'), PatternPos(0)),
+  (ConstVal('b'), PatternPos(1)),
+  (ConstVal('c'), PatternPos(3)),
+  (BindingEq(PatternPos(2), PatternPos(4))
+]
+```
+Note that in this latter representation the name of the variable `$x$ is no
+longer specified---this simplifies the pattern. It will also increase the
+overlap of contraints between patterns by removing duplicates that differ
+in variable name only.
+
+The task of the pattern matcher is then, given some data string, to
+find a binding of the positions between `PatternPos(0)` and `PatternPos(4)`
+to some data positions `DataPos(i)` ... `DataPos(i + 4)` for some i
+such that all constraints above are satisfied[^allgoodcontinuous].
+[^allgoodcontinuous]: Note: that the bound `DataPos` indices will form
+a contiguous interval is already guaranteed by our design of the indexing
+scheme---replacing with an indexing scheme allowing non-contiguous
+but monotonic indices, we would obtain pattern matching on string subsequences.
+
+A concrete decomposition of the pattern would include the ordering in which
+the constraints should be evaluated. For all but the simplest cases, however,
+fixing such a constraint decomposition and the evaluation order is likely
+to yield inefficient pattern matchers.
+As we discussed, the API instead expects the pattern decomposition to be
+provided through the functions `nominate_constraints`, `constraint_classes`,
+`expansion_factor` and `condition_on`.
+
+For the implementations of `nominate_constraints` and `condition_on`, we
+rely on the [`ConstraintPattern`](https://docs.rs/portmatching/0.4.0-rc.5/portmatching/constraint/pattern/struct.ConstraintPattern.html)
+type provided by `portmatching`.
+Provided with the set of constraints above, an instance of `ConstraintPattern`
+will keep track of which constraints have already been satisfied through
+successive calls to `condition_on`. Calls to `nominate_constraints` will return
+the set of constraints that are still left to be satisfied.
+
+To conclude, we must indicate which constraints should be grouped together
+and how to estimate their value.
+We note that when evaluated on the same `DataPos(i)`, any two `ConstVal`
+constraints are mutually exclusive.
+We can interpret a `BindingEq arg1 arg2` constraint similarly, by viewing it as
+identical to a `ConstVal(c) arg2` constraint, where `c` is the character at
+the position of `arg1`.
+We hence choose to group together constraints that apply to the same position.
+We introduce for this the classes `AtPositionClass(i)`, for integer `i`.
+```rust
+fn constraint_classes(predicate, args: [DataPos]) -> [ConstraintClass] {
+    if predicate == ConstVal {
+        [DataPos(i)] = args
+        return [AtPositionClass(i)]
+    } else {  // predicate == BindingEq
+        [DataPos(i), DataPos(j)] = args
+        // assuming i < j, and that DataPos(i) is bound before DataPos(j)
+        return [AtPositionClass(j)]
+    }
+}
+```
+To simplify here, we chose to only assign `BindingEq` constraints to a single
+class---this allows us to assume that the first key was already bound, and
+therefore treat the constraint in the same way as `ConstVal` constraints.
+We could also assign `BindingEq` to the two classes corresponding to the
+two positions it applies to, but it then becomes harder to give a good estimate
+for the `expansion_factor`.
+Assuming every character in $\Sigma$ is equally likely to occur, this gives
+the straight-forward approximation of the expansion factor $\alpha$[^notaccountingbindingeq]
+[^notaccountingbindingeq]: A better approximation in `expansion_factor` should
+take into account that multiple `BindingEq` constraints can result in the 
+same constraint, if the data contains multiple repetitions of the same character.
+One could for example treat the two constraint types independently, and assume
+that `BindingEq` constraints are satisfied with probability $1/26$,
+independently of one another.
+
+```rust
+fn expansion_factor(constraints: [Constraint]) -> f64 {
+    return 1.0 / 26.0 * constraints.len()
+}
+```
+
+{{% hint danger %}}
+There is still the branching factor!
+{{% /hint %}}
 
 ### Rewriting rule used in practice
