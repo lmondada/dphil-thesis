@@ -40,7 +40,7 @@
       {{- partial "docs/title" .Page -}}
     </a>
   {{ else if .Page.Content }}
-    <a href={{ if .Page.IsSection }}"{{ .Page.RelPermalink }}"{{ else }}"{{ .Page.Parent.RelPermalink }}#sec{{ .Page.Weight }}"{{ end }} class="{{ if $current }}active{{ end }}">
+    <a href={{ if .Page.IsSection }}"{{ .Page.RelPermalink }}"{{ else }}"{{ .Page.Parent.RelPermalink }}#{{ .Page.Slug }}"{{ end }} class="{{ if $current }}active{{ end }}">
       {{- partial "docs/title" .Page -}}
     </a>
   {{ else }}

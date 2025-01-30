@@ -16,6 +16,9 @@
     {{- errorf "Found more than one page with slug '%s'" .Slug -}}
   {{- end -}}
 {{- end -}}
+{{- if ne (len $paths) (len $slugs) -}}
+  {{- errorf "Found %d pages but %d slugs were provided" (len $paths) (len $slugs) -}}
+{{- end -}}
 
 {{- with $.Site.GetPage (index $paths 0) -}}
   {{- $firstIsSection = .IsSection -}}

@@ -2,6 +2,7 @@
 title = "Foundations of Quantum Computing"
 weight = 2
 layout = "section"
+slug = "sec:basics"
 +++
 
 The most widespread computational model in quantum
@@ -331,6 +332,6 @@ You will probably notice that there seems that there seems to be a system to
 this graphical notation. There is, but unfortunately explaining it would
 require us to discuss Pauli matrices, commutation relations, and quickly lead
 us astray.
-The references at the end of this chapter[^email] are a good starting point
+The references in {{% reflink "sec:litt" %}}[^email] are a good starting point
 for further reading. 
 [^email]: Or my email!

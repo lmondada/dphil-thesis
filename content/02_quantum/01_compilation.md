@@ -172,7 +172,7 @@ compilation problem.
 It is hard to imagine today that it would ever be sensible to deploy an entire
 compilation stack such as LLVM on quantum hardware. Why tooling so close to
 the classical compiler frameworks will be required for quantum compilation
-is a topic we will return to in the next sections.
+is a topic we will return to in {{<reflink "sec:need-help" >}}.
 
 Cross-compilation presents significant challenges.
 As quantum programs grow in size and complexity, debugging and verifying

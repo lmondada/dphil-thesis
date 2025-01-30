@@ -1,8 +1,8 @@
 +++
-title = "Review of quantum compiler optimisations"
+title = "Quantum compiler optimisations: a review"
 layout = "section"
-weight = 4
-slug = "sec:limitations"
+weight = 3
+slug = "sec:quantum-sota"
 +++
 
 Much of the foundations of classical computer science relies

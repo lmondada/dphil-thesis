@@ -1,8 +1,8 @@
 +++
 title = "Summary and further reading"
-template = "section.html"
-weight = 4
+weight = 6
 layout = "section"
+slug = "sec:litt"
 +++
 
 This introductory chapter covered some of the basic principles of

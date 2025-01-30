@@ -12,11 +12,11 @@ In summary, our claim is that given
 
 1. the challenge of scaling up quantum programs sizes to make the most of the
 computational capabilities of upcoming hardware
-(cf. {{< reflink "sec:compilation" "sec:limitations" >}}) and
+(cf. {{< reflink "sec:compilation" "sec:quantum-sota" >}}) and
 2. the modularity and expressiveness that quantum compilers will require
 to simultaneoulsy express higher level abstractions, hardware primitives
 and interleaved quantum classical computation
-(cf. {{< reflink "sec:hybrid" "sec:hybrid2" "sec:toyir">}}),
+(cf. {{< reflink "sec:hybrid" "sec:need-help" "sec:toyir">}}),
 
 graph rewriting is uniquely positioned to serve as the backbone of a
 quantum compilation framework.
