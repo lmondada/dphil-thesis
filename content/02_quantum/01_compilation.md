@@ -2,6 +2,7 @@
 title = "A new compilation regime"
 weight = 1
 layout = "section"
+slug = "sec:compilation"
 +++
 
 We have introduced quantum compilation by drawing an analogy with the
@@ -20,12 +21,13 @@ where silicon-based transistors have become the definitive physical foundation
 for all electronic chips, the search for the most scalable and reliable 
 technology for quantum computing is ongoing---and doubtless one of the most
 burning questions for the nascent industry.
+This introduces an incredible variety of compilation problems.
 
 Quantum hardware designs are dictated on the one hand by the choice of the
 quantum physical system used to encode the data of the computation, and
 by the technology that serves to control and manipulate the system on the other.
-Suggestions for the former include charged ions @Kielpinski_2002 @Pellizzari_1995, neutral atoms @Jaksch_2000, @Deutsch_2000, photons @Knill_2001, transmons @Blais_2007
-and Majorana @Sau_2010 particles.
+Suggestions for the former include charged ions @Kielpinski_2002 @Pellizzari_1995, neutral atoms @Jaksch_2000 @Deutsch_2000, photons @Knill_2001, transmons @Blais_2007
+and even Majorana @Sau_2010 particles.
 The control systems that drive the desired operations on these particles
 is then built using some jolly mixture of lasers, magnetic fields, microwaves,
 dilution fridges etc.
@@ -36,8 +38,8 @@ to large systems but are very error-prone and unreliable; others still achieve
 high fidelities at the expense of slow operations.
 
 From the perspective of a compiler engineer, this means that we must equip
-quantum compilers to handle a large variety of instruction sets, multiple optimisation
-goals and hardware specific program constraints.
+quantum compilers to handle a large variety of hardware primitives,
+multiple optimisation goals and hardware specific program constraints.
 This is a huge challenge that traditional compilation is ill-equipped to handle.
 
 A comparison of machine code for different architectures illustrates well
@@ -78,19 +80,63 @@ broadly equivalent, as is confirmed by the existence of translation tools
 such as [Apple Rosetta](https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment).
 
 Let us contrast this with the difference between two quantum architectures.
-TODO: photons VS some qubits.
+Consider on the one hand an architecture that can natively perform CX and H
+gates on qubits (e.g. superconducting qubits, ion traps, etc)
+and on the other a platform based on photons and optical components.
+{{% columns ratio="1:1" %}}
+**Quantum circuit (qubits)**
+```asm
+h q[0];
+cz q[0],q[1];
+```
+<--->
+**Linear circuit (photons)**
+```asm
+bs.h(5*pi/2, pi, pi, 2*pi) m[0], m[1];
+bs.h m[2], m[3];
+perm([2, 1, 3, 0]) m[1], m[2], m[3], m[4];
+barrier m[0], m[1], m[2], m[3], m[4], m[5];
+bs.h(1.910633) m[0], m[1];
+bs.h(1.910633) m[2], m[3];
+bs.h(1.910633) m[4], m[5];
+perm([1, 0]) m[2], m[3];
+bs.h m[3], m[4];
+perm([3, 0, 1, 2]) m[1], m[2], m[3], m[4];
+```
+{{% /columns  %}}
+On the left is a quantum circuit as expressed in the OpenQASM2 standard @Cross2017.
+The right hand side is the equivalent linear optics circuit computed by
+Perceval @Heurtel2023, expressed in an OpenQASM2-like format.
+The conversion is by no means straight-forward!
+Some of the challenges include encoding qubits into multiple photon modes
+and mapping quantum operations to an optically realizable procedure made
+of optical components and measurements @Felice2023.
+
+Other architectures, such as neutral atoms, may broadly support qubit-based
+operations but might not offer control over individual qubits, and instead
+require any operations to be applied in parallel to large groups of
+qubits @Bluvstein2022.
+Finally, it is to be expected that error correcting codes
+that individual platforms will introduce to reduce error rates 
+at the hardware level will introduce further constraints and
+new instruction sets yet again.
 
 It is worthwhile to note that current trends in the classical world are also
-pushing compilers towards more heterogenous architectures.
-Nonetheless, this shift has so far mostly taken the form of new hardware
-specific compilation tools developed by the hardware manufacturers themselves,
-rather than a fundamental reorganisation of existing tools.
+pushing compilers towards more heterogenous architectures that may include
+GPUs, FPGAs and other accelerators.
+This has led to significant changes in the design of current compilers, which
+we will touch upon later.
+Nonetheless, this shift has so far mostly "limited" itself to new forms of parallelism
+and the introduction of more specialised instruction sets,
+rather than a fundamental redesign of existing tools and computing paradigms.
 The breadth of technologies and trade-offs that quantum compilers must face have
 for the time being no equivalent in the classical world.
 
-[^cpu]: x86 and ARM are really the only game in town for everything from mobile
-phones to laptops, desktops and all the way to data centres. See the [Steam
-Hardware and Software survey](https://store.steampowered.com/hwsurvey/processormfg/)
+[^cpu]: There are other architectures such as Risc-V @Waterman2016
+and MIPS @Hennessy1982, but as of 2025
+the quasi totality of consumer and professional CPUs
+run on x86 or ARM, from mobile
+phones to laptops, desktops and all the way to data centres. See @Valve2024
 for a detailed hardware market share analysis, albeit focused on gaming.
 Details on mobile market share can be found in
 [this survey](https://www.counterpointresearch.com/insight/global-smartphone-apsoc-market-share-quarterly)---all of the listed
@@ -131,10 +177,11 @@ is a topic we will return to in the next sections.
 Cross-compilation presents significant challenges.
 As quantum programs grow in size and complexity, debugging and verifying
 their correctness without access to the target hardware becomes
-increasingly difficult @Rovara2024.
-Pursuing this would lead us into the domain of quantum simulation, a
-vibrant research area that has been and will continue to be the
-subject of theses in its own right.
+increasingly difficult @Rovara2024, as we hit the limits of what can be
+simulated classically.
+Quantum simulation is a vibrant research area that has been and will
+continue to be the subject of theses (e.g. @Flannigan2020 @Azad2024)
+in its own right.
 
 On the flip side, using classical hardware for quantum program compilation
 comes with a giant opportunity for compilers:

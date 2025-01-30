@@ -13,22 +13,23 @@ that builds a data structure that is amenable to pattern matching from the
 supplied set of rewrite rules. This allows us to obtain significant speedups
 in the exploration phase of the framework.
 The design of the pattern matching engine is described in more detail
-in section [4.2](/04_rewriting#sec2), while the original contributions
+in {{< reflink "sec:pattern" >}}, while the original contributions
 with a detailed presentation of the pre-processing computation and an analysis of the
-asymptotic speedup are presented in {{< reflink "/05_matching" >}}.
+asymptotic speedup are presented in {{< reflink "chap:matching" >}}.
 
 The second component is charged with the application and prioritisation
 of the discovered rewrites.
 Depending on the cost function and heuristics employed, it may select a subset
 of rewrites or any combination of multiple rewrites to produce zero, one or many
 new candidate programs that are equivalent to the input program.
-We discuss several rewriting strategies in section [4.3](/04_rewriting#sec3).
+We discuss several rewriting strategies in
+{{< reflink "sec:rewrite" >}}.
 Beyond that, we argue that optimisation based on local rewriting must be
 done in parallel to scale to large input sizes.
-For this purpose, section [4.3](/04_rewriting#sec3) presents a refinement of
+For this purpose, {{< reflink "sec:rewrite" >}} presents a refinement of
 our framework for the distributed setting.
 To enable this, a new distributed data structure inspired by equality saturation
-is presented in {{< reflink "/06_parallel" >}}. 
+is presented in {{< reflink "chap:parallel" >}}. 
 
 The simple heuristic driving our optimisation loop, consisting
 of pattern matching and rewrite application, relies on a
@@ -42,7 +43,7 @@ This corresponds to a simple backtracking search, which greedily
 chooses the best candidate at each step, and retreats to optimising
 previous candidates once all better candidates have been exhausted.
 Improvements to the search heuristic are an obvious area for future work, which we do not explore in this thesis but briefly
-discuss in our concluding chapter, {{< reflink "/07_conclusion" >}}.
+discuss in our concluding chapter, {{< reflink "chap:conclusion" >}}.
 
 {{< figure
   src="svg/overview-matcher.svg"

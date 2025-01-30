@@ -2,6 +2,7 @@
 title = "Quantum compilers cannot do it alone"
 weight = 1
 layout = "section"
+slug = "sec:hybrid2"
 +++
 
 We have convinced ourselves in the previous chapter that quantum

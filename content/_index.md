@@ -30,7 +30,7 @@ Hilary 2024
 ---
 {{% hint danger %}}
 This is very very work in progress. Currently worth reading:
-{{< reflink "/02_quantum" "/03_compiler" >}}; {{< reflink "/04_rewriting" >}}
+{{< reflink "chap:basics" "chap:compiler" >}}; {{< reflink "chap:rewriting" >}}
 is coming along and will be ready next.
 {{% /hint %}}
 ---

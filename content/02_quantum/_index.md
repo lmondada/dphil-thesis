@@ -3,6 +3,7 @@ title = "Quantum Computing: a Computer Scientist's Perspective"
 sort_by = "weight"
 weight = 2
 layout = "chapter"
+slug = "chap:basics"
 +++
 
 Many (too many?) introductions to quantum computing have been written, and so
@@ -14,7 +15,7 @@ Quantum computing is the computational model that arises from the quantum
 mechanical manipulation of finite dimensional physical systems[^particle].
 Realising this new computing paradigm requires an entirely new technology stack:
 most obviously, new dedicated hardware, but also a large collection of software
-tools that transform the intents of a human user into a symphony of electirc
+tools that transform the intents of a human user into a symphony of electric
 pulses that operate all components of the hardware installation (lasers,
 magnetic fields, currents, photodetectors etc.).
 

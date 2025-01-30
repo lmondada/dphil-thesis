@@ -2,6 +2,7 @@
 title = "Review of quantum compiler optimisations"
 layout = "section"
 weight = 4
+slug = "sec:limitations"
 +++
 
 Much of the foundations of classical computer science relies
@@ -601,4 +602,4 @@ hybrid quantum classical programs based on standardised IR formats.
 Before proceeding with that, however, we propose one more section reviewing
 past work. It focuses on two advanced classical compilation techniques that
 form the foundation of the quantum compiler architecture we will propose
-in {{< reflink "/04_rewriting" >}}.
+in {{< reflink "chap:rewriting" >}}.

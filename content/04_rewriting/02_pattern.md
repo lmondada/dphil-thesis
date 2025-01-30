@@ -2,6 +2,7 @@
 title = "Pattern matching engine"
 layout = "section"
 weight = 2
+slug = "sec:pattern"
 +++
 
 As discussed in the [review of superoptimisation](/03_compiler/#superoptimisation)
@@ -53,7 +54,7 @@ rewrite rules, we can then convert every pattern match into a rewrite to be
 considered during optimisation.
 
 The inner workings of the pattern matching algorithm are discussed in-depth
-for the use case of portgraph matching in {{< reflink "/05_matching" >}}.
+for the use case of portgraph matching in {{< reflink "chap:matching" >}}.
 In this section, we instead present pattern matching abstractions and a novel
 user interface that surfaces the capabilities
 of the pattern matching engine in a declarative and extensible way.

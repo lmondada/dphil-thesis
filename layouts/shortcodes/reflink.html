@@ -1,16 +1,26 @@
 {{- $capitalize := false -}}
-{{- $paths := .Params -}}
+{{- $slugs := .Params -}}
 {{- if and (gt (len .Params) 0) (eq (index .Params 0) "upper") -}}
   {{- $capitalize = true -}}
-  {{- $paths = after 1 .Params -}}
+  {{- $slugs = after 1 .Params -}}
 {{- end -}}
 
 {{- $links := slice -}}
 {{- $firstIsSection := true -}}
 
+{{- $paths := slice -}}
+{{- range where $.Site.Pages "Slug" "in" $slugs -}}
+  {{- if eq (len (where $.Site.Pages "Slug" .Slug)) 1 -}}
+    {{- $paths = $paths | append .File.Path -}}
+  {{- else -}}
+    {{- errorf "Found more than one page with slug '%s'" .Slug -}}
+  {{- end -}}
+{{- end -}}
+
 {{- with $.Site.GetPage (index $paths 0) -}}
   {{- $firstIsSection = .IsSection -}}
 {{- end -}}
+
 {{- range $paths -}}
   {{- with $.Site.GetPage . -}}
     {{- $isSection := .IsSection -}}
@@ -18,13 +28,14 @@
       {{- errorf "Cannot mix sections and regular pages in the same reference" -}}
     {{- end -}}
     {{- $weight := .Weight -}}
+    {{- $slug := .Slug -}}
     {{- if $isSection -}}
       {{- $link := printf `<a href="%s">%d</a>` .RelPermalink $weight | safeHTML -}}
       {{- $links = $links | append $link -}}
     {{- else -}}
       {{- with .Parent -}}
         {{- $parentWeight := .Weight -}}
-        {{- $link := printf `<a href="%s">%d.%d</a>` .RelPermalink $parentWeight $weight | safeHTML -}}
+        {{- $link := printf `<a href="%s#%s">%d.%d</a>` .RelPermalink $slug $parentWeight $weight | safeHTML -}}
         {{- $links = $links | append $link -}}
       {{- end -}}
     {{- end -}}

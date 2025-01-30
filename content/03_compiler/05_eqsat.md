@@ -2,6 +2,7 @@
 title = "Selected techniques in modern classical compilation"
 layout = "section"
 weight = 5
+slug = "sec:eqsat"
 +++
 
 Optimisations in compilers are typically built as passes.
@@ -27,7 +28,7 @@ we will need to find a more convincing solution to this problem.
 Fortunately, classical compilation is a mature field that has already experienced
 (and solved!) most of the challenges that quantum compilers have faced, and will ever face,
 in peephole optimisation.
-Our proposal, described in {{< reflink "/04_rewriting" >}}, combines two modern compilation techniques
+Our proposal, described in {{< reflink "chap:rewriting" >}}, combines two modern compilation techniques
 that mitigate this and which we will review now: Superoptimisation and Equality saturation.
 
 ### Superoptimisation
@@ -316,7 +317,7 @@ quantum computation presents several unsolved challenges.
 
 The root of the problem lies in the program representation.
 Fundamentally, the `minIR` representation we sketched out in
-{{< reflink "/03_compiler/03_toyir" >}}---but also the quantum circuit
+{{< reflink "sec:toyir" >}}---but also the quantum circuit
 representation---capture quantum computations, not as a term, but in a
 directed acyclic graph (DAG) structure.
 

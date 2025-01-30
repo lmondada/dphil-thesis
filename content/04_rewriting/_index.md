@@ -3,7 +3,7 @@ title = "A Framework for Scalable Graph Rewriting"
 sort_by = "weight"
 weight = 4
 layout = "chapter"
-refname = "Chapter 4"
+slug = "chap:rewriting"
 +++
 
 With this chapter we have arrived at the core of this thesis:
@@ -12,17 +12,17 @@ In summary, our claim is that given
 
 1. the challenge of scaling up quantum programs sizes to make the most of the
 computational capabilities of upcoming hardware
-(cf. sec. [2.1](/02_quantum#sec1) and [3.4](/03_compiler/#sec4)) and
+(cf. {{< reflink "sec:compilation" "sec:limitations" >}}) and
 2. the modularity and expressiveness that quantum compilers will require
 to simultaneoulsy express higher level abstractions, hardware primitives
 and interleaved quantum classical computation
-(cf. sec. [2.3](/02_quantum#sec3), [3.1](/03_compiler/#sec1) and [3.3](/03_compiler/#sec3)),
+(cf. {{< reflink "sec:hybrid" "sec:hybrid2" "sec:toyir">}}),
 
 graph rewriting is uniquely positioned to serve as the backbone of a
 quantum compilation framework.
 
 Our proposal draws much from the design and techniques of classical compilers
-(cf. sec. [3.3](/03_compiler/#sec3) and [3.5](/03_compiler/#sec5)).
+(cf. {{< reflink "sec:toyir" "sec:eqsat" >}}).
 Quantum, however, distinguishes itself in two ways, forming the cornerstones
 of our design.
 The focus on small, local graph transformations for quantum optimisation 
@@ -34,13 +34,14 @@ without losing expressiveness.
 This design choice in turn opens the door for large scale optimisation and
 compilation on parallel or even distributed hardware.
 
-Equally important, the linear types of quantum computing (cf. sec. [3.3](/03_compiler/#sec3)) significantly constrain
+Equally important, the linear types of quantum computing
+(cf. {{< reflink "sec:toyir" >}}) significantly constrain
 the space of possible program transformations.
 Our contributions in this thesis highlight how these restrictions can be leveraged
 to create quantum-specific variants of classical compilation techniques that
 scale much more favourably.
 This makes approaches that are too expensive for classical compilers
-(cf. sec. [3.5](/03_compiler/#sec5))
+(cf. {{< reflink "sec:eqsat" >}})
 perfectly feasible[^unfeasible] in the context of quantum compilation.
 [^eqcomp]: More precisely, they show that any two equivalent quantum circuits
 can be transformed into each other using a finite number of local rewriting
