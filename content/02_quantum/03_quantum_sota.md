@@ -1,5 +1,5 @@
 +++
-title = "Quantum compiler optimisations: a review"
+title = "Quantum circuit optimisations: a review"
 layout = "section"
 weight = 3
 slug = "sec:quantum-sota"
@@ -10,60 +10,62 @@ on boolean logic and discrete mathematics @Lehman2017.
 This is in some regards a poor man's
 maths, as much of the structure that comes with continuous infinite mathematical
 objects is lost along the way when discretised.
-Quantum computing on the other hand encompasses the whole breadth of quantum
-physical system evolution, with the underlying mathematics steeped in the theory
+
+In contrast, quantum computations on the other hand encompasses
+the whole breadth of (finite dimensional) quantum physical system evolution.
+Underlying this is a rich mathematical theory, steeped in the theory
 of Hilbert spaces and Lie groups[^lie].
+A direct consequence of the mathematics of quantum computations is
+the flourishing of an entire field of research dedicated to quantum circuit
+optimisations @Karuppasamy2025.
+They leverage the unique structure and symmetries of quantum physics to
+achieve significant reductions in the noise and resource requirements of
+quantum computations.
 [^lie]: If you are intreagued have a look at this
 nice introduction @Kottmann2024 and references therein.
 It's not as scary as it sounds.
 
-A direct consequence of the rich mathematics of quantum computations is
-the flourishing of an entire field of research dedicated to quantum-specific
-compiler optimisations @Karuppasamy2025.
-Using all the assumptions and theory of quantum physics to design smart
-optimisations is the strength of these techniques, but also their weakness:
-in the face of rising hybrid classical-quantum computations, it is a priority
-that the performant algorithms that have been developed for this purpose be
-adapted to handle intermingled classical computations.
-
-In this section, we will pass in review the main optimisation techniques---and
-closely related, the representation of quantum computations they use
-respectively---that have established themselves, with a particular focus on
-how they intersect with classical compiler design and how they 
-generalise to work on quantum programs expressed in an IR such as
-`minIR`. 
+In this section, we will pass in review the main optimisation techniques that
+established themselves within quantum compilers---with
+a particular focus on the representation of quantum computations they use
+and the assumptions they make about the computations they are optimising.
 
 #### Cost function
 
-A key point to settle first when discussing quantum optimisations is what
-cost function it is we are "optimising".
+A key point to settle first when discussing circuit optimisations is the
+objective of the optimisation---the cost function to be minimised.
 Unlike much of classical compiler research, which can rely on an established set
-of hardware targets and benchmark programs to use as optimisation objective,
-there is as of yet no settled answer on the "right" quantum metric that must
-be optimised.
+of hardware targets and benchmarking datasets to profile the empirial, "real world"
+performance of compiled programs,
+the quantum world must often contend with simplified noise and architecture models 
+to design proxy metrics, given the limited
+scale and availability of current quantum devices.
 
-Most work can however be clustered in one of two buckets: the cost measure
-of a quantum program is either designed to approximate the amount
-of noise
-(i.e. errors) that would be introduced by current and near-term hardware,
-or it models the resource requirements for the program execution on a more
-distant large scale
-device, with the assumption that all hardware errors will be suppressed using
-error correction @Karuppasamy2025.
+The quantum compilers research community has mostly coallesced around cost
+functions based on gate count statistics @Karuppasamy2025.
+Counting a type of gate is a simple and popular choice.
+Making some additional assumptions on the gate parallelism of
+future hardware,
+one may also consider cost functions based on gate depth, i.e. the length
+of the longest chain of gates that cannot be run
+simultaneously @Selinger_2013 @Basilewitsch2024.
 
-In many current architectures, the major challenge is to achieve high accuracy
+Despite their simplicity, gate counts have served well as a cost function
+in a number of use cases.
+Circuit optimisations typically target one of two hardware regimes.
+In most current architectures, the major challenge is achieving high accuracy
 on entangling operations, i.e. quantum gates that make two or more qubits
 interact @Acharya2024 @Pino2021 @Koch_2007 @Blais_2007.
-While experimental realisations of many-qubit interactions have been
+In superconducting qubit and ion trap architectures[^otherhard], for example, the gate set
+is typically composed of one and two-qubit gate types, with error rates dominated
+by an order of magnitude by the latter @Steiger_2018 @Sivarajah2020.
+For near-term hardware, the number of two-qubit gates---typically
+the `CX` gate, though many other two-qubit gates could be used
+equivalently---has thus become a standard optimisation cost function
+[^otherhard]: Experimental realisations of many-qubit interactions have also been
 demonstrated @Erhard2019 @Bluvstein2022 @Arrazola2021 @Evered2023
 and are at the core
-of certain proposed architectures @Bartolucci_2023 @Bourassa2021, the most
-common computation primitives exposed by current hardware
-are one and two-qubit gates, with error rates dominated typically by an order
-of magnitude by the latter @Steiger_2018 @Sivarajah2020.
-It has thus become standard to use the number of two-qubit entangling gates
-as the cost function for near-term programs---typically the `CX` gate, though
-many other two-qubit gates could be used equivalently.
+of other proposed architectures @Bartolucci_2023 @Bourassa2021.
 
 When considering error-corrected computations, on the other hand,
 what is an "expensive" computation is no longer dictated by hardware noise,
@@ -72,7 +74,7 @@ the quantum data is redundantly encoded in the code space, the fault tolerant
 execution of specific operations 
 may be anywhere between very straight forward and nigh-impossible[^cliff].
 Concretely, the bottleneck is widely expected to be the execution of a 
-single-qubit gate, such as the `T` gate.
+single-qubit (non-Clifford) gate, such as the `T` gate.
 [^cliff]: Indeed, much of quantum error correction theory is built on
 the Clifford group, a subset of quantum operations that preserve
 "Pauli errors"---and can thus be corrected easily. The flip side of this is
@@ -80,25 +82,11 @@ that correcting any non-Clifford operation is very hard, something
 that is resolved by constructing "error-free" _magic_ states ahead of time.
 For more details, refer to a quantum error correction textbook such as @Gottesman2024.
 
-In summary, whilst much of the hardware design, the error correcting codes
-and what programs will actually be executed is still in flux,
-the research community has mostly coallesced around cost functions based
-on gate count statistics @Karuppasamy2025.
-Counting a type of gate is a simple and popular choice.
-Making some additional assumptions on the gate parallelism of
-future hardware,
-one may also consider cost functions based on gate depth, i.e. the length
-of the longest chain of gates that cannot be run
-simultaneously @Selinger_2013 @Basilewitsch2024.
-These may model run times more closely,
-but come at the price of non-local cost function: whether local 
-transformations of the program will have an effect on a depth-based cost function
-can only be decided by recomputing the cost over the program globally.
 
 
 ### The best: unitary synthesis
 
-The _ne plus ultra_ of quantum compilation is **unitary synthesis**.
+The _ne plus ultra_ of quantum circuit optimisation is **unitary synthesis**.
 It leverages the representation of a quantum computation as a square,
 complex-valued, unitary matrix, which is then _re-synthetised_ as a new,
 equivalent (and hopefully optimised!) quantum circuit.
@@ -114,9 +102,9 @@ The uniqueness of the unitary matrix representation
 makes it invaluable as a resource for computation optimisation.
 Not only does it reduce any potentially large collection of equivalent
 inputs to a single form;
-it also---crucially---provides a sound metric on the space of all circuits
-that can be used to measure the distance between synthesised
-circuits and direct the search towards the optimal solution.
+it also---crucially---provides in the form of the Haar measure a sound distance
+metric on the space of all circuits that can be used to measure the distance
+between synthesised circuits and direct the search towards the optimal solution.
 
 Early work explored general unitary decomposition schemes obtained analytically 
 from linear algebra.
@@ -178,40 +166,22 @@ circuit sizes. Despite the reduced optimisation
 performance that the boundaries of the partitioned circuits introduce,
 the combination of circuit partitioning with the techniques listed above
 yields some of the best performing circuit optimisation techniques developed to date @bqskit.
+Circuit synthesis schemes have also been extended to generate circuits on a
+more expressive gate set that includes elementary classical operations @Alam2024 @Niu2024.
 
 However, a fundamental flaw of all unitary synthesis schemes is the
 $4^n$-scaling in the number of qubits $n$ of the unitary
 representation itself. This
 means that no matrix-based synthesis method, however efficient, will ever be
 able to handle computations with much more than a dozen qubits.
-Circuit partitioning schemes do not solve this problem as much as they avoid
-it, by considering only a subset of the computation---at the cost of inferior
-performance.
-
-Closer to the concerns of this thesis, the unitary representation is also
-a poor candidate to express hybrid computations.
-In an exciting recent development, first studies of synthesis
-schemes in the presence of mid-circuit measurements have been performed
-that generalise search-based circuit synthesis to reason about measurements
-and conditional gates @Alam2024 @Niu2024.
-They present promising results, with significant reductions in circuit
-depth for state preparation and circuit synthesis.
-However, the expressiveness of the programs considered in these recent advances
-remains limited to circuit-based representations.
-It is unclear if and how these techniques could be extended to synthesise
-more complex hybrid programs, such as repeat-until-success schemes, let alone
-the kind of arbitrary hybrid programs expressible in `minIR`.
-
-{{% hint danger %}}
-See @Ge2024 for a recent review of work in this space. IS THIS ANY GOOD? Should I just read it?
-{{% /hint %}}
-
+Circuit partitioning schemes are an effective circumvention of the problem, but
+they are heavily dependent on the quality of the partitioning.
 
 ### The search for scalable representations
 
 Our study of unitary synthesis introduced us to a convenient two-step approach
-to quantum computation optimisation. The input computation
-(circuits, for the most part) is first transformed into a "global" 
+to quantum computation optimisation. The input circuit is first transformed
+into a "global" 
 representation that captures the computation as a whole, abstracting away
 the precise sequences of gates that composed the original circuit.
 This representation is then the input for the second half of the problem, which
@@ -233,7 +203,7 @@ $SU(2^n)$ is after all exponentially large.
 Rather, the issue is that the set of unitaries implementable in practice
 will be restricted to quantum computations
 with a polynomial number of gates;
-these only form a tiny subset of $SU(2^n)$[^su2n].
+these only form a tiny subset $poly \subseteq SU(2^n)$[^su2n].
 [^su2n]: Polynomial sized quantum circuits constitute a polynomial-dimensional submanifold of the exponential-dimensional $SU(2^n)$ Lie group. They are hence
 a measure zero subset of $SU(2^n)$ with respect to the Haar measure.
 
@@ -244,7 +214,7 @@ whilst enabling novel optimisations.
 
 #### Phase Polynomials and Pauli Gadgets
 
-A particularly convenient global representation of many quantum computations
+A particularly convenient global representation of many quantum circuits
 is as products of Pauli exponentials, also known as Pauli "Gadgets" @Cowtan2019.
 These unitaries are of the form
 $$U = \prod_{s \in P} exp(i \alpha_s \cdot s)$$
@@ -347,13 +317,10 @@ it is also a cornerstone of measurement-based quantum computing @Raussendorf_200
 and graph states @Hein2004, as well as one of the most promising approaches
 for fast quantum simulations @Gottesman1999 @Bravyi_2019 @Kissinger_2022.
 
-It has also given rise to a quantum program representation that has been used
-profusely for compiler optimistaion.
-Indeed, the Clifford fragment, i.e. the quantum circuits with unitaries
-in the Clifford group,
-admit an efficient, $\Theta(2n^2)$-sized representation,
-known as a **Clifford tableau** @Aaronson_2004.
-
+The Clifford subgroup of quantum circuits admits an efficient
+$\Theta(2n^2)$-sized program representation
+known as **Clifford tableau** @Aaronson_2004.
+This has been used profusely for compiler optimisation.
 In @Aaronson_2004 the first Clifford circuit synthesis procedure is given, using
 an analytical decomposition of clifford tableaus 
 into $O(n^2 /\log n)$ one and two-qubit gates.
@@ -364,7 +331,7 @@ the procedure can be further refined to replace gates with classical
 computation on the measurement outcomes @Bravyi_2021.
 Finally, an alternative normal form that is well-suited to hardware with
 limited nearest neighbours connectivity was also derived using a diagrammatic
-approach @jk.
+approach @Maslov2023.
 
 Just as in unitary synthesis, circuit decompositions more efficient than the
 general analytical expressions can be obtained
@@ -408,45 +375,19 @@ some of which we have already reviewed
 This selection of papers is not _quite_ exhaustive[^arb]---there are currently
 over 300 hundred papers on the topic as indexed by
 [zxcalculus.com](https://zxcalculus.com/).
-[^arb]: and arbitrary
+[^arb]: and totally arbitrary!
 
 Aside from being an invaluable tool for research and compiler pass design,
 a major contribution of these diagrammatic representations
-is the introduction of graph rewriting systems @Ehrig1973 @Rozenberg1997 @Koenig2018
+is the introduction of graph transformation systems (GTS) @Ehrig1973 @Rozenberg1997 @Koenig2018
 to quantum computing.
-Rewriting systems were first introduced on strings @Dershowitz1990, then
-generalised to trees and terms @Bezem2003.
-
-From a formal point of view, rewrite systems endow quantum compilation with
-well-defined semantics and strong theoretical foundations @Lack2005.
-Just as importantly (or more so), they establish a practical, purely
-declarative framework in which compiler transformations can be defined, debugged
-and analysed.
-System properties such as completeness, confluence and termination
-of rewriting systems @Verma1995 @Backens2014 @Biamonte2023
-can be analytically studied, proven and then be relied on by compilers
-for soundness and performance guarantees @Duncan2020 @Kissinger2020 @Sivarajah2020 @Borgna2023.
-
-However, there is an apparent tension in the integration of
-diagrammatic calculi into compilers
-between the search for abstract primitives admitting a simple rewriting
-logic  @Heurtel2024 @Booth2024 @Felice2023a @Carette2023
-and the requirement to capture all the expressivity and constraints of
-hardware targets.
-
-An example of this is the ZX circuit extraction problem @Quanz2024 @Backens2021&#x200B;:
-it is in general hard to recover an executable quantum circuit from a ZX
-diagram as the latter is strictly more general and primitives cannot be mapped
-one-to-one.
-Similarly, while simple quantum-classical hybrid computations can be expressed
-using extensions of ZX @Borgna2021 @Carette2021 @KoziellPipe2024, it will
-never be possible to capture the full breadth and generality of classical CPU
-instruction sets in a practical and extensible (and algebraically satisfying) way.
+More on this in {{<reflink "chap:compiler" >}}
+(and much of the rest of this thesis)!
 
 #### Reversible classical circuits
 There are many more representations, that have either been taken over from
 classical compiler optimsations or were developed for specific purposes.
-The last we will mention is reversible circuits synthesis, a
+The last we will mention is reversible circuit synthesis, a
 fully classical circuit design problem
 which can draw from results of decades of research.
 From a quantum perspective, reversible classical circuits correspond
@@ -493,9 +434,7 @@ classical decompositions.
 
 ---
 
-In summary, our exploration of various quantum computation representations and 
-synthesis techniques highlights both their remarkable strengths and inherent
-limitations. On the positive side, a variety of scalable representations---such as
+In summary, a variety of scalable representations---such as
 phase polynomials, Pauli gadgets, Clifford tableaus, diagrammatic calculi, and
 reversible circuits---have been developed to abstract computations and
 enable highly tailored optimisation methods. These approaches leverage the
@@ -507,99 +446,3 @@ compilers @Amy2019 @Griend2025.
 Meanwhile, diagrammatic calculi, such as the ZX calculus, provide a flexible
 and theoretically robust framework for optimisations, often revealing
 simplifications invisible in the traditional gate-based model.
-
-However, this specialisation comes with trade-offs. These representations and
-techniques target purely unitary computations and rely on strict assumptions
-about the primitives they support. While efficient for the scenarios they
-were designed for, these methods can struggle to incorporate new primitives and
-are hard to adapt to hybrid programs. 
-In order to develop more versatile and adaptable compilation platforms,
-a foundation built on more general purpose tooling is required.
-
-
-### Resorting to peephole optimisations
-
-We have so far considered quantum-specific compiler optimisations, which can
-attain near-optimal results (unitary synthesis) as well as perform scalable
-non-local program resynthesis and optimisation (phase polynomials,
-Clifford tableaus etc.).
-We have however seen that these techniques struggle to generalise to hybrid
-programs and require custom program representations, which carry with them
-a high implementation burden for compilers.
-In contrast, peephole optimisations @McKeeman1965 @Tanenbaum1982 are a
-general purpose optimisation technique
-as old as compilation itself that act directly on the program IR
-and come with wide support within classical compiler
-ecosystems @Menendez2017 @Lopes2015 @Riddle2021.
-
-Peephole optimisations are local transformations of the IR, based on the
-heuristic that local optimisations to the program will produce a well-optimised
-result overall.
-The principle is very simple:
-a sliding window traverses the IR and considers a few operations at a time.
-Once established which peeophole optimisations would apply on the current
-window, one optimisation is selected and applied.
-Finally, the result obtained is used to replace
-the operations within the window.
-We refer to classical compiler literature, e.g. @Muchnick2007, for more details.
-
-Quantum compilers adopted peephole-style optimisations from the
-beginning @Cheung2007 @Steiger_2018 @Sivarajah2020.
-In fact, they encompass some of the most common optimisations in quantum
-computing, including the Euler Angle reduction @Chatzisavvas2009,
-the two-qubit KAK decomposition @Tucci2005 @Cross2019
-and all gate set rebases @autorebase.
-A quantum-specific flavour of peephole optimisation,
-template matching @Maslov2008 @Iten2022, achieved
-state of the art results for Clifford circuit optimisation @Bravyi2021a.
-Recently, quantum peephole optimisations were also proposed that leverage
-provable state information to perform contextual optimisations @Liu2021,
-similar to strength reduction and optimisation with preconditions in classical
-compilation @Lopes2015.
-
-There have further been advances in the theoretical underpinnings of peephole optimisations
-for quantum optimisation: Clement et al recently presented the first
-complete equational theories for quantum circuit @Clement2023 @Clement2024,
-proving that for any two equivalent quantum circuits there is a sequence
-of local transformations that rewrite one into the other.
-In other words, it is in principle possible to achieve optimal circuit compilation
-using peephole transformations only.
-
-Peephole optimisation is fast, general and scalable. However, its performance
-is heavily dependent on well-designed heuristics and may vary widely across
-input programs.
-This is often refered to in compiler research as the phase ordering
-problem @Click1995&#x200B;: 
-whenever a compiler can rewrite code in more than one way, it must
-decide which transformations should be applied and in which order, to obtain
-the most optimised result @Whitfield1997 @Liang2023.
-This issue is also a key challenge within quantum compilation:
-unitary sythesis tools can sometimes outperform current, mostly peephole-based
-compilers @Sivarajah2020
-by up to 50%[^cost] @Wu2020.
-[^cost]: at the cost of many hours of compute, of course.
-
---- 
-
-We come away from our review having explored two competing worlds.
-On the one hand, using custom quantum-specific program representations,
-it is possible to capture quantum semantics precisely and enable global program
-transformations.
-On the other hand, one can rely on standard compiler techniques and its dedicated
-mature infrastructure to drive scalable and extensible quantum optimisation
-techniques.
-So far, the latter has always come at the cost of some performance, making
-tailored solutions the preferred approach.
-
-We argue that going forward, however, the scaling and engineering challenges
-that will come with building out custom compiler tooling will prove difficult,
-given the large variations in quantum architectures and the unavoidable
-integration with classical hardware such as CPUs, GPUs and FPGAs.
-The remainder of this thesis presents contributions that aim to close the gap
-in performance, so as to enable state of the art compilation of large scale,
-hybrid quantum classical programs based on standardised IR formats.
-
-Before proceeding with that, however, we propose one more section reviewing
-past work. It focuses on two advanced classical compilation techniques that
-form the foundation of the quantum compiler architecture we will propose
-in {{< reflink "chap:rewriting" >}}.

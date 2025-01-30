@@ -7,10 +7,10 @@ slug = "sec:hybrid"
 
 ### Quantum measurements
 
-Until now, we have skipped over a crucial part of the quantum computation 
+We have until now skipped over a crucial part of the quantum computation 
 process: the role of quantum measurements.
 Quantum data, in isolation, is inherently inaccessible to humans:
-we cannot consume it!
+we cannot consume or process it!
 A result from a quantum computation is only of value if we can probe it
 and get some readout value that we can display to the user or return to
 whomever launched the quantum computation.

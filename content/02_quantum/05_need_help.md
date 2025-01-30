@@ -5,7 +5,7 @@ layout = "section"
 slug = "sec:need-help"
 +++
 
-We have convinced ourselves in the previous chapter that quantum
+We have (hopefully!) by now convinced ourselves that quantum
 programs must interface with our established classical infrastructure, and
 should rather be understood as an interleaved execution of both classical and
 quantum operations.
@@ -17,7 +17,7 @@ How do we equip quantum compilers to deal with classical operations?
 
 The simplest solution is to adopt the extended quantum circuit
 formalism with support for classically-controlled operations,
-as we have introduced it in the previous chapter.
+as we have introduced it in the previous section.
 Using this representation, the basic types available for computation are the
 qubit and the classical bit. We can also at that point introduce purely
 classical operations on bits, for instance to compute boolean logic on
@@ -117,7 +117,7 @@ For quantum hardware, no-one expects to be able to manipulate qubits without
 introducing errors for a very long time[^majorana], and so, error correction will be
 absolutely everywhere, as soon as our quantum computers will have managed to
 implement such protocols.
-[^majorana]: At the risk of stoking controversy, we should at this point
+[^majorana]: We should at this point---at the risk of stoking controversy---
 acknowledge the commendable efforts of scientists chasing the Majorana
 particle @Sau_2010 @Haaf2024 @Mourik_2012. The topological quantum computers
 these would enable are to my knowledge the only quantum architecture proposed

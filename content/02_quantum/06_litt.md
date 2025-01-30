@@ -5,6 +5,10 @@ layout = "section"
 slug = "sec:litt"
 +++
 
+{{% hint danger %}}
+Rewrite this
+{{% /hint %}}
+
 This introductory chapter covered some of the basic principles of
 quantum computation,
 and in doing so has hopefully made a convincing argument why we should expect

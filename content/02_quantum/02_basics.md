@@ -1,5 +1,5 @@
 +++
-title = "Foundations of Quantum Computing"
+title = "Foundations of quantum computing"
 weight = 2
 layout = "section"
 slug = "sec:basics"
