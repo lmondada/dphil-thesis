@@ -1,0 +1,11 @@
+{{ $title := .Get "title" }}
+{{ $number := .Get "number" | default "" }}
+<div class="definition-block">
+    <div class="definition-header">
+        <span class="definition-label">Definition{{ if $number }} {{ $number }}{{ end }}</span>
+        {{ if $title }}<span class="definition-title">{{ $title }}</span>{{ end }}
+    </div>
+    <div class="definition-content">
+        {{ .Inner | markdownify }}
+    </div>
+</div>

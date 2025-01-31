@@ -316,8 +316,8 @@ quantum computation presents several unsolved challenges.
 [^thesis]: but fortunately for this thesis
 
 The root of the problem lies in the program representation.
-Fundamentally, the `minIR` representation we sketched out in
-{{< reflink "sec:toyir" >}}---but also the quantum circuit
+Fundamentally, the minIR representation we sketched out in
+{{< reflink "sec:graph-defs" >}}---but also the quantum circuit
 representation---capture quantum computations, not as a term, but in a
 directed acyclic graph (DAG) structure.
 

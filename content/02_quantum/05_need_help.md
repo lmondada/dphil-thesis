@@ -209,3 +209,75 @@ quantum tooling and quantum optimisation research into the established compilers
 ecosystem.
 What this means exactly is the subject of the rest of this chapter. 
 
+
+### A new quantum programming paradigm? A quantum IR?
+
+We have seen it---quantum circuits are very limited in their expressiveness.
+They are well suited to present sequences of purely quantum operations as well as how the
+computation is parallelised across qubits, but they quickly become limiting
+once both quantum and classical data types are mixed and any type of control
+flow (conditionals, loops, function calls, etc.) is introduced.
+
+How users express programs in the front end has deep implications on the kind
+of computations that the compiler must be capable of reasoning about---and hence
+on the architecture of the compiler itself.
+The great merging of classical and quantum compilers is the perfect opportunity
+to reconcile program representations and to integrate the learnings
+from decades of classical programming languages research into quantum computing.
+
+There have been several trailblazing initiatives to create quantum programming
+languages, such as QCL @Oemer2000, Q# @Qsharp and Silq @Bichsel2020.
+Admittedly, their impact and adoption in the quantum
+ecosystem has so far remained limited,
+overshadowed by the popularity of python-based APIs for quantum circuit-based
+representations, as offered by Qiskit @JavadiAbhari2024,
+Pennylane @Bergholm2022 and Cirq @CirqDevelopers2024.
+There is as a result a justified dose of scepticism in the quantum community
+on how well the ideas from classical programming really translate to
+quantum.
+
+It is thus all the more notable that we are seeing a new generation of quantum
+programming tooling being developed @Koch2024 @Ittah_2024 @Cudaq, driven by 
+the need to write more expressive programs for the improving hardware
+(as we have been discussing), as well
+as for performance reasons, to scale quantum compilation to
+large scale @Ittah_2022, accelerate quantum simulations @Ittah_2024
+and integrate with
+classical high performance computing (HPC) @CudaqHpc.
+
+The history of programming is first and foremost a masterclass
+in constructing abstractions. Many of the higher level primitives,
+that have proven invaluable classically, solve problems that
+we expect to encounter very soon in our hybrid programs---when we
+have not already.
+Examples include
+1. **structured control flow** to simplify reasoning about branching
+in quantum classical hybrid programs,
+2. **type systems** to encode program logic and catch errors at compile
+time---this is particularly important for quantum programs as there is
+no graceful way of handling runtime errors on quantum hardware: by the
+time the error has been propagated to the caller, all
+quantum data stored on qubits is probably corrupted and lost,
+3. **memory management** such as reference counting and data ownership models. Current hardware follows a static memory model, in which the 
+number of available qubits is fixed and every operation acts on a set
+of qubits assigned at compile time.
+This becomes impossible to keep track of in instances such as
+qubit allocations within loops with an unknown number of
+iterations at compile time.
+It thus becomes necessary to manage qubits dynamically, just
+like classical memory.
+
+
+To facilitate such a large swath of abstractions, the first step
+quantum compilers must take 
+is to make a distinction between the language frontend and
+the **internal representation** (IR) that the compiler uses to
+reason about the program and perform optimisations.
+Today in most frameworks, the frontend and the IR are one and the same: the user is given an API that can be used to create and
+mutate quantum circuits, which is the same data structure the compiler
+leverages and transforms to produce (another) circuit, which is in
+turn sent to and executed on hardware or a simulator---it is circuits
+all the way down!
+
+
+

@@ -16,13 +16,13 @@ computational capabilities of upcoming hardware
 2. the modularity and expressiveness that quantum compilers will require
 to simultaneoulsy express higher level abstractions, hardware primitives
 and interleaved quantum classical computation
-(cf. {{< reflink "sec:hybrid" "sec:need-help" "sec:toyir">}}),
+(cf. {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}),
 
 graph rewriting is uniquely positioned to serve as the backbone of a
 quantum compilation framework.
 
 Our proposal draws much from the design and techniques of classical compilers
-(cf. {{< reflink "sec:toyir" "sec:eqsat" >}}).
+(cf. {{< reflink "sec:graph-defs" "sec:eqsat" >}}).
 Quantum, however, distinguishes itself in two ways, forming the cornerstones
 of our design.
 The focus on small, local graph transformations for quantum optimisation 
@@ -35,7 +35,7 @@ This design choice in turn opens the door for large scale optimisation and
 compilation on parallel or even distributed hardware.
 
 Equally important, the linear types of quantum computing
-(cf. {{< reflink "sec:toyir" >}}) significantly constrain
+(cf. {{< reflink "sec:graph-defs" >}}) significantly constrain
 the space of possible program transformations.
 Our contributions in this thesis highlight how these restrictions can be leveraged
 to create quantum-specific variants of classical compilation techniques that
