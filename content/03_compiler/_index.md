@@ -42,5 +42,5 @@ for quantum programs.
 This allows us to capture the semantics of any classical-quantum computation
 in a graph structure that we define formally
 in {{< reflink "sec:graph-defs" >}}.
-Finally, {{< reflink "sec:eqsat" >}} defines the graph
+Finally, {{< reflink "sec:rewrite-def" >}} defines the graph
 transformation semantics. 
