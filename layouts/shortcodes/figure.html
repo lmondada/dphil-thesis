@@ -22,6 +22,7 @@
     {{- with .Get "loading" }} loading="{{ . }}"{{ end -}}
   ><!-- Closing img tag -->
   {{- if .Get "link" }}</a>{{ end -}}
+  </div>
   {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") -}}
     <figcaption>
       {{ with (.Get "title") -}}
@@ -37,5 +38,4 @@
       {{- end }}
     </figcaption>
   {{- end }}
-  </div>
 </figure>

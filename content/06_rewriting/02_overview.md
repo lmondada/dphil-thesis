@@ -1,7 +1,8 @@
 +++
 title = "Overview"
 layout = "section"
-weight = 1
+weight = 2
+slug = "sec:framework-overview"
 +++
 
 The framework we propose can be summarised by the diagram below.

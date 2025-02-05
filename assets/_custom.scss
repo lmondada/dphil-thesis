@@ -15,7 +15,7 @@
 }
 
 h1.chapter {
-    margin-bottom: 1.5em;
+  margin-bottom: 1.5em;
 }
 
 // .chapter-head::after {
@@ -70,6 +70,7 @@ $floating-footnotes-width: 20rem;
   background-color: #f5f5f0;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
   padding: 1rem 0;
+
   @media screen and (min-width: 56rem) {
     min-width: 600px;
   }
@@ -81,13 +82,15 @@ $floating-footnotes-width: 20rem;
     img {
       width: 100%;
     }
+  }
 
-    figcaption {
-      font-style: italic;
+  figcaption {
+    font-style: italic;
+    margin: 0 auto;
+    width: 90%;
 
-      p {
-        margin-bottom: 0;
-      }
+    p {
+      margin-bottom: 0;
     }
   }
 }
@@ -155,8 +158,8 @@ $floating-footnotes-width: 20rem;
     right: 0rem;
   }
 
-  .citation-key:hover + &,
-  .citation-number:hover + & {
+  .citation-key:hover+&,
+  .citation-number:hover+& {
     display: block;
   }
 }
@@ -199,6 +202,7 @@ $floating-footnotes-width: 20rem;
 .definition-content {
   padding: $padding-16;
   color: var(--body-font-color);
+
   ul {
     list-style-type: none;
     padding-left: 1.6em;

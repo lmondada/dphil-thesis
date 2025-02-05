@@ -1,4 +1,4 @@
-{{ $title := .Get "title" }}
+{{ $title := .Get "title" | markdownify }}
 {{ $number := .Get "number" | default "" }}
 <div class="definition-block">
     <div class="definition-header">

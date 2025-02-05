@@ -1,7 +1,7 @@
 +++
 title = "Pattern matching engine"
 layout = "section"
-weight = 2
+weight = 3
 slug = "sec:pattern"
 +++
 

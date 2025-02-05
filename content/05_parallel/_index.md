@@ -1,7 +1,7 @@
 +++
 title = "Parallel Rewriting"
 sort_by = "weight"
-weight = 6
+weight = 5
 layout = "chapter"
 slug = "chap:parallel"
 +++
