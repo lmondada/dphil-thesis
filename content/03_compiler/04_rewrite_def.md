@@ -23,8 +23,29 @@ The simplest way to present DPO rewriting operationally is through graph gluings
 two graphs $G_1$ and $G_2$ are glued together by considering the union of
 vertices and (hyper)edges and identifying ("gluing") vertices from $G_1$
 with vertices from $G_2$ using some vertex relation $V_1 \times V_2$.
-In our case, we need to be careful to define gluing of minIR graphs in a way
-that preserves all the constraints we have imposed on the data structure.
+
+{{< definition title="MinIR gluings" number="3.4" >}}
+Consider a minIR graph $G$ with values $V$ and operations $O$,
+a value equivalence relation $\eqsim \subseteq V^2$,
+along with sets of values $V^- \subseteq V$ and operations $O^- \subseteq O$
+such that
+$\mathit{parent}(O \smallsetminus O^-) \subseteq O \smallsetminus O^-$,
+$\mathit{def}\,(O') \subseteq (V \smallsetminus V^-)^\ast$
+and
+$\mathit{use}(O') \subseteq (V \smallsetminus V^-)^\ast$.
+
+The gluing of $G$ along $\eqsim$ is the graph
+obtained from
+- vertices $V' = (V \smallsetminus V^-)/ \eqsim$,
+- operations $O' = O \smallsetminus O^-$,
+- the function $\mathit{parent}$ restricted to the domain $O'$, and
+- the functions $\mathit{def}\textrm{ }', \mathit{use}'$
+obtained from their equivalent in $G$ by mapping strings in the codomain $V^\ast$
+elementwise to strings of equivalence classes in $(V')^\ast$.
+{{< /definition >}}
+
+In our case, we need to be careful to only consider gluing of minIR graphs
+that preserve all the constraints we have imposed on the data structure.
 Gluing two values of a linear type, for instance, is a sure way to introduce
 multiple uses (or definitions) of it.
 
@@ -60,26 +81,24 @@ For a minIR graph $(V, O, \mathit{def}, \mathit{use}, \mathit{parent})$,
 Let $r_{in}$ and $r_{out}$ be the `in` and `out` operations of the region $r$, i.e.
 the children of the unique $r_{\mathit{def}}$ operation such that
 $\mathit{def}\,(r_{\mathit{def}}) = r$.
-Define the equivalence relation $\eqsim$ on $V^2$ by the transitive, symmetric
+Define the equivalence relation $\eqsim_R$ on $V^2$ by the transitive, symmetric
 and reflexive
 closure of
-- $v \eqsim v'$ if there exists $1 \leqslant i \leqslant |U|$ such that
+- $v \eqsim_R v'$ if there exists $1 \leqslant i \leqslant |U|$ such that
 $v = \mathit{use}(h)[i]$ and $v' = \mathit{def}\,(r_{in})[g_1(i)]$,
-- $v \eqsim v'$ if there exists $1 \leqslant i \leqslant |D'|$ such that
+- $v \eqsim_R v'$ if there exists $1 \leqslant i \leqslant |D'|$ such that
 $v = \mathit{def}\,(h)[g_2(i)]$ and $v' = \mathit{use}(r_{out})[i]$.
 
-Then $\eqsim$ defines the gluing of $h$ and $r$:
-{{% definition title="MinIR gluings" number="3.4" %}}
-The gluing in a minIR graph $G$ of a hole $h$ and region $r$ with compatible
-signatures and such that $r$ has no uses is the graph
-obtained from
-- vertices $V' = (V / \eqsim)\smallsetminus \{r\}$,
-- operations $O' = O \smallsetminus \{h, r_{\mathit{def}}, r_{\mathit{in}}, r_{\mathit{out}}\}$,
-- the function $\mathit{parent}$ restricted to the domain $O'$, and
-- the functions $\mathit{def}\textrm{ }', \mathit{use}'$
-obtained from their equivalent in $G$ by mapping strings in the codomain $V^\ast$
-elementwise to strings of equivalence classes in $(V')^\ast$.
-{{% /definition %}}
+Then $\eqsim_R$ defines the gluing of $h$ and $r$:
+{{% proposition title="Region gluings" number="3.1" %}}
+Given a hole $h$ and region $r$ in a minIR graph $G$, with compatible
+signatures and such that $r$ has no uses, the graph obtained from the gluing given by
+- the equivalence relation $\eqsim_R$ defined above,
+- the value deletion set $V^- = \{r\}$,
+- the operation deletion set $O^- = \{h, r_{\mathit{def}}, r_{\mathit{in}}, r_{\mathit{out}}\}$,
+
+is a valid minIR graph.
+{{% /proposition %}}
 We first show that the result of a gluing is always a well-defined minIR
 graph, and will then proceed to some examples that illustrate the definition.
 
@@ -97,13 +116,13 @@ and $use(O) \subseteq (V \smallsetminus \{r\})$ by hypothesis.
 _Typing_.
 The $\geqslant_g$ conditions for signature compatibility
 ensure that the glued graph is well-typed: it follows indeed from the definition
-of $\eqsim$ that all values within an equivalence class are of the same type.
+of $\eqsim_R$ that all values within an equivalence class are of the same type.
 
 _Single definition of values_.
 Suppose there is an equivalence class $\alpha \in V'$ and $v, v' \in \alpha$
 such that there exists $o, o' \in O'$ with $v \in \mathit{def}\,(o)$
 and $v' \in \mathit{def}\,(o')$.
-Given that $r_{in}, h \not\in O'$, it must hold by the definition of $\eqsim$
+Given that $r_{in}, h \not\in O'$, it must hold by the definition of $\eqsim_R$
 _tbd_.
 
 _Single use of linear values_.
