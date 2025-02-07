@@ -6,6 +6,8 @@ layout = "chapter"
 slug = "chap:basics"
 +++
 
+<!-- @thomas: modify this file and the other files in this folder. -->
+
 Many (too many?) introductions to quantum computing have been written, and so
 we will refrain from adding yet another entry to the collection.
 Some basics will however prove useful to frame the conversation for the rest
@@ -29,7 +31,7 @@ what programs that are meant to run on quantum computers look like today,
 what we expect they will look like in the (near) future and how quantum compilers
 have been built to optimise them.
 We start in {{< reflink "sec:compilation" >}} by highlighting some of the ways
-in which quantum compilation distinguishes itself from its established 
+in which quantum compilation distinguishes itself from its established
 classical counterpart.
 {{< reflink "upper" "sec:basics" >}} then reviews the basic computation
 primitives of quantum computers and how they are composed to form quantum
