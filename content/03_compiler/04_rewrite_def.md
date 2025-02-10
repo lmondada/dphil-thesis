@@ -14,6 +14,9 @@ adhesive category @Lack2005.
 However, our presentation is not categorical and is not entirely equivalent
 to DPO, as we will permit implicit edge deletions more akin to single pushout
 (SPO) @Loewe1991 in certain cases.
+On the other hand, we impose injectivity and bijectivity conditions in some cases
+to guarantee existence and uniqueness of the transformation, as well as to
+handle linear types correctly.
 We leave it to future work to define a more solid categorical foundation for minIRs
 graphs[^interestmaybe].
 [^interestmaybe]: should that be of interest to anyone.
@@ -59,40 +62,46 @@ We eschew the presentation of holes as a slice category in favour
 of a _dumbed down_ definition that fits naturally within minIR and is sufficient
 for our purposes.
 
-We first define a notion of compatible type strings---and by extension, type signatures.
-Consider type strings $U, D \in T^\ast$.
-We say that a map
-$g: \{1, \ldots, |U|\} \to \{1, \ldots, |D|\}$
-_generalises_
-$U$ to $D$, written $D \geqslant_g U$, if $g$ is
-such that $U_i = D_{g(i)}$ for all $1 \leqslant i \leqslant |U|$
-and the restriction of $g$ to linear types is bijective
-$$g: \{1 \leqslant i \leqslant |U| \mid U_i \in T_L\} \overset{\simeq}{\longrightarrow} \{1 \leqslant i \leqslant |D| \mid D_i \in T_L\}.$$
-
 For all type strings $U, D \in T^\ast$, we define a minIR `hole<U, D>: U -> D`
 operation---a black box operation that consumes values of type $U$ and
 defines new values of type $D$.
-A hole can then be _filled_ by a `Region<U', D'>` using familiar graph gluings
-whenever there are maps $g$ and $g'$ such that $U' \geqslant_g U$ and $D \geqslant_{g'} D'$.
-For a minIR graph $(V, O, \mathit{def}, \mathit{use}, \mathit{parent})$,
-- let $h \in O$ be a hole $type(o) = hole_{UD}$
-- let $r \in V$ be a region $type(r) = Region_{UD}$ with no use, i.e. for all $o \in O$, $r \not\in use(o)$.
+A hole can then be _filled_ by a `Region<U', D'>` using familiar graph gluings.
+We define for that the notion of _hole-compatible replacement_ regions.
 
-Let $r_{in}$ and $r_{out}$ be the `in` and `out` operations of the region $r$, i.e.
+{{< definition title="Hole-compatible regions" number="3.5" >}}
+Consider a minIR graph $G$, with a region $r \in V$ of type `Region<U', D'>`.
+$r$ is said to be a compatible region with a hole type `hole<U,D>` if there exist boundary maps, i.e. partial maps
+$$\begin{aligned}\rho_U&: \{1 \leqslant i \leqslant |U|\} \rightharpoonup \{1 \leqslant i \leqslant |U'|\}, \\\rho_D&: \{1 \leqslant i \leqslant |D|\} \rightharpoonup \{1 \leqslant i \leqslant |D'|\}.\end{aligned}$$
+such that
+- both maps preserve types: $U[i] = U'[\rho_U(i)]$ as well as $D[i] = D'[\rho_D(i)]$, and
+- both maps are bijective on their restrictions to linear types
+$$\begin{aligned}\rho_U&: \{1 \leqslant i \leqslant |U| \mid U[i] \in T_L\} \overset{\simeq}{\longrightarrow} \{1 \leqslant i \leqslant |U'| \mid U'[i] \in T_L\},\\\rho_D&: \{1 \leqslant i \leqslant |D| \mid D[i] \in T_L\} \overset{\simeq}{\longrightarrow} \{1 \leqslant i \leqslant |D'| \mid D'[i] \in T_L\}.\end{aligned}$$
+
+We say that the compatible region is "use-injective" if $\rho_U$ is injective,
+and that it is "definition-injective" if $\rho_D$ is injective.
+{{< /definition >}}
+This compatibility definition will provide sufficient condition minIR constraints preservation
+in graph gluings.
+
+For a minIR graph $(V, O, \mathit{def}, \mathit{use}, \mathit{parent})$,
+- let $h \in O$ be a hole $type(o) = $ `hole<U,D>`;
+- let $r \in V$ be a $h$-compatible region $type(r) = $`Region<U',D'>`,
+that is use-injective and with no use, i.e. for all $o \in O$, $r \not\in use(o)$;
+- let $r_{in}$ and $r_{out}$ be the `in` and `out` operations of the region $r$, i.e.
 the children of the unique $r_{\mathit{def}}$ operation such that
 $\mathit{def}\,(r_{\mathit{def}}) = r$.
+
 Define the equivalence relation $\eqsim_R$ on $V^2$ by the transitive, symmetric
-and reflexive
-closure of
+and reflexive closure of
 - $v \eqsim_R v'$ if there exists $1 \leqslant i \leqslant |U|$ such that
-$v = \mathit{use}(h)[i]$ and $v' = \mathit{def}\,(r_{in})[g_1(i)]$,
-- $v \eqsim_R v'$ if there exists $1 \leqslant i \leqslant |D'|$ such that
-$v = \mathit{def}\,(h)[g_2(i)]$ and $v' = \mathit{use}(r_{out})[i]$.
+$v = \mathit{use}(h)[i]$ and $v' = \mathit{def}\,(r_{in})[\rho_U(i)]$,
+- $v \eqsim_R v'$ if there exists $1 \leqslant i \leqslant |D|$ such that
+$v = \mathit{def}\,(h)[i]$ and $v' = \mathit{use}(r_{out})[\rho_D(i)]$.
 
 Then $\eqsim_R$ defines the gluing of $h$ and $r$:
-{{% proposition title="Region gluings" number="3.1" %}}
-Given a hole $h$ and region $r$ in a minIR graph $G$, with compatible
-signatures and such that $r$ has no uses, the graph obtained from the gluing given by
+{{% proposition title="Replacement region gluings" number="3.1" %}}
+Given a hole $h$ and $h$-compatible region $r$ in a minIR graph $G$
+that is use-injective and has no uses, the graph obtained from the gluing given by
 - the equivalence relation $\eqsim_R$ defined above,
 - the value deletion set $V^- = \{r\}$,
 - the operation deletion set $O^- = \{h, r_{\mathit{def}}, r_{\mathit{in}}, r_{\mathit{out}}\}$,
@@ -102,7 +111,8 @@ is a valid minIR graph.
 We first show that the result of a gluing is always a well-defined minIR
 graph, and will then proceed to some examples that illustrate the definition.
 
-_Well-definedness of link functions._
+_Proof_. tbd.
+<!-- _Well-definedness of link functions._
 We verify that the images of the
 $\mathit{parent}$, $\mathit{def}\textrm{ }'$ and $\mathit{use}'$
 functions are within their codomains:
@@ -136,33 +146,121 @@ _tbd_.
 _Values belong to a single region_.
 Suppose there were a path from an input operation to an output operation
 with different parents.
-Both operations cannot be in the _tbd_.
+Both operations cannot be in the _tbd_. -->
 
 {{% hint info %}}
-Examples.
+Examples. TODO.
 {{% /hint %}}
 
 #### Pattern matching
-Gluing establishes a way to transform minIR graphs---provided there are
+Replacement region gluing establishes a way to transform minIR graphs---provided there are
 holes within them.
-The second half of the minIR GTS consists in creating
-these holes from matching pattern graphs.
+Holes in minIR graphs are formed from subgraphs of minIR graphs.
 
-Inserting a hole in place of a subgraph is straightforward, provided some
-constraints are met, using a similar graph gluing construction as above.
 For a minIR graph $(V, O, \mathit{def}, \mathit{use}, \mathit{parent})$,
 a subgraph is defined by vertices and edges $V_S \subseteq V$ and $O_S \subseteq O$.
-We define the boundary values of the subgraph $(V_S, O_S)$ by the
-set of values
-$$B = \{v \in V \mid v \in \mathit{def}\,(o)\textrm{ or }v \in \mathit{use}(o)\textrm{ for some }o \in O \smallsetminus O_S \}.$$
-{{% definition title="Hole insertion" number="3.5" %}}
-A hole can be inserted in a minIR graph $(V, O, \mathit{def}, \mathit{use}, \mathit{parent})$
-in place of a subgraph given by vertices and edges
-$V_S \subseteq V$ and $O_S \subseteq O$ if:
+We define the sets of input and output boundary values $B_I, B_O \subseteq V$
+of the subgraph $(V_S, O_S)$ by the list of values in $V_S^\ast$
+$$\begin{aligned} B_I &= [v \in V_S \mid v \in \mathit{def}\,(o)\textrm{ for some }o \in O \smallsetminus O_S ],\\B_O &= [v \in V_S \mid v \in \mathit{use}(o)\textrm{ for some }o \in O \smallsetminus O_S ],\end{aligned}$$
+where the ordering of the values can be fixed arbitrarily.
+This defines the boundary type strings $U_S, D_S \in T^\ast$ by taking their types.
+
+{{% proposition title="Subgraph outlining" number="3.2" %}}
+A subgraph $S = (V_S, O_S)$ of a minIR graph $G$ with boundary type strings $U_S$ and $D_S$
+and such that:
 - the subgraph is convex, i.e. for all $v_1, v_2 \in V_S$, any path along
 $\leadsto$ from $v_1$ to $v_2$ contains only vertices in $V_S$,
 - parent-child relations are contained within the subgraph, i.e.
-for all $v \in dom(\mathit{parent})$, $v \in V_S$ if and only if $\mathit{parent}(v) \in V_S$.
-- for all boundary values $b_1, b_2 \in B$, $b_1 \sim b_2$, i.e. all boundary values
-are in the same region.
-{{% /definition %}}
+for all $v \in dom(\mathit{parent})$, $v \in V_S$ if and only if $\mathit{parent}(v) \in V_S$,
+- the input and output boundary values are disjoint $B_I \cap B_O = \varnothing$, and
+- for all boundary values $b_1, b_2 \in B_I \cup B_O$, $b_1 \sim b_2$, i.e. all boundary values
+are in the same region,
+
+can always be outlined, i.e. there is an equivalent minIR graph $G'$ such that
+the subgraph $S$ is nested within a region $r \in V'$ of type `Region<U_S, D_S>` and the subgraph
+is replaced by a `call` operation.
+
+We call the region $r$ of type `Region<U_S, D_S>` the _equivalent outlined region_ of the subgraph $S$.
+{{% /proposition %}}
+_Proof_. tbd.
+
+Using region outlining, it is always possible to insert a hole in place of a subgraph that satisfies
+the conditions of proposition 3.2.
+{{% proposition title="Hole insertion" number="3.3" %}}
+Consider a subgraph $S = (V_S, O_S)$ of a minIR graph $G$ with boundary type strings $U_S$ and $D_S$
+and type strings $U$ and $D$.
+If the equivalent outlined region of $S$ is compatible with a hole of type `hole<U, D>` and is
+definition-injective, then the graph obtained from the outlined graph by removing the outlined region
+and replacing the `call` operation by a hole operation is a valid minIR graph.
+
+We call the resulting graph the hole-substitution of $S$ in $G$.
+{{% /proposition %}}
+_Proof_. tbd.
+
+Combining hole insertion with replacement region gluings, we can finally define the semantics
+of graph transformation in minIR.
+Given a subgraph $S$ of a minIR graph $G$, the subgraph can be outlined and then removed.
+The `call` operation is replaced by a `hole` operation. After inserting the new region definition,
+the final minIR graph is obtained by gluing the hole with the new region.
+
+A figure illustrates this graph transformation with an example below.
+This simple and limited graph transformation framework captures a remarkably large set of minIR
+program transformations.
+In particular, the restrictions on subgraph convexity,
+containment of boundary values within a single region as well as
+containment of parent-child relations
+do not represent
+any limitation on the expressivity of the graph transformations.
+
+Non-convex subgraphs can always be made convex by taking the convex hull
+and outlining any parts within that are not part of the subgraph.
+The `call` operations within the subgraph then redirect the control flow to regions
+that are passed through as inputs to the subgraph.
+Step 1 of the figure below illustrates this transformation.
+
+Similarly, a subgraph that includes operations without their parent can be extended
+to cover the entire region and its parent, outlining any parts of the region that are not
+part of the subgraph.
+Finally, input and output boundary values to nested regions can always be hoisted and
+passed through
+from the top level region, so that subgraphs can always be transformed to only have input
+and output boundary values at the top level region.
+To do so, a value that is required within a nested region is recursively passed as argument to
+each of its ancestor regions.
+Step 2 of the figure below illustrates this transformation.
+
+{{% figure src="/svg/rewrite.svg" width="95%" caption="A minIR graph transformation for a non-convex pattern, using outlining and hoisting. We use (nested) boxes to represent operations and regions within them and coloured edges for (typed) values." %}}
+
+#### Equivalence classes and rewrite rules
+
+We complete our GTS by introducing equivalence classes of minIR graphs.
+Instead of relying on rewrite rules of the form $L \to R$, with a left-hand and a right-hand side,
+we define equivalence classes $\mathcal{E}$ of minIR graphs that implicitly capture
+the $\Theta(|\mathcal{E}|^2)$ rewrite rules between pairs of elements of $\mathcal{E}$.
+
+{{< definition title="Equivalence classes" number="3.6" >}}
+Let $U$ and $D$ be type strings that define the hole type `hole<U, D>`.
+A minIR equivalence class $\mathcal{E}$ is a set of minIR regions that are compatible with
+the hole type `hole<U, D>`.
+
+The equivalence class defines a transition relation $\to_{\mathcal{E}}$ on minIR graphs.
+For two graphs $G_1$ and $G_2$, $G_1 \to_{\mathcal{E}} G_2$ holds if:
+- there exists a subgraph $S$ of $G_1$,
+- there exists a region $L \in \mathcal{E}$
+that is definition-injective such that $L$ is the equivalent outlined
+region of $S$, and
+- there exists a region $R \in \mathcal{E}$ that is use-injective
+such that $G_2$ is the graph obtained by gluing $R$ with the hole-substitution of $L$ in $G_1$,
+- $dom(\rho_U) \subseteq dom(\sigma_U)$ and $dom(\sigma_D) \subseteq dom(\rho_D)$, where
+$\sigma_U, \sigma_D$ and $\rho_U, \rho_D$ are the boundary maps from the hole type
+to $L$ and $R$, respectively.
+{{< /definition >}}
+With equivalence classes, we can thus fully capture the semantics of minIR operations
+in a concise and graphical form that is very amenable to graph transformation-based optimisations,
+as well as formal methods for correctness verification.
+
+The following example illustrates a set of equivalent minIR graphs that
+a minIR equivalence class could capture.
+Any valid transformation will preserve minIR constraints such as linearity,
+whilst allowing the copying and discarding of non-linear values, which arise
+from non injective boundary maps.
