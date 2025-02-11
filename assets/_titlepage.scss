@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+@import "toc";
 
 .titlepage {
     display: flex;
@@ -12,6 +13,10 @@
 
     h1 {
         padding-top: 2rem;
+        @media print {
+            padding-top: 0rem;
+        }
+
         text-align: center;
         font-size: 3rem;
         line-height: 1.4;
@@ -23,6 +28,10 @@
 
     .logo img {
         margin: 5rem 0;
+        @media print {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+        }
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -35,7 +44,7 @@
     }
 
     .university {
-        margin-bottom: 5rem;
+        margin-bottom: 3rem;
     }
 
     .title,

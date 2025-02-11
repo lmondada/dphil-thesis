@@ -27,8 +27,10 @@ Doctor of Philosophy
 Hilary 2024
 {.submission}
 
+{{< tableofcontents >}}
+
 ---
-{{% hint danger %}}
+{{% hint %}}
 This is very very work in progress. Currently worth reading:
 {{< reflink "chap:basics" "chap:compiler" >}}; {{< reflink "chap:rewriting" >}}
 is coming along and will be ready next.
