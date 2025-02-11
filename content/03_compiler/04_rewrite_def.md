@@ -264,3 +264,7 @@ a minIR equivalence class could capture.
 Any valid transformation will preserve minIR constraints such as linearity,
 whilst allowing the copying and discarding of non-linear values, which arise
 from non injective boundary maps.
+
+{{% hint info %}}
+TODO: figure
+{{% /hint %}}
