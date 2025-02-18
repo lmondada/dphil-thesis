@@ -8,18 +8,18 @@ slug = "chap:basics"
 
 <!-- @thomas: modify this file and the other files in this folder. -->
 
-Many (too many?) introductions to quantum computing have been written, and so
-we will refrain from adding yet another entry to the collection.
-Some basics will however prove useful to frame the conversation for the rest
+Many (too many?) introductions to quantum computing have been written, so
+we will refrain from adding another entry to the collection.
+Some basics will, however, prove helpful in framing the conversation for the rest
 of this thesis.
 
 Quantum computing is the computational model that arises from the quantum
 mechanical manipulation of finite dimensional physical systems[^particle].
 Realising this new computing paradigm requires an entirely new technology stack:
-most obviously, new dedicated hardware, but also a large collection of software
+most obviously, new dedicated hardware, but also an extensive collection of software
 tools that transform the intents of a human user into a symphony of electric
 pulses that operate all components of the hardware installation (lasers,
-magnetic fields, currents, photodetectors etc.).
+magnetic fields, currents, photodetectors, etc.).
 
 Turning human-readable code into machine instructions is the realm of *compilers*,
 a problem as old as classical computer science itself[^classical].
@@ -28,7 +28,7 @@ By analogy, the same problem in the quantum world was named
 
 In this chapter, we lay the groundwork for this thesis by introducing
 what programs that are meant to run on quantum computers look like today,
-what we expect they will look like in the (near) future and how quantum compilers
+what we expect they will look like in the (near) future, and how quantum compilers
 have been built to optimise them.
 We start in {{< reflink "sec:compilation" >}} by highlighting some of the ways
 in which quantum compilation distinguishes itself from its established

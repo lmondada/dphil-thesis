@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/01_intro/_index.md",
+                "file": "content/02_quantum/_index.md",
                 "mode": "source",
                 "source": false
               },
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "content/01_intro/_index.md",
+                "file": "content/02_quantum/_index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "content/01_intro/_index.md",
+                "file": "content/02_quantum/_index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -139,7 +139,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "content/01_intro/_index.md"
+                "file": "content/02_quantum/_index.md"
               },
               "icon": "lucide-list",
               "title": "Outline of _index"
@@ -163,5 +163,9 @@
     }
   },
   "active": "7655d505a066908e",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "content/02_quantum/01_compilation.md",
+    "content/02_quantum/_index.md",
+    "content/01_intro/_index.md"
+  ]
 }
