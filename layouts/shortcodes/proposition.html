@@ -1,0 +1,12 @@
+{{ $title := .Get "title" | markdownify }} {{ $number := .Get "number" | default
+"" }}
+<div class="proposition-block">
+    <div class="proposition-header">
+        <span class="proposition-label"
+            >Proposition{{ if $number }} {{ $number }}{{ end }}</span
+        >
+        {{ if $title }}<span class="proposition-title">{{ $title }}</span>{{ end
+        }}
+    </div>
+    <div class="proposition-content">{{ .Inner | markdownify }}</div>
+</div>

@@ -34,6 +34,10 @@ div.footnotes {
     }
 }
 
+.book-columns pre {
+    overflow: hidden
+}
+
 @media print {
 
     /* Use A4 paper in landscape orientation */
@@ -41,12 +45,6 @@ div.footnotes {
         size: A4;
         margin-top: 30mm;
         margin-bottom: 30mm;
-
-        @top-center {
-            content: string(title);
-            text-transform: uppercase;
-            font-size: 9px;
-        }
     }
 
     @page: left {
@@ -55,6 +53,12 @@ div.footnotes {
 
         @bottom-left {
             content: counter(page);
+        }
+
+        @top-center {
+            content: string(title);
+            text-transform: uppercase;
+            font-size: 9px;
         }
     }
 
@@ -65,10 +69,20 @@ div.footnotes {
         @bottom-right {
             content: counter(page);
         }
+
+        @top-center {
+            content: string(subtitle);
+            text-transform: uppercase;
+            font-size: 9px;
+        }
     }
 
     h1 {
         string-set: title content(text);
+    }
+
+    h2 .section-name {
+        string-set: subtitle content(text);
     }
 
     .chapter-number {

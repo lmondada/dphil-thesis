@@ -5,8 +5,10 @@ layout = "section"
 slug = "sec:graph-defs"
 +++
 
-We can now leverage minIR to capture the semantics of any classical-quantum
-computation in a graph structure that we define formally in this section.
+It is time to give a formal definition of minIR.
+Using the ideas we presented in the last section, this will allow us 
+to capture the semantics of any classical-quantum
+computation in a graph structure.
 
 MinIR graphs closely resemble hypergraphs, with some added structure. Recall
 that a hypergraph can be defined by a set of vertices $V$ and a set of
@@ -26,7 +28,7 @@ or there exists $w$ with $u \sim w$ and $w \sim v$.
 
 In our case, vertices are SSA values and edges are operations. We will
 call the source of a value its definition and the target its uses---and hence
-call the $\mathit{src}$ and $\mathit{tgt}$ functions $\mathit{def}$
+rename the $\mathit{src}$ and $\mathit{tgt}$ functions to $\mathit{def}$
 and $\mathit{use}$ respectively.
 We furthermore write $f: A \rightharpoonup B$ for a partial function from $A$ to
 $B$, i.e. with a domain of definition $dom(f) \subseteq A$.
@@ -50,11 +52,12 @@ by chains of $\mathit{use}$s and $\mathit{def}$s.
 
 The first constraint ensures that the IR is in SSA form, i.e. every value is
 defined in exactly one operation and immutable.
-The $\mathit{parent}\,$ function encodes the hierarchy of regions in minIR:
+The operation hierarchy defined by $\mathit{parent}\,$ is used to define
+the regions of minIR:
 the second constraint guarantees that any connected component with respect
 to the usedef relation belongs to (at most) one region.
 Finally, the last constraint is equivalent to excluding any circular dependencies
-in the graph, both within the usedef  as well as in the region
+in the graph, both within the usedef graph as well as in the region
 hierarchy given by $\mathit{parent}\,$.
 
 Given the existence of a unique root region and the acylicity constraint,
@@ -63,35 +66,34 @@ hyperedges (operations) of the graph.
 We use the map $\mathit{children}: O \to \mathcal{P}(O)$ to refer to all
 children $\{o' \in O \mid parent(o') = o\}$ of an operation $o \in O$.
 
-Viewing the `in` and `out` statements of minIR regions as just another
-operation and introducing a top level `main` region,
-the minIR graph captures faithfully the structure of a minIR program that
-we described in the last section.
+We introduce a `def: () -> Region<U, D>` operation for every region
+type to capture the `def { ... }` statements of our textual minIR programs.
+The `in` and `out` operations of minIR regions are then specified as the
+(only) children of the `def` operation.
 For example, the following minIR program
 ```python
-main := {
-    in: q0, q1
+main := def {
+    q0, q1 := in()
 
     q0_1 := h(q0)
     q0_2, q1_1 := cx(q0_1, q1)
 
     m0 := measure(q0_2)
 
-    ifregion := {
-        in: q1
-        out: q1
+    ifregion := def {
+        q1 := in()
+        out(q1)
     }
-    elseregion := {
-        in: q1
+    elseregion := def {
+        q1 = in()
         q1_1 := x(q1)
-        out: q1_1
+        out(q1_1)
     }
     q1_2 := ifelse(m0, q1_1, ifregion, elseregion)
 
-    out: q1_2, m0
+    out(q1_2, m0)
 }
 ```
-
 can be interpreted as a minIR graph as follows:
 {{% figure src="/svg/minir-graph-2.svg" width="70%" caption="An example minIR graph. Black and white circles are SSA values, with hyperedges spanning between them and labelled with operations. Hyperedges attaching on the white half circles are value definitions, while hyperedges attaching on the black half circles are value uses. Hierarchical dependencies are indicated by dashed arrows; the dashed rectangles are the equivalence classes of $\sim$. The value colours refer to their types, see below." %}}
 
@@ -105,8 +107,8 @@ However, in much of compilation (and computer) science, it is more common to def
 computation graphs using operations as vertices and data flow as edges.
 The same computation would then look rather like the following:
 {{% figure src="/svg/minir-graph.svg" width="70%" caption="The same computation as above, now representing operations as vertices and values as edges. Note that this formalism would require an edge ordering to be defined at each vertex." %}}
-The two representations are equivalent, but the first has the simpler
-rewriting semantics.
+The two representations are equivalent, but the first is more prevalent in
+categorical settings and has the simpler rewriting semantics.
 
 ### Type Graph
 It is time to formally model the type system of minIR and the linearity constraints
@@ -129,15 +131,16 @@ i.e. for all $o \in O_1$, $$\varphi_O|_{children(o)}: children(o) \to children(\
 {{% /definition %}}
 Remark that this definition would be a very standard one, if it were not for the
 last constraint that we impose on the $\mathit{parent}$ relation.
-This ensures that the number of nested regions, which the relation encodes, of
-any operation is always preserfed by graph morphisms. This will allow for the number
+This ensures that the number of nested regions (and their existence in the
+first place), which the relation encodes, of
+any operation is always preserved by graph morphisms. This will allow for the number
 of regions of an operation to be a property of the type system.
 
 A type system for a minIR graph $G$ is then given by
-a minIR graph $T$ and
-a graph morphism $\mathit{type}: G \to T$[^slicecat].
-The set of values of $T$ are called the data types of $G$ and the set of
-operations of $T$, the operation types, or optypes.
+a minIR graph $\Sigma$ and
+a graph morphism $\mathit{type}: G \to \Sigma$[^slicecat].
+The set of values of $\Sigma$ are called the (data) types $T$ of $G$
+and the set of operations of $\Sigma$, the operation types $\Gamma$, or optypes.
 A valid type system for our example minIR graph above is the following.
 [^slicecat]: A construction known in category theory as the slice category.
 {{% figure src="/svg/minir-graph-types.svg" width="100%" caption="The minIR type system for the example above. Value vertices with the same label (and same colour) form a single vertex in the type graph. They have been split into multiple vertices in this representation for better readability. Note that we used two types for regions to distinguish them by type signature, with their respective region definition of (`regiondefQB` and `regiondefQQ`) as well as separate `in` and `out` operations." %}}
@@ -147,14 +150,28 @@ valid, with the exception of linearity.
 This is captured in the following definition.
 
 {{< definition title="$\Sigma$-typed minIR graph" number="3.3" >}}
-Consider a minIR graph $\Sigma$ with values $T_L \cup T_N$ ($T_L$ and $T_N$ disjoint)
+Consider a minIR graph $\Sigma$ with values $T$
 and operations $\Gamma$.
+Let $T_L \subseteq T$.
 A minIR graph $G = (V, O, \mathit{def}, \mathit{use}, \mathit{parent})$
 is $\Sigma$-typed if there exists a graph morphism
 $type: G \to \Sigma$ and
 - for all $v \in V$ such that $type(v) \in T_L$,
 there exists a unique operation $o \in O$ such that $v \in \mathit{use}\,(o)$.
 
-We call $\Sigma$ the type system of $G$, $T_L \cup T_N$ the types of $G$,
+We call $\Sigma$ the type system of $G$, $T$ the types of $G$,
 $\Gamma$ the optypes of $G$ and $T_L$ the linear types.
 {{< /definition >}}
+
+From here onwards, we always consider minIR graphs that are $\Sigma$-typed.
+Furthermore, for all type strings $U, D \in T^\ast$, we assume that
+the type `Region<U, D>` is defined in $T$, along with the region definition
+operation `def<U, D>`
+and the input and output operations `in<U, D>` and `out<U, D>`.:
+```python
+def<U, D>: () -> Region<U, D>
+in<U, D>: () -> U
+out<U, D>: D -> ()
+```
+The `in` and `out` operations for `Region<U, D>` are the children of `def<U, D>`:
+$$\mathit{children}(\mathit{def}_{UD}) = \{in_{UD}, out_{UD}\}.$$
