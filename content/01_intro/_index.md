@@ -5,13 +5,12 @@ weight = 1
 layout = "chapter"
 +++
 
-This thesis is first and foremost a story about compilers.
+This thesis is, first and foremost, a story about compilers.
 It is interesting to note that whereas the term *quantum compilation* has been in use for the longest part
 of the existence of quantum computing as a field,
 it is only recently that our community has started to adopt tools, ideas and results from our classical counterparts
 {% footnote(id="test") %}
-We use the word *classical* as a derogatory term to refer to any form of computing that is not advanced enough to
-be quantum.
+We use *classical* as a derogatory term to refer to any form of computing not advanced enough to be quantum.
 {% end %}.
 
 Strengthening the bridge between classical and quantum compilation research is one of the main motivations for this thesis -- and arguably its most ambitious goal.
@@ -28,14 +27,14 @@ but that might be pushing it too far.
 {% end %}
  -- more on this below.
 However, there are also important differences; the majority of the
-quantum software stacks were developped within the Python ecosystem, with limited
+quantum software stacks were developed within the Python ecosystem, with limited
 concerns for performance on large-scale quantum programs (Ittah, 2021) and interoperability with other
 toolchains, and in particular with the mature classical compiler ecosystem (LLVM, MLIR).
 
-A new generation of quantum compilers is starting to address these concerns (QCOR, QIRO, Catalyst, CUDAQ, Guppy, HUGR).
-We will see that this is opening up new ways to program quantum computers,
-that enable quantum error correction as well as seamless integration
-with heterogenous classical computing (CPUs, GPUs, etc) used in high-performance computing (HPC).
+A new generation of quantum compilers is addressing these concerns (QCOR, QIRO, Catalyst, CUDAQ, Guppy, HUGR).
+We will see that this is opening up new ways to program quantum computers
+that enable quantum error correction and seamless integration
+with heterogeneous classical computing (CPUs, GPUs, etc.) used in high-performance computing (HPC).
 
 ## At the beginning was the Quantum Circuit
 s
