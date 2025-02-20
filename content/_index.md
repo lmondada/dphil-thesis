@@ -31,6 +31,10 @@ Hilary 2024
 
 ---
 {{% hint %}}
+This document is available online in its latest version [here](https://luca.mondada.net/dphil-thesis).
+{{% /hint %}}
+
+{{% hint %}}
 This is very very work in progress. Currently worth reading:
 {{< reflink "chap:basics" "chap:compiler" >}}; {{< reflink "chap:rewriting" >}}
 is coming along and will be ready next.
@@ -42,3 +46,6 @@ TODOs:
 - [x] Citations do not render on GH Pages
 - [ ] Bottom of chapter pages, link to next chapter
 - [ ] In left-hand side menu: track reading progress by highlight the current section
+- [ ] PDF: improve font rendering (justify text?, serif?)
+- [ ] PDF: improve/control page breaks
+- [ ] PDF: no page numbers and asymmetric margins on title page
