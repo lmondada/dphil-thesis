@@ -14,10 +14,10 @@ applying operation splitting until a spanning tree of the original graph
 is obtained.
 The following result shows that a spanning tree reduction using operation splitting
 is always possible.
-We say a graph $G$ is tree-like if there are no cycles in the underlying
+We say a graph $G$ is tree-like if it is connected and there are no cycles in the underlying
 undirected graph $G_U$ of $G$.
 {{< proposition title="Spanning tree reduction" number="4.3" >}}
-A tree-like graph $G_T$ can always be obtained from any graph $G$ by successively applying
+A tree-like graph $G_T$ can always be obtained from any connected graph $G$ by successively applying
 operation splittings.
 {{< /proposition >}}
 
@@ -38,7 +38,7 @@ in the interaction graph.
 
 Hence, the set of operations to be split to turn $G$ into a tree-like graph $G_T$
 is given by the set of edges $E^-$ in the interaction graph that must be
-removed to obtain a spanning tree[^spantheo].
+removed to obtain a spanning tree of the interaction graph[^spantheo].
 [^spantheo]: It is a simple result from graph theory that such a set of edges
 always exists---it suffices to remove one edge from every cycle in the graph.
 {{% /proof %}}
@@ -80,9 +80,13 @@ by adding weights to (a subset of) the operations $O_T$ of the spanning tree
 $$split: O_T \rightharpoonup P^\ast$$
 that maps a split operaton $o$ to the unique path in $G_T$
 from $o$ to the other half of the split operation.
-Writing $\mathcal{G}$ for the set of graphs and $\mathcal{G}_T$ for the
-set of valid tree-like graphs, we can thus view the spanning tree reduction as
-a bijection $\mathcal{G} \to (\mathcal{G}_T, split)$.
+<!-- Writing $\mathcal{G}$ for the set of graphs and
+$\mathcal{G}_T \subseteq \mathcal{G} \times (O_T \rightharpoonup P^\ast)$
+for the set of valid tree-like graphs, -->
+This defines a map
+$\sigma_1: (G_T, split) \mapsto G$ that maps
+$G_T$, the graph-like tree obtained from the spanning tree reduction
+of $G$, to the original graph $G$.
 
 #### Tree contraction
 
@@ -96,19 +100,22 @@ string of operations that were contracted[^whystring]
 $$contract: V_C \rightharpoonup \Gamma_T^\ast$$
 where $\Gamma_{G_T}$ are the optypes of operations in $G_T$, i.e. the optypes
 of the minIR graph $G$ along with optypes for the split operations.
-In summary, we have the bijections
-$$\mathcal{G} \to (\mathcal{G}_T, split) \to (\mathcal{G}_C, spill, contract),$$
-where $\mathcal{G}_C$ designates the set of valid contracted spanning trees.
+This defines a second map $\sigma_2: (G_C, contract) \mapsto G_T$.
+This map is bijective on the sets of valid contracted spanning trees,
+i.e. the inverse map $\sigma_2^{-1}: (G_T, split) \mapsto G_C$ is also
+well-defined.
+In summary, we have the composition
+$$(G_C, contract, split) \xrightarrow{\sigma_2 \times Id} (G_T, split) \xrightarrow{\sigma_1} G.$$
 [^whystring]: Because all contracted operations apply on a single, shared,
 linear path, they indeed form a string of operations.
 
 Contracted spanning trees are particularly useful for the study of the
 asymptotic complexity of the pattern matching algorithm we propose, as they
-have a very regular structure, which we express in terms of its dual:
+have a very regular structure, which we summarise in terms of its dual:
 
 {{% proposition title="Contracted spanning tree" number="4.5" %}}
 There is a root operation $r \in O_C$ such that the dual contracted spanning tree
-$G_C$ of a graph $G$ rooted in $r$ is a
+$T_C$ of a graph $G$ rooted in $r$ is a
 ternary tree with $width(G) - 1$ nodes.
 {{% /proposition %}}
 {{% proof %}}
@@ -119,19 +126,23 @@ a tree of $k$ nodes spans $k+1$ linear paths---and hence,
 we conclude $k = width(G) - 1$.
 {{% /proof %}}
 
-We can summarise our construction with the following result:
-{{% proposition title="Reduction to Tree Pattern matching" %}}
+We conclude the construction presented in this section
+with the following result, expressing graph pattern matching in terms of
+tree equality:
+{{% proposition title="Reduction to Tree Pattern matching" number="4.6" %}}
 Let $P$ be a pattern graph and $G$ a graph. Let $P_{CD}$ be the dual
-contracted spanning tree of $P$.
+of a contracted spanning tree of $P$.
 There is an embedding $P \hookrightarrow G$ if and only if
-there is $S \subseteq G$ with dual contracted spanning tree $S_{CD}$
-such that $P_{CD} = S_{CD}$.
+there is $S \subseteq G$ and a dual contracted spanning tree $S_{CD}$
+of $S$
+such that $P_{CD} = S_{CD}$ and the trees have equal weight maps
+$split$ and $contract$.
 {{% /proposition %}}
-The proof of this follows directly from our construction and the injection
-of the graphs $P, S$ into their dual contracted spanning tree.
+The proof of this follows directly from our construction and the bijection
+between the graphs $P, S$ and their (dual) contracted spanning tree.
 
 We have thus successfully reduced the problem of pattern matching to
 the problem of matching on trees.
 Given that the ordering of children of a node in a tree is fixed, checking
-trees for equality is a simple matter of checking node equality, one node
-at a time.
+trees for equality is a simple matter of checking node and weight equality,
+one node (and edge) at a time.

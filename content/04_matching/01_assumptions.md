@@ -82,6 +82,8 @@ that is not in the fully split graph of $\varphi(P)$.
 Given that $P$ is convex, this path must be in $P$, which contradicts the preservation of operation
 splitting under embeddings.
 {{% /proof %}}
+In this chapter, whenever we define a subgraph $H \subseteq G$ of a graph $G$,
+we will assume that $H$ satisfies the above weakened convexity condition.
 
 The converse is however not true.
 This means that the pattern matching technique presented below will find
@@ -137,9 +139,13 @@ the paths are equivalently described by a string in $\Pi^\ast$, the sequence of 
 of the operations traversed,
 which we order using the lexicographical ordering on strings.
 Given a root value $r$, for every value $v$ in $G$ there is thus a unique smallest
-path from $r$ to $v$ in $G$.
+path from $r$ to $v$ in $G$[^thisisdfs].
 This path is invariant under isomoprhism of the underlying graph
 (i.e. relabelling of the values and operations, but preserving the port labels).
+[^thisisdfs]: Remark that the ordering of the operations thus defined is a particular
+case of a depth-first search (DFS) ordering of the graph: given an operation $o$
+that has been visited, all its descendants will be visited before proceeding to
+any other operation.
 
 Define an _open_ value as a value with a missing use or define operation (i.e.
 an open value can never be part of a valid minIR graph, but will be found in

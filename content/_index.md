@@ -4,7 +4,7 @@ layout = "titlepage"
 sort_by = "weight"
 +++
 
-# Scaling Up<br />Quantum Compilation
+# Scaling<br />Quantum Compilation<br />with<br />Graph Rewriting
 
 ![Oxford logo](titlepage/oxford-logo.svg)
 {.logo}

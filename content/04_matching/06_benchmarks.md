@@ -1,7 +1,7 @@
 +++
 title = "Benchmarks"
 layout = "section"
-weight = 5
+weight = 6
 slug = "sec:benchmarks"
 +++
 
