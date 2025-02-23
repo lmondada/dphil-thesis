@@ -48,9 +48,11 @@ are required for the implementation, and we have
 not observed any impact on performance when lifting them in practice,
 so it is our conjecture that these assumptions can be relaxed and our results generalised.
 
-{{< reflink "upper" "sec:treereduc" >}} and {{< reflink "sec:canonical" >}} present the core
-ideas of our approach, respectively introducing a reduction of minIR graphs to equivalent trees
-and a canonical construction for the tree reduction. We also prove bounds on the size
+{{< reflink "upper" "sec:treereduc" >}}, {{< reflink "sec:canonical" >}} and {{< reflink "sec:anchors" >}}
+present the core
+ideas of our approach, respectively introducing: a reduction of minIR graphs to equivalent trees,
+a canonical construction for the tree reduction and an efficient way to enumerate all possible subtrees of a graph.
+We also prove bounds on the size
 and number of the resulting trees, which will directly translate to the asymptotic complexity.
 In {{< reflink "sec:automaton" >}}, we introduce a pre-computation step
 and show that the pattern matching problem reduced to tree

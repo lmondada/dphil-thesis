@@ -29,11 +29,11 @@ def CanonicalAnchors(
   operations_queue := queue(sorted_operations)
 
   # Skip all operations that are not anchors
-  op := operations_queue.pop() or return []
+  op := operations_queue.pop() or return ({}, {}, G)
   G = RemoveOperation(G, op)
   while len(LinearPaths(G, op)) == 1 or
         issubset(LinearPaths(G, op), seen_paths):
-    op = operations_queue.pop() or return []
+    op = operations_queue.pop() or return ({}, {}, G)
     G = RemoveOperation(G, op)
 
   # op is anchor, update seen_paths and recurse
@@ -88,10 +88,10 @@ be seen as a rooted tree $T_G$ by taking the dual of $G_T$ and picking a root op
 $r$ in $G_T$.
 Furthermore, children of nodes in a tree are ordered by the port label ordering.
 
-For the following proposition we introduce a $\subseteq$ relation on rooted trees:
+For the following proposition we introduce a $\subseteq$ relation on dual trees of spanning tree reductions:
 $T_H \subseteq T_G$ if the trees share the same root operation $r$, $T_H$ is
-a subtree of $T_G$ up to isomorphism and they coincide on all weights on the common subtree
-(including on the $split$ map in the case of spanning tree reductions).
+a subtree of $T_G$ up to isomorphism, and their types as well as the $split$ map
+coincide on the common subtree.
 {{% proposition title="Maximal spanning tree reductions" number="4.9" %}}
 Let $G$ be a connected graph, $X$ a set of operations in $G$ and $r \in X$
 a root operation. Let
@@ -201,4 +201,248 @@ def AllSpanningTrees(G: Graph, root: Operation) -> Set[Graph]:
   return {MaximalSpanningTree(G, X) for X in all_anchors}
 ```
 
-#### The final missing piece: `AllAnchors`
+#### The missing piece: `AllAnchors`
+We can now complete the definition of `AllSpanningTrees` by defining
+the `AllAnchors` procedure, which enumerates all possible sets of anchors
+in $G$ given a root opereatation $r$.
+
+The procedure is similar to `CanonicalAnchors`,
+described in detail in the previous paragraphs.
+In addition to the arguments of `CanonicalAnchors`, `AllAnchors`
+requires a width $w \geq 1$ argument.
+It then returns all sets of $w$ operations that form the canonical anchors of
+some width-$w$ subgraph of $G$ with root $r$.
+The main difference between `CanonicalAnchors` and `AllAnchors`
+is that the successive
+recursive calls (line 22 in `CanonicalAnchors`)
+are replaced by a series of nested loops (lines 42--48 in `AllAnchors`)
+that exhaustively iterate over the possible outcomes for different subgraphs of $G$.
+The results of every possible combination of recursive calls are then collected
+into a list of anchor sets, which is returned.
+
+```python {.numbered}
+def AllAnchors(
+    G: Graph, root: Operation, w: int,
+    seen_paths: Set[int] = {}
+) -> List[(Set[Operation], Set[int], Graph)]:
+  # Base case: return one empty anchor list
+  if w == 0:
+    return [({}, {}, G)]
+
+  operations = Operations(ConnectedComponent(G, root))
+  sorted_operations := sort(operations)
+  operations_queue := queue(sorted_operations)
+
+  op := operations_queue.pop() or return [({}, {}, G)]
+  G = RemoveOperation(G, op)
+  while len(LinearPaths(G, op)) == 1 or
+        issubset(LinearPaths(G, op), seen_paths):
+    op = operations_queue.pop() or return [({}, {}, G)]
+    G = RemoveOperation(G, op)
+
+  seen0 = union(seen_paths, LinearPaths(G, op))
+  # There are always at most three neighbours: we
+  # unroll the for loop of CanonicalAnchors.
+  [child1, child2, child3] = Neighbours(G, op)
+  # Iterate over all ways to split w-1 anchors over
+  # the three children and solve recursively
+  all_anchors = []
+  for 0 <= w1, w2, w3 < w with w1 + w2 + w3 == w - 1:
+    for (anchors1, seen1, G1) in
+        AllAnchors(G, child1, w1, seen0):
+      for (anchors2, seen2, G2) in
+          AllAnchors(G1, child2, w2, seen1):
+        for (anchors3, seen3, G3) in
+            AllAnchors(G2, child3, w3, seen2):
+          # Concatenate new anchor with anchors from all paths
+          anchors = union([op], anchors1, anchors2, anchors3)
+          all_anchors.push((anchors, seen3, G3))
+  return all_anchors
+```
+
+The part of the pseudocode that is uncommented is unchanged
+from `CanonicalAnchors`. Using Proposition 4.4, we know that
+we can assume that every operation has at most 3 children, and thus
+3 neighbours in `G`, given that the operations equivalent to parent nodes
+were removed.
+
+
+{{< proposition title="Correctness of AllAnchors" number="4.10" >}}
+Let $G$ be a graph and $H \subseteq G$ be a subgraph of $G$ of width $w$.
+Let $r$ be a choice of root operation in $H$. We have
+`CanonicalAnchors(H, r, {})` $\in$ `AllAnchors(G, r, w, {})`.
+{{< /proposition >}}
+
+The proof is by induction over the width $w$ of the subgraph $H$.
+The idea is to map every recursive call in `CanonicalAnchors`
+to one of the calls to `AllAnchors` on lines 29, 31 or 33.
+All recursive results are concatenated on line 36, and thus the value
+returned by `CanonicalAnchors` will be one of the anchor sets in the list
+returned by `AllAnchors`.
+
+{{% proof %}}
+Let $H \subseteq G$ be a connected subgraph of $G$ of width $w$.
+We prove inductively over $w$ that if
+$(X, S', H') = $`CanonicalAnchors`$(H, r, S)$
+then there is a graph $G'$ such that $H' \subseteq G' \subseteq G$ such that
+{{% centered %}}
+$(X, S', G') \in$ `AllAnchors`$(G, r, w, S)$
+{{% /centered %}}
+for all valid root operations $r$ of $H$ and all subsets of the linear paths of $H$
+`seen_paths`.
+The statement in the proposition follows from this claim directly.
+
+For the base case $w = 1$,
+`CanonicalAnchors` will return the anchors `anchors = [op]` as defined on line 19:
+there is only one linear path and it is already in `seen_paths`, thus for
+every recursive call to `CanonicalAnchors`,
+the `while` condition on line 12 will always be satisfied, until all operations
+have been exhausted and empty sets are returned.
+In `AllAnchors`, on the other hand,
+The only values of `w1`, `w2` and `w3` that satisfy the loop condition
+on line 27 for $w = 1$ are `w1` $=$ `w2` $=$ `w3` $= 0$.
+As a result, given the `w` $=0$ base case on lines 6--7,
+the lines 35 and 36 of `AllAnchors` are only executed once,
+and the definition of `anchors` on line 36 is equivalent to its definition
+in `CanonicalAnchors`.
+
+We now prove the claim for $w > 1$ by induction.
+As documented in `AllAnchors`, we can assume that every operation has at most 3 children.
+This simplifies the loop on lines 21--25 of `CanonicalAnchors` to at most three
+calls to `CanonicalAnchors`.
+
+Consider a call to `CanonicalAnchors` for a graph $H \subseteq G$, a root operation $r$ in $H$
+and a set $S$ of linear paths.
+Let $w_a$, $w_b$ and $w_c$ be the length of the values returned
+by the three recursive calls to `CanonicalAnchors` of line 22 for the execution
+of `CanonicalAnchors` with arguments $H$, $r$ and $S$.
+Let $c_a, c_b$ and $c_c$ be the three neighbours of $r$ in $H$.
+If the child $c_x$ does not exist, then one can set $w_x = 0$ and it
+can be ignored---the argument below still holds in that case.
+The definition of `seen0` on line 20 in `AllAnchors` coincides with
+the update to `seen_paths` on line 18 of `CanonicalAnchors`; similarly,
+the updates to `G` on lines 14 and 18 of `AllAnchors` are identical
+to the lines 11 and 15 of `CanonicalAnchors` that update `H`.
+Let the updated `seen_paths` be the set $S_a$, the updated `G` be $G_a$
+and the updated $H$ be $H_a$, with $H_a \subseteq G_a$.
+
+As every anchor operation reduces the number of unseen linear paths
+by exactly one (using the simplifying assumptions),
+it must hold that $w_a + w_b + w_c + 1 = w$.
+Thus for a call to `AllAnchors` with the arguments
+$G$, $r$, $w$ and $S$,
+there is an iteration of the `for` loop on line 27 of `AllAnchors`
+such that `w1` $= w_a$, `w2` $= w_b$ and `w3` $= w_c$.
+It follows that on line 29 of `AllAnchors`, the procedure is called recursively
+with arguments $(G_a, c_a, w_a, S_a)$.
+From the induction hypothesis we obtain
+that there is an iteration of the `for` loop on line 29
+in which the values of `anchors1` and  `seen1` coincide with
+the values of the `new_anchors` and `seen_paths` variables after the first iteration
+of the `for` loop on line 21 of `CanonicalAnchors`.
+Call the value of `seen1` (and `seen_paths`) $S_b$.
+Similarly, call the updated value of `G` in `AllAnchors` $G_b$ and the
+updated value of `G` in `CanonicalAnchors` $H_b$.
+We have by the induction hypothesis that $H_b \subseteq G_b$.
+
+Repeating the argument, we obtain that there are iterations of the `for` loops
+on lines 30 and 32 of `AllAnchors` that correspond to the second and third
+recursive calls to `CanonicalAnchors` on line 22 of the procedure.
+Finally, the concatenation of anchor lists on line 36 of `AllAnchors` is equivalent
+to the repeated concatenations on line 25 of `CanonicalAnchors` and so
+we conclude that the induction hypothesis holds for $w$.
+{{% /proof %}}
+
+We will see that the overall runtime complexity of `AllAnchors` can be easily
+derived from a bound on the size of the returned list.
+For this we use the following result:
+{{% proposition title="Number of anchor sets in `AllAnchors`" number="4.11" %}}
+  For a graph $G$, a root operation $r$ in $G$ and $1 \leq w \leq width(G)$,
+  the length of the list `AllAnchors`$(G, r, w)$ is in
+  $O(c^w \cdot w^{-3/2})$, where $c = 6.75$ is a constant.
+{{% /proposition %}}
+
+{{% proof %}}
+Let $C_w$ be an upper bound for the length of the list returned by
+a call to `AllAnchors` for width $w$.
+For the base case $w = 0$, $C_0 = 1$.
+The returned `all_anchors` list is obtained by pushing anchor lists
+one by one on line 36.
+We can count the number of times this line is executed by multiplying
+the length of the lists returned by the recursive calls on lines 28--32,
+giving us the recursion relation
+
+$$C_w \leq \sum_{\substack{0 \leq w_1, w_2, w_3 < w\\w_1 + w_2 + w_3 = w - 1}} C_{w_1} \cdot C_{w_2} \cdot C_{w_3}.$$
+
+Since $C_w$ is meant to be an upper bound, we replace $\leq$ with equality above
+to obtain a recurrence relation for $C_w$.
+This recurrence relation is a generalisation of the well-known
+Catalan numbers @Stanley2015, equivalent to counting the number of ternary trees
+with $w$ internal nodes:
+a ternary tree with $w \geq 1$ internal nodes is made of a root along with
+three subtrees with $w_1,w_2$ and $w_3$ internal nodes respectively, with
+$w_1 + w_2 + w_3 = w-1$.
+A closed form solution to this problem can be found in @Aval2008:
+
+$$C_w = \frac{{3w \choose w}}{2w + 1} = \Theta \left(\frac{c^w}{w^{3/2}} \right)$$
+
+satisfying  the above recurrence relation with equality,
+where $c = 27/4 = 6.75$ is a constant obtained from the Stirling approximation:
+
+$$\begin{aligned}{3w \choose w} = \frac{(3w)!}{(2w)!w!} &= \Theta\left(\frac{1}{\sqrt{w}}\right)
+\Big(\frac{(3w)^3}{e^3}\Big)^{w}\Big(\frac{e^2}{(2w)^2}\Big)^{w}\Big(\frac{e}{w}\Big)^{w}\\
+&= \Theta\left(\frac{(27/4)^w}{w^{1/2}}\right).\end{aligned}$$
+{{% /proof %}}
+
+To obtain a runtime bound for `AllAnchors`, it is useful to identify how much of $G$ needs to be traversed.
+If we suppose all patterns have at most depth $d$, then it immediately follows that any
+operation in $G$ that is in the image of a pattern embedding must be at most a distance $d$ away
+from an anchor operation.
+We can thus equivalently call `AllAnchors` on a subgraph of $G$ such that
+no linear path is longer than $2d$.
+We thus obtain the following runtime.
+
+{{< proposition title="Runtime of `AllAnchors`" number="4.12" >}}
+For patterns with at most width $w$ and depth $d$,
+the total runtime of `AllAnchors` is in
+$$O\left(\frac{c^w \cdot d}{w^{1/2}}\right).$$
+{{< /proposition >}}
+
+{{% proof %}}
+We restrict `Operations on line 9 to only return the first $d$
+operations on the linear path in each direction, starting at the anchor operation:
+operations more than distance $d$ away
+from the anchor cannot be part of a pattern of depth $d$.
+
+We use the bound on the length of the list returned by calls to `AllAnchors` of Proposition 4.11
+to bound the runtime.
+We can ignore the non-constant runtime of the concatenation of the outputs of recursive calls
+on line 35,
+as the total size of the outputs is asymptotically at worst of the same complexity as the
+runtime of the recursive calls themselves.
+Excluding the recursive calls, the only remaining lines of `AllAnchors`
+that are not executed in constant time are
+the `while` loop on lines 15--18 and the `Operations` and `sort` calls on lines
+9--11. Using the same argument as in `CanonicalAnchors`, we can ignore the
+latter two calls by replacing the queue of operations by a lazy iterator
+of operations. The next operation given `op` and the graph `G` can always
+be computed in $O(1)$ time using a depth-first traversal of `G`.
+
+Consider the recursion tree of `AllAnchors`, i.e. the tree in which
+the nodes are the recursive calls to `AllAnchors` and the children
+are the executions spawned by the nested `for` loops on line 28--32.
+This tree has at most
+
+$$C_w = \Theta\left(\frac{c^w}{w^{3/2}}\right)$$
+
+leaves. A path from the root to a leaf corresponds to a stack of recursive calls
+to `AllAnchors`.
+Along this recursion path, `seen_paths` set is
+always strictly growing (line 35) and the operations removed from `G`
+on lines 14 and 18 are all distinct.
+For each linear path, at most $2d$ operations are traversed.
+Thus the total runtime of the `while` loop (lines 15--18) along a path
+from root to leaf in the recursion tree is in $O(w \cdot d)$.
+We can thus bound the overall complexity of executing the entire recursion tree
+by $O(C_w \cdot w \cdot d) = O(\frac{c^w \cdot d}{w^{1/2}})$.
+{{% /proof %}}

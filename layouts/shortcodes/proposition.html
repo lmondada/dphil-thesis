@@ -8,5 +8,5 @@
         {{ if $title }}<span class="proposition-title">{{ $title }}</span>{{ end
         }}
     </div>
-    <div class="proposition-content">{{ .Inner | markdownify }}</div>
+    <div class="proposition-content">{{ .InnerDeindent | markdownify }}</div>
 </div>
