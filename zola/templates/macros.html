@@ -1,0 +1,13 @@
+{% macro render_chapter(title, contents) %}
+<h1 class="chapter-title" id="chapter-{{ title | slugify }}">
+{{ title }}
+</h1>
+{{ contents | safe }}
+{% endmacro render_chapter %}
+
+{% macro render_section(title, contents) %}
+<h2 class="section-title" id="section-{{ title | slugify }}">
+{{ title }}
+</h2>
+{{ contents | safe }}
+{% endmacro render_section %}

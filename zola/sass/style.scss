@@ -1,0 +1,51 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  background-color: lightblue;
+}
+
+.content-wrapper {
+  margin: 0 auto;
+  max-width: 800px;
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.page {
+  width: 70%;
+}
+
+.margin-notes {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 25%;
+}
+
+.footnote {
+  position: absolute;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.footnote-ref {
+  cursor: pointer;
+  color: #0000FF;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+.section-title::before {
+  content: "Section " counter(chapter) "." counter(section) " - ";
+}
+
+.chapter-title::before {
+  content: "Chapter " counter(chapter) " - ";
+}
