@@ -4,7 +4,3 @@
 .hugo_build.lock
 public
 resources
-
-# backups that we will probably never use
-tex-backup
-zola
