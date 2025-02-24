@@ -6,8 +6,6 @@ layout = "chapter"
 slug = "chap:basics"
 +++
 
-<!-- @thomas: modify this file and the other files in this folder. -->
-
 Many (too many?) introductions to quantum computing have been written, so
 we will refrain from adding another entry to the collection.
 Some basics will, however, prove helpful in framing the conversation for the rest
