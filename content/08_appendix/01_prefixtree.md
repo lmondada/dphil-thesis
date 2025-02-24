@@ -5,20 +5,19 @@ weight = 1
 slug = "sec:prefixtrees"
 +++
 Our main result is achieved by reducing a tree inclusion problem to the following problem.
-\paragraph{String prefix matching.}
+
+**String prefix matching.**&emsp;
 Consider the following computational problem over strings.
 Let $\Sigma$ be a finite alphabet and consider $\mathcal{W} = (\Sigma^*)^w$
 the set of $w$-tuples of strings over $\Sigma$.
 For a string tuple $(s_1, \dots, s_w) \in \mathcal{W}$ and a set of string tuples $\mathcal{D} \subseteq \mathcal{W}$,
 the $w$-dimensional string prefix matching consists in finding the set
-\[
-    \{ (p_1, \dots, p_w) \in \mathcal{D} \ | \ \text{for all }1 \leq i \leq w: p_i\text{ is a prefix of }s_i \}.
-\]
+$$\{ (p_1, \dots, p_w) \in \mathcal{D} \ | \ \text{for all }1 \leq i \leq w: p_i\text{ is a prefix of }s_i \}.$$
 This string problem can be solved using a $w$-dimensional prefix tree.
 We give a short introduction to prefix trees for the string case but refer
-to standard literature for more details~\cite{taocpIII}.
+to standard literature for more details @Knuth1999.
 
-\paragraph{One-dimensional prefix tree.}
+**One-dimensional prefix tree.**&emsp;
 Let $P_1, \dots, P_\ell \in \mathcal{A}^\ast$ be strings on some alphabet $\mathcal{A}$.
 Given an input string $s\in\mathcal{A}^\ast$, we wish to find the set of
 patterns $\{ P_{1 \leq i \leq \ell} | P_i \subseteq s\}$, i.e. $P_i$ is a prefix of $s$.
@@ -44,7 +43,8 @@ Note that in theory the number of reported pattern matches can dominate the runt
 of the algorithm. We can avoid this
 by returning the list of matches as an iterator, stored as a list of pointers
 to the tree nodes matching lists.
-\paragraph{Multi-dimensional prefix tree.}
+
+**Multi-dimensional prefix tree.**&emsp;
 A $w$-dimensional prefix tree for $w > 1$ is defined recursively as a one-dimensional
 prefix tree that at each node stores a $w-1$-dimensional prefix tree.
 Given an input $w$-tuple $(s_1, \dots, s_w) \in (\mathcal{A}^\ast)^w$,
@@ -61,11 +61,11 @@ of the $w$-dimensional prefix tree by $1 + (\ell \cdot L)^w$.
 The runtime and space complexity of the construction of the $w$-dimensional prefix tree
 is thus in $O((\ell \cdot L)^w)$, summarised in the result:
 
-\begin{prop}\label{prop:prefixmatch}
-    Let $\mathcal{D} \subseteq \mathcal{W}$ be a set of string tuples
-    and $L$ the maximum length of a string in a tuple of $\mathcal{D}$.
-    There is a prefix tree with at most $(\ell \cdot L)^w + 1$ nodes
-    that encodes $\mathcal{D}$ that can be used to solve
-    the $w$-dimensional string prefix matching problem
-    in time $O(|s_1| + \cdots + |s_w|)$.
-\end{prop}
+{{< proposition title="Multi-dimensional string prefix matching" >}}
+  Let $\mathcal{D} \subseteq \mathcal{W}$ be a set of string tuples
+  and $L$ the maximum length of a string in a tuple of $\mathcal{D}$.
+  There is a prefix tree with at most $(\ell \cdot L)^w + 1$ nodes
+  that encodes $\mathcal{D}$ that can be used to solve
+  the $w$-dimensional string prefix matching problem
+  in time $O(|s_1| + \cdots + |s_w|)$.
+{{< /proposition >}}

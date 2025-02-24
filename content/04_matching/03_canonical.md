@@ -69,9 +69,8 @@ order according to which the elements are sorted, from smallest to largest.
 For a graph $G$, the graph returned by `CanonicalSpanningTree(G)`
 is a valid spanning tree reduction of $G$.
 It is deterministic and invariant under isomorphism of $G$.
-The runtime of `CanonicalSpanningTree` is $O(|G| + w \cdot \log w)$,
-where $|G|$ is the number of operations in the graph $G$ and
-$w = width(G)$.
+The runtime of `CanonicalSpanningTree` is $O(|G|)$,
+where $|G|$ is the number of operations in the graph $G$.
 {{% /proposition %}}
 {{% proof %}}
 _Valid spanning tree reduction._
@@ -119,9 +118,6 @@ as strings of port labels, which we have established to be invariant under
 isomorphism.
 
 _Runtime complexity._
-{{% hint danger %}}
-WRONG: not wlog w
-{{% /hint %}}
 Lines 2 and 3 run in $O(|G|)$ time.
 With the exception of the `sort` function on lines 4--7, every other line
 can be run in $O(1)$ time:
@@ -133,12 +129,11 @@ can be run in $O(1)$ time:
   modification of `new_G`.
 
 The `for` loop will run $|G|$ iterations, for a total of $O(|G|)$ runtime.
-Finally, the sorting operation would naively take time $O(|G| \log |G|)$,
-however, we can ignore all operations that are on a single linear path.
-We can thus pre-process in $O(|G|)$ time the set of operations
-to filter out those that are
-not on two linear paths. We are then left with a list of operations of
-length $w - 1$, as shown in the proof of Proposition 4.5. The result follows.
+Finally, the sorting operation would naively take time $O(|G| \log |G|)$.
+However, given that the ordering is obtained lexicographically from the
+paths starting at the root, we can obtain the sorted list of operations
+by depth-first traversal of the graph starting at the root.
+The result follows.
 {{% /proof %}}
 
 Using `CanonicalSpanningTree`, we can now sketch what the pattern matching

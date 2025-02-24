@@ -80,27 +80,35 @@ which by design produces subgraphs of width $w$.
 
 The string prefix matching problem is a simple computational task that can be generalised
 to to check for multiple string patterns at the same time using a prefix tree.
-An overview of this problem can be found in [appendix A]({{< relref "/08_appendix#sec:prefixtrees" >}}).
+An overview of this problem can be found in appendix [A]({{< relref "/08_appendix#sec:prefixtrees" >}}).
 We can thus obtain a solution for the pattern matching problem for $\ell$ patterns:
+
 {{< proposition title="Fixed anchor pattern matching" number="4.14" >}}
 Let $G$ be a graph, $P_1, \dots, P_\ell$ be patterns of width $w$ and depth $d$
 and $X \subseteq V$ be a set of $w - 1$ operations in $G$.
 Let $r_1,\dots, r_\ell$ be the root operations of the patterns $P_1, \dots, P_\ell$
 and $r$ be the root operation of $G$.
+
 The set of all pattern embeddings mapping the canonical anchor set of $P_i$ to $X$
 and root $r_i$ to $r$ for $1 \leq i \leq \ell$
-can be computed in time $O(w\cdot d)$ using a pre-computed prefix tree of size
-at most $(\ell \cdot d + 1)^w$,
-constructed in time complexity $O((\ell \cdot d)^w)$.
+can be computed in time $O(w\cdot d)$ using at most $\ell$ pre-computed prefix tree of size
+at most $(\ell \cdot d)^w + 1$,
+each constructed in time complexity $O((\ell \cdot d)^w)$.
 {{< /proposition >}}
-{{< proof >}}
+
+{{% proof %}}
 For each pattern, we consider its canonical spanning tree reduction and construct
 a multi-dimensional prefix tree for each group of patterns that share the same spanning tree reduction.
 
-Given a graph $G$, we can compute the spanning tree reduction of $G$ for anchors $X$ and map
-it to the corresponding prefix tree. This can be done in $O(|G|)$ time by using a search tree.
-The rest of the proof follows from the multi-dimensional prefix tree construction.
-{{< /proof >}}
+Given a graph $G$, we can compute the spanning tree reduction $T_G$ of $G$ for anchors $X$ and map
+it to the corresponding prefix tree. This can be done in $O(|T_G|)$ time by using a search tree.
+We can restrict $T_G$ to a graph of size $O(w \cdot d)$ by truncating
+the linear paths to at most $2d$ length, as in the proof of Proposition 4.12.
+Thus we can assume $|T_G| \in O(w \cdot d)$.
+
+The rest of the proof and the runtime follows from the multi-dimensional prefix tree construction
+detailed in appendix [A]({{< relref "/08_appendix#sec:prefixtrees" >}}).
+{{% /proof %}}
 
 #### Combining everything
 Finally, putting Proposition 4.14 and 4.12 together, we obtain our main result.
@@ -109,34 +117,33 @@ Finally, putting Proposition 4.14 and 4.12 together, we obtain our main result.
   and depth $d$.
   The pre-computation runs in time and space complexity
 
-  $$O \left( (d\cdot \ell)^w \cdot \ell + \ell \cdot w^2 \cdot d \right).$$
+  $$O \left( (d\cdot \ell)^w \cdot \ell + \ell \cdot w \cdot d \right).$$
 
   For any subject graph $G$, the pre-computed prefix tree can be used
   to find all
   pattern embeddings $P_i \to G$ in time
-  $$O \left( |G| \cdot \frac{c^w}{w^{\sfrac{1}{2}}} \cdot d \right)$$
+  $$O \left( |G| \cdot \frac{c^w}{w^{1/2}} \cdot d \right)$$
   where $c = 6.75$ is a constant.
 {{% /proposition %}}
 
 {{% proof %}}
 The pre-computation consists of running the `CanonicalAnchors` procedure on
-every pattern and then transforming them into a map of prefix trees as described in the proof of Proposition 4.14.
-\textsc{AsStrings} is linear in pattern sizes and `CanonicalAnchors` runs in $O(w^2\cdot d)$ for each pattern (\cref{prop:cananchors}).
-This is followed by the insertion of $\ell$ tuples of $2w$ strings of length $\Theta(d)$
-into a multidimensional prefix tree. This dominates the total runtime, which can be obtained
-directly from \cref{prop:prefixmatch}.
+each of the $\ell$ patterns and then transforming them into a map of prefix trees
+using Proposition 4.14.
+By proposition 4.7, `CanonicalAnchors` runs in $O(w\cdot d)$ for each pattern, where
+we used that $|P_i| \leqslant w \cdot d$ for all patterns.
+The total runtime of prefix construction is thus
+$$O \left( (d\cdot \ell)^w \cdot \ell + \ell \cdot w \cdot d \right).$$
 
 The complexity of pattern matching itself on the other hand is composed of two parts:
 the computation of all anchor set candidates, and the execution of
 the prefix string matcher for each of the trees resulting from these sets of fixed anchors.
-The complexity of the former is obtained by
-multiplying the result of \cref{prop:catalanbound} with $|G|$,
-as \textsc{AllAnchors}
-must be run for every choice of root vertex $r$ in $G$:
-\begin{equation}\label{eq:finalcomplexity}
-  O(w \cdot d \cdot C_w \cdot |G|),
-\end{equation}
-where $C_w$ is the bound for the number of anchor lists returned by \textsc{AllAnchors}.
-For the latter we use \cref{prop:prefixmatch} and obtain the complexity
-$O(w \cdot d \cdot C_w)$, which is dominated by \cref{eq:finalcomplexity}.
+As `AllAnchors` must be run for every choice of root vertex $r$ in $G$,
+the runtime is thus obtained by multiplying
+i) $|G|$ with
+ii) the runtime of the prefix tree matching (Proposition 4.14), and with
+ii) the number of anchor lists returned by `AllAnchors` (Proposition 4.11):
+$$O(|G| \cdot w \cdot d \cdot C_w ),$$
+where $C_w$ is the bound for the number of anchor lists returned by `AllAnchors`.
+The result follows.
 {{% /proof %}}

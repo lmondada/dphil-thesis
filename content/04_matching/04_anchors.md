@@ -409,7 +409,7 @@ $$O\left(\frac{c^w \cdot d}{w^{1/2}}\right).$$
 {{< /proposition >}}
 
 {{% proof %}}
-We restrict `Operations on line 9 to only return the first $d$
+We restrict `Operations` on line 9 to only return the first $d$
 operations on the linear path in each direction, starting at the anchor operation:
 operations more than distance $d$ away
 from the anchor cannot be part of a pattern of depth $d$.

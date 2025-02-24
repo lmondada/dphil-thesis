@@ -310,3 +310,31 @@ $floating-footnotes-width: 20rem;
         }
     }
 }
+
+////// PROOFS //////
+
+.proof {
+    padding: $padding-16;
+    border: 1px solid var(--gray-200);
+    border-radius: $border-radius;
+    margin: $padding-16 0;
+    background: var(--body-background);
+
+    .proof-header {
+        font-style: italic;
+        display: inline;
+        margin-right: 0.5em;
+    }
+
+    .markdown-inner {
+        display: inline;
+        
+        // Remove extra margins in nested markdown content
+        > :first-child {
+            margin-top: 0;
+        }
+        > :last-child {
+            margin-bottom: 0;
+        }
+    }
+}
