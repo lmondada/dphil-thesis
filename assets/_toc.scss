@@ -1,0 +1,94 @@
+// LaTeX-inspired Table of Contents styling
+.toc {
+  font-family: "Noto Serif", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  margin: 2rem 0;
+  padding: 1rem 2rem;
+  @media print {
+    padding-top: 0rem;
+    font-size: 0.9rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-variant: small-caps;
+
+    @media print {
+      margin-top: 0rem;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+
+    ul {
+      padding-left: 2rem;
+    }
+  }
+
+  li {
+    margin: 0.5rem 0;
+    line-height: 1.4;
+
+    a {
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .toc-chapter {
+    font-weight: 500;
+    margin-top: 1rem;
+
+    // LaTeX-style dotted leaders
+    a {
+      display: flex;
+      align-items: baseline;
+
+      &::after {
+        content: "";
+        flex-grow: 1;
+        margin: 0 0.5rem;
+        border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  .toc-section {
+    font-weight: normal;
+
+    a {
+      display: flex;
+      align-items: baseline;
+
+      &::after {
+        content: "";
+        flex-grow: 1;
+        margin: 0 0.5rem;
+        border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+
+// Dark mode adjustments
+[data-theme="dark"] .toc {
+  .toc-chapter a::after,
+  .toc-section a::after {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+
+  a {
+    color: inherit;
+  }
+}

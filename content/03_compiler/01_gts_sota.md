@@ -5,8 +5,24 @@ layout = "section"
 slug = "sec:gts-sota"
 +++
 
+Optimisation of computation graphs is a long-standing problem in computer science
+that is seeing renewed interest in the compiler @Lattner_2021,
+machine learning (ML) @Jia2019 @Fang2020
+and quantum computing communities @Xu2022 @Xu2023.
+In all of these domains, graphs encode computations that are either expensive to execute or that are
+evaluated repeatedly over many iterations,
+making graph optimisation a primary concern.
+
+Domain-specific heuristics are the most common approach in compiler
+optimisations @pytorch @Sivarajah2020&#x200B;---a more
+flexible alternative are optimisation engines based on declarative sets of
+graph transformations @Bonchi2022 @Bonchi2022a.
+Given a computation graph as input,
+a graph transformation system (GTS) is used to find a sequence of allowed transformations that rewrite the input
+into a computation graph with minimal cost.
+
 Rewriting systems were first introduced on strings @Dershowitz1990, then
-generalised to trees and terms @Bezem2003, before being introduced 
+generalised to trees and terms @Bezem2003, before being introduced
 in the context of graph transformations @Ehrig1973 @Rozenberg1997 @Koenig2018.
 Their use in quantum computing is part of a long tradition of diagrammatic
 reasoning in physics @Penrose1964 @Feynman1949, and particularly in
@@ -79,7 +95,7 @@ is heavily dependent on well-designed transformation orderings and may vary
 widely across input programs.
 This is often refered to in compiler research as the phase ordering
 problem @Click1995&#x200B;---and is known in graph transformation theory
-as the rule control mechanism @Heckel2020&#x200B;: 
+as the rule control mechanism @Heckel2020&#x200B;:
 whenever a compiler can rewrite code in more than one way, it must
 decide which transformations should be applied and in which order, to obtain
 the most optimised result @Whitfield1997 @Liang2023.
@@ -88,4 +104,3 @@ unitary sythesis tools can sometimes outperform current, mostly peephole-based
 compilers @Sivarajah2020
 by up to 50%[^cost] @Wu2020.
 [^cost]: at the cost of many hours of compute, of course.
-

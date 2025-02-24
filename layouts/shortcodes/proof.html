@@ -1,0 +1,15 @@
+{{- if not (isset .Site.Params "pdfgen") -}}
+<details open>
+  <summary>Proof</summary>
+  <div class="markdown-inner">
+    {{ .InnerDeindent | safeHTML }}
+  </div>
+</details>
+{{- else -}}
+<div class="proof">
+  <div class="proof-header">Proof.</div>
+  <div class="markdown-inner">
+    {{ .InnerDeindent | safeHTML }}
+  </div>
+</div>
+{{- end -}}
