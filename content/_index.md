@@ -36,8 +36,7 @@ This document is available online in its latest version [here](https://luca.mond
 
 {{% hint %}}
 This is very very work in progress. Currently worth reading:
-{{< reflink "chap:basics" "chap:compiler" >}}; {{< reflink "chap:rewriting" >}}
-is coming along and will be ready next.
+{{< reflink "chap:basics" "chap:compiler" "chap:matching" >}}.
 {{% /hint %}}
 ---
 

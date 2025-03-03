@@ -16,8 +16,7 @@ $bookSection }}
             >Chapter {{ $chapterNum }}. {{ partial "docs/title" . }}</a
         >
         {{ $sectionNum := 0 }} {{ range (where .Pages "Params.bookHidden" "ne"
-        true) }} {{ if and .IsPage .Content }} {{ $sectionNum = add $sectionNum
-        1 }}
+        true) }} {{ if .IsPage }} {{ $sectionNum = add $sectionNum 1 }}
         <ul>
             <li class="toc-section">
                 <a href="{{ .RelPermalink }}"

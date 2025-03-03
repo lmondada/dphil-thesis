@@ -1,14 +1,14 @@
 +++
-title = "Equality Saturation"
+title = "A closer look at equality saturation"
 layout = "section"
-weight = 1
+weight = 2
 slug = "sec:eqsat"
 +++
 
 Superoptimisation resolves half of the phase ordering problem: it stops the
 proliferation of a multitude of hardware or input specific passes, replacing
 it instead with one, extensible and unified local rewrite-based compiler platform.
-However, in a sense it makes the other half of the problem worse: instead of 
+However, in a sense it makes the other half of the problem worse: instead of
 building a compilation pipeline from a library of manually written passes,
 superoptimising compilers must discover sequences of rewrites out of a much
 larger pool of automatically generated transformations!
@@ -17,7 +17,7 @@ Equality saturation removes the phase ordering problem altogether.
 The technique was first proposed in @Tate2009.
 A modern implementation of it was presented in @Willsey2021.
 We will provide a succinct introduction to equality saturation below, but
-recommend the presentation of @Willsey2021 to the interested 
+recommend the presentation of @Willsey2021 to the interested
 reader, as well as its implementation @Willsey2025 and this blog
 discussion @Bernstein2024.
 Finally, in spite its theoretical origins, equality saturation is also
@@ -33,13 +33,13 @@ or unbound variables
 abstract syntax trees (AST)---it's the same thing.
 ```goat
                       .-.
-                     | f |                                 
+                     | f |
                       '+'
                        |
                        +
                       / \
                    .-.   .-.
-                  | ✱ | | 3 |       The term f(x ✱ 2, 3)                            
+                  | ✱ | | 3 |       The term f(x ✱ 2, 3)
                    '+'   '-'
                     |
                     +
@@ -52,7 +52,7 @@ This representation is particularly suited representation for any functional
 (i.e. side effect free) classical computation.
 Every node of a term is identified with a term of its own: the subterm given
 by the subtree the node is the root of.
-Given equivalences between terms, term rewriting consists of finding 
+Given equivalences between terms, term rewriting consists of finding
 subterms that match known equivalences. The matching subtrees are then be
 replaced with the new equivalent trees.
 
@@ -68,7 +68,7 @@ algorithm, tasked with finding the term that minimises the cost function of
 interest among all terms discovered during exploration.
 
 The data structure that enables this is a generalisation of term trees. Just
-as in terms, nodes correspond to operations and have children subterms that 
+as in terms, nodes correspond to operations and have children subterms that
 correspond to the arguments of the operation.
 However, the data structure is persistent: when applying a rewrite, existing
 terms are never removed and thus information in the data structure is never lost.
@@ -81,15 +81,15 @@ If we for instance applied the rewrite $x * 2 \mapsto x + x$ to the term above,
 we would obtain
 ```goat
                                             .-.
-                                           | f |                                 
+                                           | f |
                                             '+'
                                              |
                                              +
                                             / \
                            .-.           .-.   .-.
-                          | ➕ |<------->| ✱ | | 3 |                             
+                          | ➕ |<------->| ✱ | | 3 |
                            '+'           '+'   '-'
-                            |             |      
+                            |             |
                             +             +
                            / \           / \
                         .-.   .-.     .-.   .-.
@@ -104,13 +104,13 @@ Suppose for example the existence of a rewrite $f(x + y, z) \mapsto f(x, y * z)$
 then this would match in the above data structure resulting in
 ```goat
                                        .-.            .-.
-                                      | f |<-------->| f |       
+                                      | f |<-------->| f |
                                        '+'            '+'
                                         |              |
                                         +              +
                                        / \            / \
                       .-.           .-.   .-.      .-.   .-.
-                     | ➕ |<------->| ✱ | | 3 |    | x | | ✱ |                      
+                     | ➕ |<------->| ✱ | | 3 |    | x | | ✱ |
                       '+'           '+'   '-'      '-'   '+'
                        |             |                    |
                        +             +                    +
@@ -121,7 +121,7 @@ then this would match in the above data structure resulting in
 ```
 
 A consequence of persistency and the use of equivalence relations is that
-the ordering in which the rewrites are considered and applied becomes totally 
+the ordering in which the rewrites are considered and applied becomes totally
 irrelevant!
 As presented, the exploration process would however never terminate and the
 data structure size would grow indefinitely: as more
@@ -136,21 +136,21 @@ As a result, the nodes no longer form a forest of trees, but instead a directed
 acyclic graphs:
 ```goat
                                        .-.            .-.
-                                      | f |<-------->| f |       
+                                      | f |<-------->| f |
                                        '+'            '+'
                                         |              |
                                         +              +
                                        / \            / \
                       .-.           .-.   \        .-.   \
-                     | ➕ |<------->| ✱ |   \      | ✱ |   |                    
+                     | ➕ |<------->| ✱ |   \      | ✱ |   |
                       '+'           '+'     \      '+'    |
                        |             |       \      |     |
                        +             +        \     +     |
                       / \           / \        \   / \    .
                      .   \         /   .-.      .-.   .  /
-                      \   \       .   | 2 |    | 3 | /  /         
-                       \   \     .+.   '-'      '-' /  /           
-                        \   '---+   +--------------'  /            
+                      \   \       .   | 2 |    | 3 | /  /
+                       \   \     .+.   '-'      '-' /  /
+                        \   '---+   +--------------'  /
                          '------+ x +----------------'
                                  '-'
 ```
@@ -186,7 +186,7 @@ The optimiser may then proceed to the extraction phase.
 It is not trivial to read out an optimised term out of the saturated term
 data structure.
 For every equivalence class in the data structure, a representative node must
-be chosen in such a way that the final term, extracted recursively from the 
+be chosen in such a way that the final term, extracted recursively from the
 root by always choosing the representative node of every term class, minimises
 the desired cost function[^sharing].
 [^sharing]: Note that we are omitting a subtle point here that arises due to
@@ -271,7 +271,7 @@ from the right of a CX gate to the left:
          }
     ]
 }
-{{< /qviz >}} 
+{{< /qviz >}}
   </div>
   <div style="min-width: 16px; margin: 0 -40px;">
     <svg width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -344,7 +344,7 @@ of the following circuit:
          }
     ]
 }
-{{< /qviz >}} 
+{{< /qviz >}}
 With some creative drawing, we can represent the resulting equality saturation
 data structure containing both the circuit before and after the rewrite as
 follows.
@@ -383,7 +383,7 @@ Now, suppose the existence of another rewrite rule, given by
          }
     ]
 }
-{{< /qviz >}} 
+{{< /qviz >}}
   </div>
   <div style="min-width: 16px; margin-left: -40px; margin-right: -20px;">
     <svg width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
