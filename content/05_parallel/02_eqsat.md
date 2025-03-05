@@ -5,23 +5,13 @@ weight = 2
 slug = "sec:eqsat"
 +++
 
-Superoptimisation resolves half of the phase ordering problem: it stops the
-proliferation of a multitude of hardware or input specific passes, replacing
-it instead with one, extensible and unified local rewrite-based compiler platform.
-However, in a sense it makes the other half of the problem worse: instead of
-building a compilation pipeline from a library of manually written passes,
-superoptimising compilers must discover sequences of rewrites out of a much
-larger pool of automatically generated transformations!
-
-Equality saturation removes the phase ordering problem altogether.
-The technique was first proposed in @Tate2009.
-A modern implementation of it was presented in @Willsey2021.
-We will provide a succinct introduction to equality saturation below, but
-recommend the presentation of @Willsey2021 to the interested
-reader, as well as its implementation @Willsey2025 and this blog
+We provide a succinct introduction to equality saturation below, along with a discussion
+of the shortcomings of the method in the context of quantum computation and graph
+rewriting in general.
+For further details on equality saturation,
+we recommend the presentation of @Willsey2021
+as well as its implementation @Willsey2025 and this blog
 discussion @Bernstein2024.
-Finally, in spite its theoretical origins, equality saturation is also
-(slowly) making it into production compilers @Fallin2022.
 
 Unlike a general purpose compiler utility, equality saturation is specifically
 a technique for term rewriting.
@@ -48,17 +38,16 @@ abstract syntax trees (AST)---it's the same thing.
                | x | | 2 |
                 '-'   '-'
 ```
-This representation is particularly suited representation for any functional
+This representation is particularly suited for any pure functional
 (i.e. side effect free) classical computation.
 Every node of a term is identified with a term of its own: the subterm given
 by the subtree the node is the root of.
-Given equivalences between terms, term rewriting consists of finding
-subterms that match known equivalences. The matching subtrees are then be
+Given term transformation rules, term rewriting consists of finding
+subterms that match known transformation patterns. The matching subtrees can then be
 replaced with the new equivalent trees.
 
-The core of equality saturation is a data structure that stores the
-term being compiled, along with the result of every possible rewrite that could
-be applied to it or to any of its subterms.
+In equality saturation, all terms that are obtained through term rewriting
+are stored within a single persistent data structure.
 Term optimisation proceeds in two stages. First, an exploration phase
 adds progressively more terms to the data structure in order to discover and capture
 all possible terms that the input can be rewritten to, until
@@ -70,11 +59,8 @@ interest among all terms discovered during exploration.
 The data structure that enables this is a generalisation of term trees. Just
 as in terms, nodes correspond to operations and have children subterms that
 correspond to the arguments of the operation.
-However, the data structure is persistent: when applying a rewrite, existing
-terms are never removed and thus information in the data structure is never lost.
-Instead, the new term introduced by a term rewrite is added to the data structure
-while the term that was matched remains unchanged.
-To record that both terms are equivalent, we extend the data structure we employ
+To record that a new term obtained through a rewrite is equivalent to an existing
+subterm, we extend the data structure we employ
 to also store equivalence classes of nodes, typically implemented as
 Union-Find data structures @Galler1964 @Cormen2009.
 If we for instance applied the rewrite $x * 2 \mapsto x + x$ to the term above,
@@ -120,9 +106,10 @@ then this would match in the above data structure resulting in
                    '-'   '-'     '-'   '-'            '-'   '-'
 ```
 
-A consequence of persistency and the use of equivalence relations is that
+A consequence of the use of equivalence relations in the data structure is that
 the ordering in which the rewrites are considered and applied becomes totally
 irrelevant!
+
 As presented, the exploration process would however never terminate and the
 data structure size would grow indefinitely: as more
 rewrites are applied, more and more terms are created, resulting in an ever
@@ -157,15 +144,14 @@ acyclic graphs:
 This is commonly known as _term sharing_, or _term graphs_ @Willsey2021.
 Maintaining this invariance is not hard in practice: whenever a new term is about
 to be added by the application of a rewrite, it must first be checked whether
-the term exist already---something that can be done cheaply by keeping
+the term exists already---something that can be done cheaply by keeping
 track of all hashes of existing terms.
 In the affirmative case, rather than adding a new term to the equivalence class
 of the matched
-term, the entire class of the existing node must be merged into it.
+term, the classes of both terms must be merged.
 
-Note that when term sharing, it might be that not only the equivalence classes
-of the two terms must be merged, but also that merging of classes must be done
-recursively: given the terms $f(x, 3)$ and $f(y, 3)$, if the classes of $x$ and
+It might be that equivalence classes must be merged recursively:
+given the terms $f(x, 3)$ and $f(y, 3)$, if the classes of $x$ and
 $y$ are merged (and thus $x$ and $y$ have been proven equivalent), then the
 classes of their
 respective parent $f(x, 3)$ and $f(y, 3)$ must also be merged.
@@ -182,7 +168,7 @@ This marks the end of the exploration phase[^timeout].
 implementations to guarantee timely termination even on large or ill-behaved
 systems.
 
-The optimiser may then proceed to the extraction phase.
+Term optimisation then proceeds to the extraction phase.
 It is not trivial to read out an optimised term out of the saturated term
 data structure.
 For every equivalence class in the data structure, a representative node must
@@ -206,21 +192,40 @@ then finding the optimal solution will require more expensive computations such
 as solving boolean satisfiability (SAT) or Satisfiability Modulo Theories (SMT)
 problem instances @Biere2021.
 
-#### Quantum programs: trouble in paradise?
+#### Equality saturation on graphs?
 
 Equality saturation is a fast developing subfield of compilation sciences with
 a growing list of applications.
 Unfortunately for us[^thesis], adapting the ideas to
-quantum computation presents several unsolved challenges.
+quantum computation (and graph rewriting more generally)
+presents several unsolved challenges.
 [^thesis]: but fortunately for this thesis
 
 The root of the problem lies in the program representation.
-Fundamentally, the minIR representation we sketched out in
+The minIR representation we presented in
 {{< reflink "sec:graph-defs" >}}---but also the quantum circuit
 representation---capture quantum computations, not as a term, but in a
 directed acyclic graph (DAG) structure.
 
-This issue was studied by @Yang2021 in the context of tensor graphs optimisation.
+A generalisation of equality saturation to computational DAGs
+was studied in @Yang2021, in the context of optimisation of
+computational graphs for deep learning.
+They show that computational DAG rewriting can be modelled by the composition
+of multiple term rewrites.
+Consider for example the simple computation that takes two inputs `(x, y)`
+representing 2D cartesian coordinates and returns its equivalent in polar
+coordinates `(r, θ)`.
+```goat
+         .----------.
+x ------>+          +------> r
+         | to_polar |
+y ------>+          +------> θ
+         '----------'
+```
+By introducing two operations `to_polar_r` and `to_polar_theta` that
+correspond to projections of the outputs of `to_polar` onto one of the two
+outputs
+
 They propose decomposing computation DAGs into a tuple of (overlapping) terms,
 one for each output of the computation.
 In theory, this should allow for the full use of the equality saturation

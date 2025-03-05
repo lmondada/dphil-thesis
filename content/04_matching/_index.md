@@ -1,5 +1,5 @@
 +++
-title = "Fast Pattern Matching"
+title = "Pattern Matching in large Graph Transformation Systems"
 sort_by = "weight"
 weight = 4
 layout = "chapter"

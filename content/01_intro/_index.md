@@ -187,3 +187,19 @@ its equivalence class can be determined.
 Any replacement of that set of instructions with another program in the same
 equivalence class
 is a valid transformation, and thus a potential peephole optimisation.
+
+
+#### Intro to chapter 5
+
+Our goal is to run pattern matching on GTSs to optimise stuff
+in a way that applies to many different regimes, i.e. remaining agnotic
+to the graph semantics. Thus not rely too much on rewrite strategies.
+This means we will need heuristics -- heuristics whose performance will
+necessarily be dependent on the overall size of the search space.
+
+This chapter contributes to this goal by introducing a data structure for
+the _concurrent_ exploration of the state space of GTSs.
+As the name implies, this will allow for a parallelised exploration of the state
+space; but more importantly, we will see that it significantly reduces the
+size of the total search space, whilst keeping the solution space
+unchanged.

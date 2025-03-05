@@ -5,22 +5,39 @@ weight = 1
 slug = "sec:sota_parallel"
 +++
 
-Concurrent graph transformations were first formalised by @Corradini1996 and @Baldan1999.
-Other work has also proposed a theory for concurrent transformations with
-support for overlaps @Echahed2017.
-The former led to the first proposal for a fully persistent data structure for graph
-rewriting @Weber2022:
-by storing the graph _edits_ that result from a graph transformation, rather than modifying
-the underlying data, read and write access to all previous versions of the graph is
-preserved.
-Our construction presented in {{< reflink "sec:persistent-ds" >}} expands on this idea
-by proposing a persistent data structure that furhter supports "merges" of multiple
-rewrite sequences.
+First proposed and studied in 1986 by Driscoll et al @Driscoll1989,
+persistent data structures have a rich history in computer science @Lagogiannis2005,
+and particularly within functional programming @Okasaki1996 @Okasaki1998 @Hinze2005.
+Confluently persistent data structures were first explored in @Driscoll1994.
+A general treatment of the approach was subsequently presented in @Fiat2003 and improved
+in @Collette2012.
+@Chalermsook2018 proposed a data structure for confluently persistent tries.
 
-Another key aspect of our contributions in this chapter relate to rewrite ordering.
-In many applications of graph transformation systems, the graph rewrites
-are executed according to a rewriting strategy, i.e. a procedure to select
+Within the field of graph transformations, there is a well-developed theory
+for persistent (and confluently persistent) transformations in the form of
+the concurrent graph transformation formalism of
+Corradini et al. @Corradini1996 and Baldan et al. @Baldan1999.
+This categorical formalism has also been extended to include
+support for overlapping transformations in @Echahed2017.
+
+The first practical application of persistent graph rewriting was
+developed by the graph rewriting engine GRAPE @Weber2017 and was
+originally based on ephemeral data structures with transactional ACID semantics.
+This was later enhanced by its successor GrapeVine @Weber2022,
+with the first fully persistent data structure for graph rewriting.
+In this work, the vertices and edges that result from graph rewrites
+are stored individually in a specialised database.
+Depending on the version of the data that is requested, the graph can be
+retrieved from the individual vertex and edge entities in the database using
+the database's graph query language.
+To our knowledge, no confluently persistent data structure has been proposed for graph
+rewriting.
+
+As we will see in {{< reflink "sec:factor-gts" >}}, confluent persistence
+is a particularly valuable property in the absence of a rewriting strategy,
+i.e. a procedure to select
 and prioritise among possible graph transformations @Echahed2008.
+This distinguishes the approach presented in this thesis from most previous work.
 Rewriting strategies feature prominently in PORGY,
 a tool for port graph rewriting @Andrei2011 @Fernandez2010;
 the graph rewriting software GROOVE provides the notion
@@ -53,9 +70,11 @@ the constantly evolving rewrite rules, instruction sets and complex,
 architecture dependent, cost functions render it challenging to
 fix a deterministic program transformation schedule.
 
-Jia et al. used graph transformations along with a simple exhaustive search
-with backtracking to optimise computation graphs in the context of
-deep learning @Jia2019.
+That optimisation using graph transformations were achievable without predefined
+rewriting strategies was shown by Jia et al. in @Jia2019, discovering new
+state of the art implementations for computation graphs of interest to the
+deep learning community, using a simple exhaustive search of the GTS space
+with backtracking.
 This approach was then adapted to quantum circuit optimisation in
 @Xu2022 and @Xu2023.
 
@@ -83,6 +102,13 @@ This leads to immense search spaces that superoptimisation does not scale well t
 For the special case of _term rewriting_, i.e. rewriting of tree expressions,
 a technique known as _equality saturation_ was introduced in @Tate2009 to
 significantly compress and reduce the size of the search space.
+Equality saturation can be viewed as a twist on persistent data structures,
+specifically designed for optimizing terms through term rewriting.
+It is persistent insofar as it preserves all data that was inserted into it, though
+unlike persistent data structures, it does not retain the history of transformations.
+This introduces a new step in the optimisation process known as the _extraction phase_,
+where the best term stored within the data structure must be identified and recovered.
+
 An efficient implementation of it was presented in @Willsey2021
 and has recently seen adoption in modern compiler optimisation pipelines @Fallin2022.
 Though the approach was extended to optimise computation graphs
