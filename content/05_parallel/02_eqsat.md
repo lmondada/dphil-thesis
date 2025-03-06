@@ -210,8 +210,9 @@ directed acyclic graph (DAG) structure.
 A generalisation of equality saturation to computational DAGs
 was studied in @Yang2021, in the context of optimisation of
 computational graphs for deep learning.
-They show that computational DAG rewriting can be modelled by the composition
-of multiple term rewrites.
+Their approach is based on the observation that the computation of a (classical)
+computational DAG can always be expressed by a term for each output
+of the computation.
 Consider for example the simple computation that takes two inputs `(x, y)`
 representing 2D cartesian coordinates and returns its equivalent in polar
 coordinates `(r, θ)`.
@@ -223,40 +224,32 @@ y ------>+          +------> θ
          '----------'
 ```
 By introducing two operations `to_polar_r` and `to_polar_theta` that
-correspond to projections of the outputs of `to_polar` onto one of the two
-outputs
+compute `to_polar` and subsequently discard one of the two outputs,
+the DAG can equivalently be formulated as two terms
+```goat
+      .--------.       .------------.
+     |to_polar_r|     |to_polar_theta|
+      '---+----'       '-----+------'
+         / \                / \
+      .-.   .-.          .-.   .-.
+     | x | | y |        | x | | y |
+      '-'   '-'          '-'   '-'
+```
+corresponding to the two outputs `r` and `θ` of the computation.
+This involves temporarily duplicating some of the data and computations in
+the DAG---though all duplicates will be merged again in the term graph as a result
+of the term sharing invariant.
 
-They propose decomposing computation DAGs into a tuple of (overlapping) terms,
-one for each output of the computation.
-In theory, this should allow for the full use of the equality saturation
-workhorse with very minimal adjustements.
-In their application, however, they found exponential size increases in the term data
-structure used as a result of the
-cartesian product between the decomposed terms of DAG rewrite rules and had
-to limit the number of applications of multi-term rewrite rules to 2 for
-performance reasons.
+This duplicating and merging of data is fundamentally at odds with the
+constraints that we must enforce on linear data such as quantum resources.
+Each operation (or data) of a DAG that is split into multiple terms
+introduces a new constraint that must be imposed on the extraction algorithm:
+a computational DAG will only satisfy _no-discard_ for linear values
+if for each split operation it contains, it either contains all or none
+of its splitted components.
 
-DAG rewriting also introduces new issues in the extraction phase of equality
-saturation.
-The authors of @Yang2021 show that multi-term rewrites can introduce
-cycles in the term data
-structure, which are expensive to detect and account for in the extraction algorithm.
-Finally, such rewrites result in large overlaps between terms. This means that
-greedy divide-and-conquer extraction heuristics that do not model cost
-savings from subexpression sharing perform poorly, necessitating the use of
-more compute intensive SMT techniques for competitive results.
-
-To make matters worse, there are also quantum-specific difficulties in using
-equality saturation.
-Term sharing and the hash-based uniqueness invariant enforced by the term data
-structure is fundamentally at odds with the linearity of quantum resources.
-At extraction time, all linear resources would have to be carefully tracked.
-Additional constraints would have to be added to ensure that expressions that
-depend on the same linear resources are mutually exclusive. Conversely, we would have
-to guarantee that for all terms that make up a multi-term rewrite, the linear
-resources used on their overlaps coincide.
-
-Consider for instance the following simple rewrite that pushes X gates ($\oplus$)
+To illustrate this point, consider the following simple rewrite on quantum circuits
+that pushes X gates ($\oplus$)
 from the right of a CX gate to the left:
 <div class="book-columns flex" style="align-items: center;">
   <div class="flex-even markdown-inner">
@@ -312,17 +305,161 @@ Both the left and right hand sides would be decomposed into two terms, one
 for each output qubit. The left terms could be written as
 $$X(CX0(0, 1)) \quad\textrm{and}\quad CX1(0, 1)$$
 whereas the right terms would be
-$$CX0(X(0), X(1)) \quad\textrm{and}\quad CX1(X(0), X(1))$$
-where we introduced the term $X(\cdot)$ for the single-qubit X gate
+$$CX0(X(0), X(1)) \quad\textrm{and}\quad CX1(X(0), X(1)).$$
+We introduced the term $X(\cdot)$ for the single-qubit X gate
 and two terms $CX1(\cdot, \cdot)$ and $CX2(\cdot, \cdot)$ for the terms
 that produce the first, repsectively second, output of the two-qubit
 CX gate. $1$ and $0$ denote the input qubits of the computation.
 This would be interpreted as two different rewrites
-$$\begin{aligned}X(CX0(0, 1)) &\mapsto CX0(X(0), X(1))\\\textrm{and}\quad CX1(0, 1) &\mapsto CX1(X(0), X(1))\end{aligned}$$
-but the crucial point is: unlike classical computations,
-we would have to enforce at extraction time that for every set of applicable gates,
-either both or none of these rewrites are applied.
-Otherwise, the extracted program would be unphysical.
+$$\begin{aligned}X(CX0(0, 1)) &\mapsto CX0(X(0), X(1))\\\textrm{and}\quad CX1(0, 1) &\mapsto CX1(X(0), X(1)).\end{aligned}$$
+Unlike classical computations, however, either of these rewrites on their own
+would be unphysical: there is no implementation of either split operations
+$CX0$ or $CX1$ on their own.
+We would thus have to enforce at extraction time that for every application of this
+pair of rewrite rules,
+either both or none of the rewrites are applied.
+
+Conversely, satisfying the _no-cloning_ principle requires verification that during
+extraction, terms that share a subterm but correspond to distinct graph rewrites are never
+selected simultaneously---otherwise the linear value that corresponds to the shared
+subterm would require cloning to be used twice.
+
+The no-discard and no-cloning restrictions result in a complex web of `AND` respectively `XOR`
+relationships between individual terms in the term graph.
+These constraints _could_ be ignored during the exploration phase and then be modelled
+in the extraction phase by an integer linear programming (ILP) problem.
+However, @Yang2021 observed that this approach causes the term graph
+to encode a solution space that grows super-exponentially with rewrite depth
+(see Fig. 7 in @Yang2021),
+rendering the ILP extraction problem computationally intractable beyond 3 subsequent rewrites.
+
+In constrast, in the absence of clonable values, we claim that the solution space
+can only grow exponentially with rewrite depth[^superexpsmaller].
+In other words:
+[^superexpsmaller]: Exponential is super-exponentially smaller than super-exponential!
+Or put mathematically $e^{o(n)}/e^{\Theta(n)} = e^{o(n) - \Theta(n)} = e^{o(n)}$.
+
+{{< proposition >}}
+Consider a term graph and for each term $t$ in the term graph
+define $P(t)$, the set of all
+uses of $t$,
+i.e. all terms $t'$ such that $t$ is one of the children of the root of $t'$.
+Suppose there are sets $A_{t,1}, \dots A_{t,n_t} \subseteq P(t)$ defined for each term $t$.
+
+Say a set of terms $S$ is _linear_ if for every term $t$, either $S \cap P(t) = A_{t,i}$
+for some $i$ or $S \cap P(t) = \emptyset$ and say a rewrite is linear if it applies on a linear set of terms.
+
+After $d$ linear rewrites,
+there will be at most $O(e^{\alpha \cdot d})$ applicable linear rewrites.
+
+TODO: $A$ etc would depend on $d$...
+{{< /proposition >}}
+Note that this definition of linear rewrite corresponds exactly to the rewrites that are valid
+if terms represent linear values.
+The sets $A_{t,i}$ are then the sets of terms that result from a single graph rewrite, split into
+several term rewrites.
+The condition on sets $S$ then enforce that for all terms $t$,
+if $t$ is used in the rewrite
+then all term rewrites of exactly one graph rewrite must be applied.
+
+{{% proof %}}
+<!-- Let $\mathcal{G}_d$ be the set of all computational DAGs that can be reached from $G$ in the
+GTS after $d$ rewrites. -->
+For all $d \geqslant 0$, we consider the set $Val_d$ of all terms contained in the term graph
+after $d$ linear rewrites.
+<!-- and define
+$$n_v = \left|\left\{G' \in \mathcal{G}_d \mid v \in G'\right\}\right|$$
+if $v \in Val_d$ and $n_v = 0$ otherwise. -->
+
+It is sufficient to count the number of valid linear sets of terms $S_d \subseteq Val_d$;
+the total number of linear rewrites will then be in $O(|S_d|)$, given that the total number of
+rewrite rules is a constant.
+From the definition of linear in the proposition, we can derive that
+$$|S_d| = \prod_{t \in Val_d} n_t + 1,$$
+obtained by observing that for every value $v$, one of $n_t$ sets of parents can
+be chosen, or none at all.
+
+Applying a linear graph rewrite will introduce at most $p$ new parent sets
+$A_{t_1, i_1}, \dots, A_{t_p, i_p}$,
+where $p$ is the maximum number of inputs in any of the rewrite rules.
+Writing $n_t'$ for the updated number of parent sets for each $t \in Val_{d+1}$
+and $X = \{t_1, \dots, t_p\}$, we have
+$n_t' = n_t + 1$ if $v \in X$, and $n_t' = n_t$ otherwise
+(we introduce for convenience $n_t = 0$ if $t \in Val_{d+1} \smallsetminus Val_d$).
+By defining
+$$\alpha = 2^p \geqslant \prod_{t \in X} \frac{n_t + 1}{n_t},$$
+we obtain the new bound after rewrite application $|S_{d+1}| < \alpha \cdot |S_d|$.
+Finally, for $d=0$, we can bound $|S_0| \leq 2^|G|$, where $|G|$ is the number of
+vertices in the input graph. The result follows.
+{{% /proof %}}
+
+In summary, equality saturation is a specialisation of persistent data structures
+uniquely suited to the problem of term rewriting.
+It succinctly encodes the space of all equivalent terms and using term sharing
+does away with the need to
+apply equivalent rewrites on multiple copies of the same term, which inevitably
+occur on more naive rewriting approaches.
+
+However, equality saturation is unable to model rewrites that require deletion of parts of the data.
+This is not a problem for terms representing classical operations, as data
+can always be implicitly copied during exploration and discarded during extraction
+as required.
+This is not the case for quantum computations---and for graph rewriting in general,
+where explicit vertex and edge deletions are an integral part of graph transformation
+semantics.
+
+As a result, numerous constraints would have to be imposed to restrict the solution
+space encoded by term graphs to valid outcomes of graph rewriting procedures.
+This would make extraction algorithms complex and cumbersome. More importantly,
+we showed that it also makes the solution space explored by equality saturation
+_super-exponentially larger_ than the true solution space, rendering the extraction
+algorithm and a meaningful exploration of the relevant rewriting space computationally
+intractable.
+
+<!-- We can thus define $n_v$ as the number of graph rewrites in the term graph that
+use the value $v$. Each such rewrite corresponds to a set of terms in the term graph
+that include $v$.
+
+can only be used in the graph that results
+from one graph rewrite (which may correspond to a set of terms).
+For each value $v$ in the term graph, we can thus define $n_v$ as the number of
+graphs in the term graph that
+
+
+
+
+
+
+
+They propose decomposing computation DAGs into a tuple of (overlapping) terms,
+one for each output of the computation.
+In theory, this should allow for the full use of the equality saturation
+workhorse with very minimal adjustements.
+In their application, however, they found exponential size increases in the term data
+structure used as a result of the
+cartesian product between the decomposed terms of DAG rewrite rules and had
+to limit the number of applications of multi-term rewrite rules to 2 for
+performance reasons.
+
+DAG rewriting also introduces new issues in the extraction phase of equality
+saturation.
+The authors of @Yang2021 show that multi-term rewrites can introduce
+cycles in the term data
+structure, which are expensive to detect and account for in the extraction algorithm.
+Finally, such rewrites result in large overlaps between terms. This means that
+greedy divide-and-conquer extraction heuristics that do not model cost
+savings from subexpression sharing perform poorly, necessitating the use of
+more compute intensive SMT techniques for competitive results.
+
+To make matters worse, there are also quantum-specific difficulties in using
+equality saturation.
+Term sharing and the hash-based uniqueness invariant enforced by the term data
+structure is fundamentally at odds with the linearity of quantum resources.
+At extraction time, all linear resources would have to be carefully tracked.
+Additional constraints would have to be added to ensure that expressions that
+depend on the same linear resources are mutually exclusive. Conversely, we would have
+to guarantee that for all terms that make up a multi-term rewrite, the linear
+resources used on their overlaps coincide.
 
 This problem is further compounded by quantum entanglement.
 Indeed, consider the rewrite rule above applied to the second and third gate
@@ -445,4 +582,4 @@ Applying the rewrite to this match is not only unphysical, it is plain nonsensic
 This applies entangling gates between different versions of the same qubit!
 In other words, linearity constraints would not only have to be taken into account
 during extraction, but also to restrict pattern matching and rewriting during
-exploration.
+exploration. -->
