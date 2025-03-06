@@ -32,7 +32,7 @@ This means the data structure and algorithms we present applies directly to minI
 but also more broadly to most instances of graph rewriting.
 
 {{< definition >}}
-A rewrite $r$ on a graph $G = (V, E)$ is given by a tuple $r = (V_R, E_R, V^-, \sim)$,
+A rewrite $\delta$ on a graph $G = (V, E)$ is given by a tuple $\delta = (V_R, E_R, V^-, \sim)$,
 with
 - $G_R = (V_R, E_R)$ is a graph called the replacement graph,
 - $V^- \subseteq V$ is the vertex deletion set, and
@@ -42,7 +42,7 @@ the gluing relation,
 where $V_L = (V \smallsetminus  V^-)$.
 {{< /definition >}}
 Define $G_L = (V_L, E_L)$ with $E_L = E \cap V_L^2$. Then the rewritten graph resulting from applying
-$r$ to $G$ is $(G_L \cup G_R) / \sim$, obtained from the union of $G_L$ and $G_R$ by merging
+$\delta$ to $G$ is $(G_L \cup G_R) / \sim$, obtained from the union of $G_L$ and $G_R$ by merging
 all vertices within the same equivalence class in $\sim$.
 
 This definition of graph rewrite encompasses all valid minIR transformations defined
@@ -50,14 +50,5 @@ in {{% reflink "sec:rewrite-def" %}} but may not cover the full breadth of DPO t
 in other GTSs, as this definition does not allow for "vertex splitting" (see the discussion on DPO
 in {{% reflink "sec:rewrite-def" %}}).
 
-
-
-Instead of handling merges explicitly, we view confluent persistency
-as allowing mutations to be applied not only on previous
-versions of the data, but also on collections of several versions---equivalent to
-creating explicitly a merged version of the data
-followed by the desired mutation.
-The edit history then forms a directed acyclic graph (DAG), with nodes being
-versions of the data and directed edges indicating the data mutations that were applied.
-
-Persistent
+To distinguish between vertices and edges of multiple graphs, we will write $V(G)$ and $E(G)$
+to designate the vertices, respectively edges, of a graph $G$.
