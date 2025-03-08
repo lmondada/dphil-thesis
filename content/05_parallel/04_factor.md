@@ -18,26 +18,27 @@ Whilst the exact data structure of equality saturation does not
 apply to computation graphs with linear resources, it turns out
 that a similar factorisation of the search space is also
 obtainable for GTS search space exploration.
+Throughout this section, we consider a GTS and will aim to bound the size
+of the space of possible sequences of rewrites starting from
+an input graph $G$ using the GTS.
 
 #### A lower bound for the naive search tree
 
 Consider an input graph $G$.
-We can view the graphs $G'$ that can be obtained from $G$ by applying
-a sequence of transformations from the GTS as the nodes of a (possibly infinite) tree $T$,
+The graphs $G'$ that can be obtained from $G$ by applying
+a sequence of transformations from the GTS form the nodes of a (possibly infinite) tree $T$,
 with edges between graphs given by the transformations.
 The path from the root $G$ to $G'$ is the sequence of transformations that produces $G'$.
 We call $T$ the naive search tree of $G$.
 
-Assume that every transformation $t \in E(T)$ introduces fresh vertices[^minIRdel];
+As in the previous section, we assume that every transformation
+$t \in E(T)$ introduces fresh vertices;
 that is to say, the new vertices introduced by transformations in $T$ form disjoint sets.
 Thus, if a vertex $v$ is contained in the vertex sets of two graphs $G_1, G_2 \in V(T)$,
 then either $v \in V(G)$ or there is a shared transformation that introduces $v$
 contained in both sequences of transformations that produce $G_1$ and $G_2$.
 For two transformations $t_1$ and $t_2$, we say that $t_2$ overlaps $t_1$ if the
 former deletes a vertex that the latter introduces.
-[^minIRdel]: Recall that in minIR rewriting, vertices are values. Values are
-deleted during rewriting by the value deletion set $V^-$ of Definition 3.4.
-New values are introduced by adding new minIR graphs and gluing them together.
 
 For a depth $\Delta \geqslant 0$, we say a graph $G'$ is reachable from $G$
 within depth $\Delta$ in the GTS if there is a sequence of transformations in the GTS
