@@ -339,7 +339,7 @@ In other words:
 [^superexpsmaller]: Exponential is super-exponentially smaller than super-exponential!
 Or put mathematically $e^{o(n)}/e^{\Theta(n)} = e^{o(n) - \Theta(n)} = e^{o(n)}$.
 
-{{< proposition >}}
+{{< proposition number="5.1" >}}
 Consider a term graph and for each term $t$ in the term graph
 define $P(t)$, the set of all
 uses of $t$,

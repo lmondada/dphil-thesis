@@ -31,19 +31,39 @@ as applications require it.
 This means the data structure and algorithms we present applies directly to minIR graphs,
 but also more broadly to most instances of graph rewriting.
 
-{{< definition >}}
-A rewrite $\delta$ on a graph $G = (V, E)$ is given by a tuple $\delta = (V_R, E_R, V^-, \sim)$,
+{{< definition number="5.1" >}}
+A rewrite $r$ on a graph $G = (V, E)$ is given by a tuple $r = (G_R, V^-, \mu)$,
 with
 - $G_R = (V_R, E_R)$ is a graph called the replacement graph,
 - $V^- \subseteq V$ is the vertex deletion set, and
-- $\sim\, \subseteq (V_L \cup V_R)^2$ is an equivalence relation called
-the gluing relation,
-
-where $V_L = (V \smallsetminus  V^-)$.
+- $\mu: V^- \rightharpoonup V_R$ is the _gluing relation_, a partial function
+that maps a subset of the deleted vertices of $G$ to vertices in the replacement graph.
 {{< /definition >}}
-Define $G_L = (V_L, E_L)$ with $E_L = E \cap V_L^2$. Then the rewritten graph resulting from applying
-$\delta$ to $G$ is $(G_L \cup G_R) / \sim$, obtained from the union of $G_L$ and $G_R$ by merging
-all vertices within the same equivalence class in $\sim$.
+We will write $Dom(\mu)$ and $Im(\mu)$ for the domain and image of $\mu$, respectively.
+
+Define the graph $G_L = (V_L, E_L)$ given by
+$V_L = V \setminus V^- \cup Dom(\mu)$ and $E_L = E \cap V_L^2$.
+The gluing relation $\mu$ defines an equivalence relation
+$$\sim \ \subseteq (V_L \cup V_R)^2$$ by taking the symmetric,
+transitive and reflexive closure of $\mu$, viewed as a relation $V_L \times V_R$.
+The rewritten graph resulting from applying
+$r$ to $G$ is
+$$r(G) = (G_L \cup G_R) / \sim,$$ obtained from the union of $G_L$ and $G_R$ by merging
+all vertices within the same class in $\sim$.
+
+In this chapter, we will consider sequences of multiple rewrites.
+It is therefore convenient to adopt a convention on how to refer to vertices
+that are created as the result of gluings in rewrites.
+We make use of the fact that for every rewrite $r = (G_R, V^-, \mu)$, all sets $M$
+of merged vertices resulting from the gluing relation $\mu$ are of the form
+$$M = \{ m \} \cup \{ v \in V^- \mid \mu(v) = m \},$$
+for some $m \in V(G_R)$.
+There is thus a unique vertex in $M$ that is not in the deletion set of $r$: $M \smallsetminus V^- = \{ m \}$.
+We choose to always identify the merged vertex with $m$.
+Using this convention, the set of vertices of $r(G)$ is
+simply $V(G) \cup V(G_R) \setminus V^-$.
+
+---
 
 This definition of graph rewrite encompasses all valid minIR transformations defined
 in {{% reflink "sec:rewrite-def" %}} but may not cover the full breadth of DPO transformations
