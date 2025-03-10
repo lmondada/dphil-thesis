@@ -1,0 +1,3 @@
+{{- $id := .Get 0 -}}
+{{- $counter := index (.Page.Store.Get "centered_map") $id -}}
+<a href="#{{ $id }}">({{ $counter }})</a> 

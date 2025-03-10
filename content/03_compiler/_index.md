@@ -14,7 +14,7 @@ We can thus focus on building and designing scalable and efficient graph
 transformation algorithms that can then be leveraged across a wide range of
 applications and hardware targets.
 
-From a formal point of view, GTS endow quantum compilation with
+From a formal point of view, GTSs endow quantum compilation with
 well-defined semantics and strong theoretical foundations @Lack2005.
 Just as importantly, they establish a practical, purely
 declarative framework in which compiler transformations can be defined, debugged
@@ -23,11 +23,18 @@ Indeed, while the specialised optimisation techniques that we reviewed in
 {{< reflink "sec:quantum-sota" >}} are effective for the scenarios they
 were designed for, these methods are hard to generalise.
 They struggle to incorporate new primitives, constraints
-or cost functions and are hard to adapt to hybrid programs. 
+or cost functions and are hard to adapt to hybrid programs.
 We argue that going forward the scaling and engineering challenges
 that will come with building out custom compiler tooling will prove difficult,
 given the large variations in quantum architectures and the unavoidable
-integration with classical hardware such as CPUs, GPUs and FPGAs.
+integration with classical hardware such as CPUs, GPUs and FPGAs[^whyfpga].
+[^whyfpga]: The adoption of exotic classical hardware within quantum computer
+architectures is not a figment of
+our imagination: quantum error decoding using GPUs is already
+well-developped @Bausch2024 @Cao2023 and more esoteric platforms
+FPGAs @Overwater2022 @Meinerz2022, superconducting circuits @Ueno2021 and
+compute-in-memory architectures @Wang2024
+are being actively studied.
 
 
 This chapter presents the graph formalism that enables our GTS.
@@ -43,4 +50,5 @@ This allows us to capture the semantics of any classical-quantum computation
 in a graph structure that we define formally
 in {{< reflink "sec:graph-defs" >}}.
 Finally, {{< reflink "sec:rewrite-def" >}} defines the graph
-transformation semantics. 
+transformation semantics that we will adopt.
+Section 3.5?

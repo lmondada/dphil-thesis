@@ -311,8 +311,23 @@ $floating-footnotes-width: 20rem;
     }
 }
 
-////// PROOFS //////
+////// CENTERED ENVIRONMENT //////
+.centered {
+    margin: -0.5em auto;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
 
+.centered.numbered::after {
+    content: "(" attr(data-number) ")";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+////// PROOFS //////
 .proof {
     padding: $padding-16;
     border: 1px solid var(--gray-200);

@@ -6,7 +6,7 @@ slug = "sec:graph-defs"
 +++
 
 It is time to give a formal definition of minIR.
-Using the ideas we presented in the last section, this will allow us 
+Using the ideas we presented in the last section, this will allow us
 to capture the semantics of any classical-quantum
 computation in a graph structure.
 
@@ -35,13 +35,13 @@ $B$, i.e. with a domain of definition $dom(f) \subseteq A$.
 
 {{% definition title="MinIR Graph" number="3.1" %}}
 A minIR graph $(V, O, \mathit{def}, \mathit{use}, \mathit{parent})$
-is given by a set of values $V$ and a set of operations $O$, 
+is given by a set of values $V$ and a set of operations $O$,
 along with the (partial) functions
 $$\begin{aligned}\mathit{def}: O \rightarrow V^\ast && \mathit{use}: O \rightarrow V^\ast && \mathit{parent}: O \rightharpoonup O, \end{aligned}$$
 satisfying the constraints
 - for all $v \in V$, there exists a unique operation $o \in O$ such that $v \in \mathit{def}\,(o)$
 - for all $o, o' \in dom(\mathit{parent}\,)$ such that $o \sim o'$, $\ \mathit{parent}\,(o) = \mathit{parent}\,(o')$.
-- the relation $\preccurlyeq \, \subseteq O^2$ obtained by the transitive closure of 
+- the relation $\preccurlyeq \, \subseteq O^2$ obtained by the transitive closure of
 $$\begin{cases}o \preccurlyeq o' &\textrm{if }o \leadsto o'\\ o \preccurlyeq o' &\textrm{if }o = \mathit{parent}(o')\end{cases}$$
 is a partial order.
 {{% /definition %}}
@@ -123,14 +123,19 @@ a graph morphism $\varphi: G_1 \to G_2$ is given by maps
 $$\begin{aligned}\varphi_V: V_1 \to V_2 \quad&& \varphi_O: O_1 \to O_2,\end{aligned}$$
 that is compatible with the three graph functions, i.e. for all $o \in O_1$,
 we have $o \in dom(parent_1) \Leftrightarrow \varphi_O(o) \in dom(parent_2)$ and
-the commuting diagrams  
+the commuting diagrams
 $$\begin{aligned}\mathit{def}_2(\varphi_O(o)) &= \varphi_V(\mathit{def}_1(o)),\quad\\\mathit{use}_2(\varphi_O(o)) &= \varphi_V(\mathit{use}_1(o)), \quad\\\mathit{parent}_2(\varphi_O(o)) &= \varphi_O(\mathit{parent}_1(o)),\end{aligned}$$
 where the domain of definition of $\varphi_V$ was expanded to $V^\ast$ elementwise.
 Furthermore, we require that $\varphi_O$ be bijective on all children sets,
-i.e. for all $o \in O_1$, $$\varphi_O|_{children(o)}: children(o) \to children(\varphi_O(o))$$ is a bijection.
+i.e. for all $o \in O_1$,
+{{% centered numbered="bijchildren" %}}
+$$\varphi_O|_{children(o)}: children(o) \to children(\varphi_O(o))$$
+{{% /centered %}}
+is a bijection.
 {{% /definition %}}
+
 Remark that this definition would be a very standard one, if it were not for the
-last constraint that we impose on the $\mathit{parent}$ relation.
+additional constraint {{% refcentered "bijchildren" %}} that we impose on the $\mathit{parent}$ relation.
 This ensures that the number of nested regions (and their existence in the
 first place), which the relation encodes, of
 any operation is always preserved by graph morphisms. This will allow for the number

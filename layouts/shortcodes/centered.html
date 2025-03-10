@@ -1,6 +1,20 @@
+{{ $id := .Get "numbered" }}
+
+{{ if not (.Page.Store.Get "centered_counter") }}
+    {{ .Page.Store.Set "centered_counter" 0 }}
+    {{ .Page.Store.Set "centered_map" dict }}
+{{ end }}
+
+{{ $counter := 0 }}
+{{ if $id }}
+    {{ .Page.Store.Add "centered_counter" 1 }}
+    {{ $counter = .Page.Store.Get "centered_counter" }}
+    {{ .Page.Store.SetInMap "centered_map" $id $counter }}
+{{ end }}
+
 <div
-    class="centered"
-    style="margin: -0.5em auto; width: 100%; text-align: center"
+    class="centered{{ if $id }} numbered{{ end }}"
+    {{ if $id }}id="{{ $id }}" data-number="{{ $counter }}"{{ end }}
 >
     {{ .InnerDeindent | safeHTML }}
 </div>
