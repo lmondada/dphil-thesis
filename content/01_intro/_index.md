@@ -68,7 +68,7 @@ One successful approach in both ML and quantum computing has been to use automat
 
 #### Contributions from pattern matching
 
-Our first major contribution is a pattern matching algorithm for port graphs
+Our first significant contribution is a pattern-matching algorithm for port graphs
 with a runtime complexity bound independent of the number of patterns being matched, achieved
 using a one-off pre-computation.
 The main complexity result is expressed in terms of maximal pattern
@@ -142,64 +142,39 @@ of degrading the compiler performance on established use cases.
 If we are serious about adopting classical compiler tooling for quantum computations,
 we will need to find a more convincing solution to this problem.
 Fortunately, classical compilation is a mature field that has already experienced
-(and solved!) most of the challenges that quantum compilers have faced, and will ever face,
+(and solved!) most of the challenges that quantum compilers have faced and will ever face
 in peephole optimisation.
 Our proposal, described in {{< reflink "chap:rewriting" >}}, combines two modern compilation techniques
-that mitigate this and which we will review now: Superoptimisation and Equality saturation.
+that mitigate this, which we will review now: Superoptimisation and Equality saturation.
 
 ---
 
-Large compiler projects support a multitude of program representations and
-large sets of operations/instructions to be able to generate code for a wide
-array of devices and architectures.
-Designers of optimising compiler passes must thus necessarily put constraints
-on the program input format that the pass will accept.
-In all likelihood, the pass will furthermore only be applicable for certain
-cost functions or for a limited set of hardware target.
-This all leads to a proliferation of special purpose compiler passes that are
-bug-prone and must be carefully ordered to perform well across all the use
-cases of interest.
-On top of this, new instruction sets, architectures or new cost functions
-require new sets of compiler passes, in effect rebuilding the entire compilation
-pipeline.
+Large compiler projects support a multitude of program representations and large sets of operations/instructions to generate code for a wide array of devices and architectures.
+Thus, designers of optimising compiler passes must necessarily constrain the program input format that the pass will accept.
+The pass will also only apply for certain cost functions or a limited set of hardware targets.
+This leads to a proliferation of special-purpose compiler passes that are bug-prone and must be carefully ordered to perform well across all the use cases of interest.
+In addition, new instruction sets, architectures, or cost functions require new sets of compiler passes, effectively rebuilding the entire compilation pipeline.
 
-As early as 1979, Fraser suggested deriving peephole optimisations
-automatically @Fraser1979,
-an idea Massalin coined superoptimisation @Massalin1987.
-Instead of hard-coding the peephole optimisations as passes to be ordered and
-executed, useful valid program transformations are synthesised automatically.
-Early work used probabilistic verification, which meant that program
-transformations were generated ahead of time, and once verified manually,
-added to the compiler for use in optimisation @Massalin1987 @Sands2011.
-With advances in theorem proving techniques,
-program transformation synthesis and verification was further automated,
-resulting in end-to-end automatically generated and proven compiler
-transformations @Bansal2006 @Sasnauskas2017.
+As early as 1979, Fraser suggested deriving peephole optimisations automatically @Fraser1979, an idea Massalin coined superoptimisation @Massalin1987.
+Instead of hard-coding the peephole optimisations as passes to be ordered and executed, useful valid program transformations are synthesised automatically.
+Early work used probabilistic verification, meaning that program transformations were generated ahead of time and, once verified manually, added to the compiler for optimisation @Massalin1987 @Sands2011.
+With advances in theorem proving techniques, program transformation synthesis and verification were further automated, resulting in end-to-end automatically generated and proven compiler transformations @Bansal2006 @Sasnauskas2017.
 
-A particularly simple superoptimising compiler design was proposed in @Jia2019,
-specially for the purposes of computation graph optimisation @Fang2020
-in deep learning.
+A straightforward superoptimising compiler design was proposed in @Jia2019, for graph optimisation @Fang2020 in deep learning.
 The set of all small programs, up to a threshold, is generated ahead of time and
 partitioned into disjoint classes of equivalent programs.
 This concisely expresses every possible peephole optimisation up to the specified
 size: for every small enough subset of instructions of an input program,
 its equivalence class can be determined.
-Any replacement of that set of instructions with another program in the same
-equivalence class
-is a valid transformation, and thus a potential peephole optimisation.
+Replacing that set of instructions with another program in the same equivalence class is a valid transformation and, thus, a potential peephole optimisation.
 
 
-#### Intro to chapter 5
+#### Intro to Chapter 5
 
 Our goal is to run pattern matching on GTSs to optimise stuff
-in a way that applies to many different regimes, i.e. remaining agnotic
-to the graph semantics. Thus not rely too much on rewrite strategies.
-This means we will need heuristics -- heuristics whose performance will
-necessarily be dependent on the overall size of the search space.
+in a way that applies to many different regimes, i.e. remaining agnostic
+to the graph semantics. Thus, we should not rely too much on rewrite strategies.
+This means we will need heuristics whose performance will necessarily depend on the overall size of the search space.
 
-This chapter contributes to this goal by introducing a data structure for
-the _concurrent_ exploration of the state space of GTSs.
-As the name implies, this will allow for a parallelised exploration of the state
-space; but more importantly, we will see that it significantly reduces the
-size of the total search space, whilst keeping the solution space
-unchanged.
+This chapter contributes to this goal by introducing a data structure for _concurrently_ exploring the state space of GTSs.
+As the name implies, this will allow for a parallelised exploration of the state space. More importantly, it significantly reduces the size of the total search space while keeping the solution space unchanged.
