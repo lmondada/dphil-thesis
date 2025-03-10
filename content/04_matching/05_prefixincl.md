@@ -80,7 +80,7 @@ which by design produces subgraphs of width $w$.
 
 The string prefix matching problem is a simple computational task that can be generalised
 to to check for multiple string patterns at the same time using a prefix tree.
-An overview of this problem can be found in appendix [A]({{< relref "/08_appendix#sec:prefixtrees" >}}).
+An overview of this problem can be found in appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 We can thus obtain a solution for the pattern matching problem for $\ell$ patterns:
 
 {{< proposition title="Fixed anchor pattern matching" number="4.14" >}}
@@ -107,7 +107,7 @@ the linear paths to at most $2d$ length, as in the proof of Proposition 4.12.
 Thus we can assume $|T_G| \in O(w \cdot d)$.
 
 The rest of the proof and the runtime follows from the multi-dimensional prefix tree construction
-detailed in appendix [A]({{< relref "/08_appendix#sec:prefixtrees" >}}).
+detailed in appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 {{% /proof %}}
 
 #### Combining everything

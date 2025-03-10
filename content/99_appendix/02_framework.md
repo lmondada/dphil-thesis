@@ -1,12 +1,108 @@
 +++
-title = "Pattern matching engine"
+title = "A Platform for Scalable Graph Rewriting"
+sort_by = "weight"
+weight = 2
 layout = "section"
-weight = 3
-slug = "sec:pattern"
+slug = "chap:rewriting"
 +++
 
+With this chapter we have arrived at the core of this thesis:
+a proposal for a new quantum compilation framework.
+In summary, our claim is that given
+
+1. the challenge of scaling up quantum programs sizes to make the most of the
+computational capabilities of upcoming hardware
+(cf. {{< reflink "sec:compilation" "sec:quantum-sota" >}}) and
+2. the modularity and expressiveness that quantum compilers will require
+to simultaneoulsy express higher level abstractions, hardware primitives
+and interleaved quantum classical computation
+(cf. {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}),
+
+graph rewriting is uniquely positioned to serve as the backbone of a
+quantum compilation framework.
+
+Our proposal draws much from the design and techniques of classical compilers
+(cf. {{< reflink "sec:graph-defs" "sec:eqsat" >}}).
+Quantum, however, distinguishes itself in two ways, forming the cornerstones
+of our design.
+The focus on small, local graph transformations for quantum optimisation
+is justified by the groundbreaking work by Clément et al @Clement2023 @Clement2024.
+They showed that the rich algebraic structure of quantum circuits can be fully
+captured and expressed using local rewrite rules[^eqcomp].
+Our compiler can therefore restrict program manipulation to local transformations
+without losing expressiveness.
+This design choice in turn opens the door for large scale optimisation and
+compilation on parallel or even distributed hardware.
+
+Equally important, the linear types of quantum computing
+(cf. {{< reflink "sec:graph-defs" >}}) significantly constrain
+the space of possible program transformations.
+Our contributions in this thesis highlight how these restrictions can be leveraged
+to create quantum-specific variants of classical compilation techniques that
+scale much more favourably.
+This makes approaches that are too expensive for classical compilers
+(cf. {{< reflink "sec:eqsat" >}})
+perfectly feasible[^unfeasible] in the context of quantum compilation.
+[^eqcomp]: More precisely, they show that any two equivalent quantum circuits
+can be transformed into each other using a finite number of local rewriting
+rules.
+[^unfeasible]: Or at least, less unfeasible.
+
+#### Overview
+
+
+The framework we propose can be summarised by the diagram below.
+It is composed of two main components: _pattern matching_
+is tasked with finding all possible applications of rewrite rules from
+the set of pre-defined rules.
+Importantly, for this computation, we introduce an offline pre-processing step
+that builds a data structure that is amenable to pattern matching from the
+supplied set of rewrite rules. This allows us to obtain significant speedups
+in the exploration phase of the framework.
+The design of the pattern matching engine is described in more detail
+in ??, while the original contributions
+with a detailed presentation of the pre-processing computation and an analysis of the
+asymptotic speedup are presented in {{< reflink "chap:matching" >}}.
+
+The second component is charged with the application and prioritisation
+of the discovered rewrites.
+Depending on the cost function and heuristics employed, it may select a subset
+of rewrites or any combination of multiple rewrites to produce zero, one or many
+new candidate programs that are equivalent to the input program.
+We discuss several rewriting strategies in ??.
+Beyond that, we argue that optimisation based on local rewriting must be
+done in parallel to scale to large input sizes.
+For this purpose, ?? presents a refinement of
+our framework for the distributed setting.
+To enable this, a new distributed data structure inspired by equality saturation
+is presented in {{< reflink "chap:parallel" >}}.
+
+The simple heuristic driving our optimisation loop, consisting
+of pattern matching and rewrite application, relies on a
+priority queue, which orders all candidate programs by increasing
+cost function.
+This allows us to keep track of all the best candidates seen so
+far, with the top of the queue always containing the current best
+optimised program.
+Optimisation can thus be terminated at any time based on a timeout.
+This corresponds to a simple backtracking search, which greedily
+chooses the best candidate at each step, and retreats to optimising
+previous candidates once all better candidates have been exhausted.
+Improvements to the search heuristic are an obvious area for future work, which we do not explore in this thesis but briefly
+discuss in our concluding chapter, {{< reflink "chap:conclusion" >}}.
+
+{{< figure
+  src="svg/overview-matcher.svg"
+  alt="Proposed quantum compiler optimisation framework"
+  caption="Overview of the proposed quantum compiler optimisation framework. The two main components (white square boxes in the figure) are discussed in details in sec. [4.2](/04_rewriting#sec2) and [4.3](/04_rewriting#sec3) respectively."
+  width="95%"
+>}}
+
+
+#### Pattern matching engine
+
 As discussed in the [review of superoptimisation](/03_compiler/#superoptimisation)
-(sec. [3.5](/03_compiler/#sec5)), the adaptation of the technique to 
+(sec. [3.5](/03_compiler/#sec5)), the adaptation of the technique to
 quantum computing benefits from the use of thousands of rewrite rules. However,
 the performance reaches a ceiling as the number of rewrite rules grows, when
 pattern matching becomes the bottleneck.
@@ -62,7 +158,7 @@ This allows the user to define pattern matching languages that are tailored to
 their domain of application and the rewrite rules of interest, without going
 into the details of the pattern matching engine.
 
-### Indexing schemes 
+### Indexing schemes
 We abstract away the domain of definition of patterns and the host data, i.e. the
 data being matched, using a structure that we call an _indexing scheme_.
 The main object of interest within indexing schemes are index maps,
@@ -73,7 +169,7 @@ and $\mathcal V$ are thus typically chosen so that there are (obvious)
 injective maps $P \hookrightarrow \mathcal K$ and $D \hookrightarrow \mathcal V$
 for any pattern $P \in \mathcal P$ and data $D \in \mathcal D$ in the
 application domain.
-For simplicity of presentation---and in a blatant abuse of notation---we will 
+For simplicity of presentation---and in a blatant abuse of notation---we will
 assume in this section that these injective maps are the identity, i.e.
 that always $P \subseteq \mathcal K$ and $D \subseteq \mathcal V$.
 As a result, whenever the domain of defintion $\textrm{dom}(\varphi)$ of
@@ -94,7 +190,7 @@ $\varphi_\varnothing: \mathcal K \to \mathcal V$ with
 $\textrm{dom}(\varphi_\varnothing)$,
 new index maps are created using an user-provided expansion function:
 $$\textrm{expand}(\varphi, D) = \{ \varphi_1', \ldots, \varphi_n' \}.$$
-Informally, this provides all the ways in which $\textrm{dom}(\varphi)$ can 
+Informally, this provides all the ways in which $\textrm{dom}(\varphi)$ can
 be extended.
 This can be specified in terms of the following three properties:
 
@@ -106,7 +202,7 @@ $\varphi|_P \subseteq f$, there exists $1 \leqslant i \leqslant n$
 such that $\varphi_i'|_P \subseteq f$
 &emsp;(_preserve all embeddings_).
 
-3. $\textrm{dom}(\varphi_i') \neq \textrm{dom}(\varphi)$ 
+3. $\textrm{dom}(\varphi_i') \neq \textrm{dom}(\varphi)$
 for all $1 \leqslant i \leqslant n$
 &emsp;(_progress must be made_).
 
@@ -243,9 +339,9 @@ such that $\varphi_i'|_P \subseteq f$
 The most obvious change is in the third property, where instead of requiring
 that the domain of definition is enlarged _in some way_, we now require
 explicitly that $k$ be added to the domain of definition.
-The other change is a _weakening_ of property 2. 
+The other change is a _weakening_ of property 2.
 Unlike the original expansion function, in this case the expansion is no longer
-"complete", in the sense that for some $f: P \hookrightarrow D$ with $k \notin P$, 
+"complete", in the sense that for some $f: P \hookrightarrow D$ with $k \notin P$,
 it may be that $\varphi_i'|_P \not\subseteq f$ for any $\varphi_i' \in \textrm{expand}_k(\varphi, D)$,
 even though $\varphi|_P \subseteq f$.
 
@@ -282,7 +378,7 @@ constraints share a logical relation---in statistics words, that the constraints
 are not independent. A particularly useful property of
 constraint classes would be a relation of pairwise mutual exclusion between
 elements of the class: the satisfaction of any of the constraints in the set
-precludes any other from being satisfied. 
+precludes any other from being satisfied.
 More trivially, a constraint class can also group together constraints that
 should be evaluated jointly, for a more efficient implementation.
 
@@ -392,7 +488,7 @@ fn build_matcher(patterns: [Pattern], root = None) -> Tree {
 }
 ```
 Of course, the real implementation must keep track of additional information, such
-as the set of bound keys and the pattern matching at each node. Nodes that 
+as the set of bound keys and the pattern matching at each node. Nodes that
 represent the same pattern matching state are also merged to reduce the size
 of the data structure.
 
@@ -496,7 +592,7 @@ We now turn to the set of valid **predicates**, from which pattern
 constraints are defined.
 To add a bit of spice here (and incidentally support string matching capabilities
 more powerful than regular expressions), we consider a somewhat extended pattern
-language. 
+language.
 Suppose our data strings are drawn from an alphabet $\Sigma$, i.e. $D \in \Sigma^*$.
 Instead of taking pattern strings in $\Sigma^*$, we instead extend the
 alphabet with a (disjoint) set of symbols $X$ and take patterns in $P \in (\Sigma \cup X)^*$.
@@ -611,7 +707,7 @@ for the `expansion_factor`.
 Assuming every character in $\Sigma$ is equally likely to occur, this gives
 the straight-forward approximation of the expansion factor $\alpha$[^notaccountingbindingeq]
 [^notaccountingbindingeq]: A better approximation in `expansion_factor` should
-take into account that multiple `BindingEq` constraints can result in the 
+take into account that multiple `BindingEq` constraints can result in the
 same constraint, if the data contains multiple repetitions of the same character.
 One could for example treat the two constraint types independently, and assume
 that `BindingEq` constraints are satisfied with probability $1/26$,
