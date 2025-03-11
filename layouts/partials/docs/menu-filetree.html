@@ -15,7 +15,7 @@
           {{ template "book-page-link" (dict "Page" . "CurrentPage" $.CurrentPage) }}
           {{ template "book-section-children" (dict "Section" . "CurrentPage" $.CurrentPage) }}
         </li>
-      {{ else if and .IsPage .Content }}
+      {{ else if .IsPage }}
         <li>
           {{ template "book-page-link" (dict "Page" . "CurrentPage" $.CurrentPage) }}
         </li>

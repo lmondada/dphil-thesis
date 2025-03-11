@@ -135,6 +135,7 @@ optimal results @Whitfield1997 @Liang2023.
 This is a common design challenge in GTSs, often addressed through
 mechanisms such as rule controls @Heckel2020.
 This issue is also a key challenge within quantum compilation:
+on problem sizes where exhaustive search is feasible,
 unitary sythesis tools can sometimes outperform current, mostly peephole-based
 compilers @Sivarajah2020
 by up to 50%[^cost] @Wu2020.
