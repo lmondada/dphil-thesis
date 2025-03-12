@@ -43,12 +43,10 @@ it is simplified and modified slightly to fit our needs.
 {{< reflink "upper" "sec:gts-sota" >}} starts with a review of previous
 related work at the intersection of graph transformation software
 and quantum circuit optimisation.
-We then present in {{< reflink "sec:ir" >}}
-a graph-based internal representation (IR)
-for quantum programs.
-This allows us to capture the semantics of any classical-quantum computation
-in a graph structure that we define formally
-in {{< reflink "sec:graph-defs" >}}.
-Finally, {{< reflink "sec:rewrite-def" >}} defines the graph
-transformation semantics that we will adopt.
+We then discuss in {{< reflink "sec-compgraphs" >}} a fundamental difference
+between classical computation graphs and the requirements of quantum computation.
+This motivates a new graph-based internal representation (IR) tailored to quantum
+computation that we present in {{< reflink "sec:graph-defs" >}},
+along with formal graph transformation semantics based on double pushout (DPO) rewriting,
+presented in {{< reflink "sec:rewrite-def" >}}.
 Section 3.5?

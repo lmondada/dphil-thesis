@@ -1,4 +1,6 @@
-<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+{{- $otherClass := .Get "class" -}}
+{{- $figureBgClass := cond (.Get "nobg") "" "figure-bg" -}}
+<figure{{ if or $otherClass $figureBgClass }} class="{{ $otherClass }} {{ $figureBgClass }}"{{ end }}>
   <div class="figure-div"
     {{- with .Get "width" }} style="width: {{ . }};"{{ end -}}
   >

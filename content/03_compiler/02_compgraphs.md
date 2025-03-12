@@ -42,7 +42,7 @@ identifiable because they have no consumers.
 In quantum computations, we must deal with values that are _linear_[^linear],
 reflecting the fact that they are the result of computations on quantum data,
 which must obey the no-cloning and no-deleting laws.
-This leads us to the fundamental constraint:
+This leads us to the constraint:
 [^linear]: The terminology comes from "linear" logic @Girard_1987.
 I apologise for slamming additional semantics on what I recognise
 is an already very overloaded term.
@@ -78,21 +78,3 @@ Restricting IR transformations to valid graph rewrites will guarantee that
 obsolete values and operations are always _explicitly_ deleted,
 making it in turn possible to check and enforce linearity constraints at
 every transformation.
-
-<!-- existing values as inputs and define new output values. Subsequent operations
-in the IR can then be "rewired" to use the new values instead of the old ones.
-In other words, values, and the operations defining them, are never
-explicitly deleted from the IR. This is handled separately by the compiler
-with _dead code elimination_ passes @Cytron1991 @Briggs1994
-that detect and remove unused values.
-
-This separation of concerns between generating new code and "garbage collecting"
-obsolete code means that IR transformations do not need to worry about
-all global uses of a particular value when rewriting it---after all, both
-new and old versions can be kept in the IR if useful.
-In the presence of linear values, however,
-creating new values and deleting old ones
-cannot be decoupled.
-Two (possibly equivalent) values that are obtained
-from the same linear inputs cannot be simultaneously defined in the program,
-or the IR is in an invalid state. -->
