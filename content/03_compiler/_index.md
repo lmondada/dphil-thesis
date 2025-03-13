@@ -37,16 +37,18 @@ compute-in-memory architectures @Wang2024
 are being actively studied.
 
 
-This chapter presents the graph formalism that enables our GTS.
-The IR that we present here is based on our work in @Hugr, although
+This chapter presents a formalization of quantum computation and optimization
+based on graphs and graph transformations, providing the foundation for
+all considerations in later chapters.
+The internal representation IR that we present here is based on our work in @Hugr, although
 it is simplified and modified slightly to fit our needs.
+
 {{< reflink "upper" "sec:gts-sota" >}} starts with a review of previous
 related work at the intersection of graph transformation software
 and quantum circuit optimisation.
 We then discuss in {{< reflink "sec-compgraphs" >}} a fundamental difference
 between classical computation graphs and the requirements of quantum computation.
-This motivates a new graph-based internal representation (IR) tailored to quantum
+This motivates a new graph-based IR tailored to quantum
 computation that we present in {{< reflink "sec:graph-defs" >}},
 along with formal graph transformation semantics based on double pushout (DPO) rewriting,
 presented in {{< reflink "sec:rewrite-def" >}}.
-Section 3.5?

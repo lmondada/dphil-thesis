@@ -74,7 +74,7 @@ adding new values and operations as required, without any explicit code
 deletion,
 computation graphs with linear values must adopt _proper_ graph transformation
 semantics.
-Restricting IR transformations to valid graph rewrites will guarantee that
+Restricting IR transformations to valid graph transformations will guarantee that
 obsolete values and operations are always _explicitly_ deleted,
 making it in turn possible to check and enforce linearity constraints at
 every transformation.

@@ -1,5 +1,5 @@
 {{- if not (isset .Site.Params "pdfgen") -}}
-<details open>
+<details{{ if not (.Get "collapse") }} open{{ end }}>
   <summary>Proof</summary>
   <div class="markdown-inner">
     {{ .InnerDeindent | safeHTML }}
