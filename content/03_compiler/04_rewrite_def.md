@@ -309,7 +309,7 @@ As usual, let us consider a minIR graph $G = (V, V_L, O, \mathit{def}, \mathit{u
 Consider a subset of values and
 operations $V_H \subseteq V$ and $O_H \subseteq O$.
 Define the sets
-$$\begin{aligned} B_D &= \{v \in V_H \mid v \in \mathit{def}\,(o)\textrm{ for some }o \in O \smallsetminus O_H \},\\B_U &= \{v \in V_H \mid v \in \mathit{use}(o)\textrm{ for some }o \in O \smallsetminus O_H \},\end{aligned}$$
+$$\begin{aligned} B_D &= \{v \in V_H \mid v \in use(o)\textrm{ for some }o \in O \smallsetminus O_H \},\\B_U &= \{v \in V_H \mid v \in \mathit{def}\,(o)\textrm{ for some }o \in O \smallsetminus O_H \},\end{aligned}$$
 
 The tuple $H = (V_H, O_H)$ of $G$ is called a valid minIR subgraph of $G$ if the following conditions hold:
 - the subgraph is convex, i.e. for all $v_1, v_2 \in V_H$, any path along
@@ -350,7 +350,7 @@ and a minIR graph $G_R$ which implements an interface $I \triangleright I_H$.
 There is a graph $G_R'$ with values $V_R'$
 and a partial function $\mu': V_H \rightharpoonup V_R'$
 such that the graph $r_H(G)$ obtained from the
-rewrite $$r_H = (G_R', B, O_B, \mu')$$
+rewrite $$r_H = (G_R', V_H, O_B, \mu')$$
 is a valid minIR graph and is equivalent to the graph obtained
 by removing the values $V_H \smallsetminus B$ and operations $O_H \cup \{o_{in}, o_{out}\}$
 from $(G \cup G_R) / \sim_{\mu}$.
@@ -380,7 +380,8 @@ to be continued...
 A figure illustrates this graph transformation with an example below.
 This simple and limited graph transformation framework captures a remarkably large set of minIR
 program transformations.
-It may seem at first that the restrictions on subgraph convexity,
+It may seem at first that the restrictions by Definition (subgraph)
+on subgraph convexity,
 containment of boundary values within a single region as well as
 containment of parent-child relations
 represent significant limitation on the expressivity of the rewrites.
@@ -388,72 +389,41 @@ In practice, however, the semantics of minIR operations can be used to
 decompose more complex rewrites into a sequence of simple rewrites
 of the kind of Proposition ??.
 
-In particular, consider a minIR graph with a type system that includes
+Consider in particular the case of minIR graphs with a type system that includes
 `regiondef` and `call` operations as discussed in examples of the previous
 section---respectively defining a code block by a nested region and redirecting
 control flow to a code block defined using a `regiondef`.
 Then all constraints that we impose on valid minIR subgraphs can be
-side-stepped using _region outlining_ and _value hoisting_.
+effectively side-stepped using the _region outlining_ and _value hoisting_
+transformations.
 
-**Region outlining** is a rewrite that moves a valid minIR subgraph into its own
+**Region outlining** moves a valid minIR subgraph into its own
 separate region, and replaces the hole left by the subgraph in the computation
 by a `call` operation to the newly outlined region.
 
-**Value hoisting**
+**Value hoisting** moves a value definition within a region to its parent region
+and passes the value down to the nested region through an additional input.
+In case of linear values, we can similarly hoist the unique _use_ of the value to
+the parent region.
 
-Non-convex subgraphs can always be made convex by taking the convex hull
+Using these transformations, non-convex subgraphs can always be made
+convex by taking the convex hull
 and outlining any parts within that are not part of the subgraph.
-The `call` operations within the subgraph then redirect the control flow to regions
-that are passed through as inputs to the subgraph.
+Outlined regions can then be passed as additional inputs to the subgraph.
 Step 1 of the figure below illustrates this transformation.
-
 Similarly, a subgraph that includes operations without their parent can be extended
 to cover the entire region and its parent, outlining any parts of the region that are not
 part of the subgraph.
-Finally, input and output boundary values to nested regions can always be hoisted and
-passed through
-from the top level region, so that subgraphs can always be transformed to only have input
+
+Finally, whenever a boundary value $v$ belongs to a region that is not the top level region
+of the subgraph[^assumeconnected],
+we can repeatedley hoist $v$ to its parent region until it is in the top level region.
+The value is then recursively passed as argument to descendant regions until
+the region that it is required in.
+Subgraphs can thus always be transformed to only have input
 and output boundary values at the top level region.
-To do so, a value that is required within a nested region is recursively passed as argument to
-each of its ancestor regions.
 Step 2 of the figure below illustrates this transformation.
+[^assumeconnected]: We can always extend a subgraph to contain more ancestor regions,
+until there is indeed a unique top-level region in the subgraph.
 
 {{% figure src="/svg/rewrite.svg" width="95%" caption="A minIR graph transformation for a non-convex pattern, using outlining and hoisting. We use (nested) boxes to represent operations and regions within them and coloured edges for (typed) values." %}}
-
-#### Equivalence classes and rewrite rules
-
-We complete our GTS by introducing equivalence classes of minIR graphs.
-Instead of relying on rewrite rules of the form $L \to R$, with a left-hand and a right-hand side,
-we define equivalence classes $\mathcal{E}$ of minIR graphs that implicitly capture
-the $\Theta(|\mathcal{E}|^2)$ rewrite rules between pairs of elements of $\mathcal{E}$.
-
-{{< definition title="Equivalence classes" number="3.6" >}}
-Let $U$ and $D$ be type strings that define the hole type `hole<U, D>`.
-A minIR equivalence class $\mathcal{E}$ is a set of minIR regions that are compatible with
-the hole type `hole<U, D>`.
-
-The equivalence class defines a transition relation $\to_{\mathcal{E}}$ on minIR graphs.
-For two graphs $G_1$ and $G_2$, $G_1 \to_{\mathcal{E}} G_2$ holds if:
-- there exists a subgraph $S$ of $G_1$,
-- there exists a region $L \in \mathcal{E}$
-that is definition-injective such that $L$ is the equivalent outlined
-region of $S$, and
-- there exists a region $R \in \mathcal{E}$ that is use-injective
-such that $G_2$ is the graph obtained by gluing $R$ with the hole-substitution of $L$ in $G_1$,
-- $dom(\rho_U) \subseteq dom(\sigma_U)$ and $dom(\sigma_D) \subseteq dom(\rho_D)$, where
-$\sigma_U, \sigma_D$ and $\rho_U, \rho_D$ are the boundary maps from the hole type
-to $L$ and $R$, respectively.
-{{< /definition >}}
-With equivalence classes, we can thus fully capture the semantics of minIR operations
-in a concise and graphical form that is very amenable to graph transformation-based optimisations,
-as well as formal methods for correctness verification.
-
-The following example illustrates a set of equivalent minIR graphs that
-a minIR equivalence class could capture.
-Any valid transformation will preserve minIR constraints such as linearity,
-whilst allowing the copying and discarding of non-linear values, which arise
-from non injective boundary maps.
-
-{{% hint info %}}
-TODO: figure
-{{% /hint %}}

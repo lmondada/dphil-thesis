@@ -1,5 +1,5 @@
 +++
-title = "Quantum Compilation as a Graph Transformation System"
+title = "Quantum Compilation as a Graph Transformation Problem"
 sort_by = "weight"
 weight = 3
 layout = "chapter"
