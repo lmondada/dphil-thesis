@@ -12,13 +12,13 @@ the novel directions it is taking the field in.
 Of the many new challenges that are arising, let us discuss here three that
 together form the core motivation for this work.
 
-### Large variations in architecture
+#### Large variations in architecture
 
 A first distinguishing characteristic of current quantum computing developments
 is the vast differences between proposed hardware architectures.
-Unlike classical computing 
+Unlike classical computing
 where silicon-based transistors have become the definitive physical foundation
-for all electronic chips, the search for the most scalable and reliable 
+for all electronic chips, the search for the most scalable and reliable
 technology for quantum computing is ongoing---and doubtless one of the most
 burning questions for the nascent industry.
 This introduces an incredible variety of compilation problems.
@@ -32,7 +32,7 @@ The control systems that drive the desired operations on these particles
 is then built using some jolly mixture of lasers, magnetic fields, microwaves,
 dilution fridges, etc.
 
-Each of these combinations results in different tradeoffs: some will render a 
+Each of these combinations results in different tradeoffs: some will render a
 specific computation particularly easy; others hold the promise to scale well
 to large systems but are very error-prone and unreliable; others still achieve
 high fidelities at the expense of slow operations.
@@ -53,7 +53,7 @@ manufacturers[^cpu].
 mov eax, 5        ; Load 5 into EAX
 add eax, 3        ; Add 3 to EAX
 mov [result], eax ; Store the result in memory
- 
+
 ```
 <--->
 
@@ -75,7 +75,7 @@ This simplistic example naturally ignores some of the more fine-grained
 considerations that can make translations hard in certain edge cases. A
 discussion of these can be found in @Ford2021.
 However, overall, the instructions and capabilities of the two platforms are
-broadly equivalent, as is confirmed by the existence of translation tools 
+broadly equivalent, as is confirmed by the existence of translation tools
 such as [Apple Rosetta](https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment).
 
 Let us contrast this with the difference between two quantum architectures.
@@ -116,7 +116,7 @@ operations but might not offer control over individual qubits and, instead
 require any operations to be applied in parallel to large groups of
 qubits @Bluvstein2022.
 Finally, it is to be expected that error-correcting codes
-that individual platforms will introduce to reduce error rates 
+that individual platforms will introduce to reduce error rates
 at the hardware level will introduce further constraints and
 new instruction sets yet again.
 
@@ -141,7 +141,7 @@ Details on mobile market share can be found in
 [this survey](https://www.counterpointresearch.com/insight/global-smartphone-apsoc-market-share-quarterly)---all of the listed
 manufacturers use the ARM architecture.
 
-### Asymmetric computational resources
+#### Asymmetric computational resources
 
 A second exciting paradigm shift in compilation that quantum is driving forward
 is cross-compilation.
@@ -152,8 +152,9 @@ run on different machines, possibly with different architectures.
 An instance of this would be using a recent MacOS ARM machine to create a
 binary program for a PC running Windows on an Intel chip.
 While this is a supported feature in most modern compilers, such tasks are the
-exception rather than the norm and are often [laborious to get to work well in
-practice](https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/).
+exception rather than the norm and may be [laborious to get to work well in
+practice](https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/)[^zig].
+[^zig]: Yes---fine---there is [Zig](https://zig.guide/build-system/cross-compilation/).
 
 The situation is very different for quantum computing.
 Quantum computational resources are so limited that native compilation,
@@ -175,8 +176,8 @@ As quantum programs grow in size and complexity, debugging and verifying
 their correctness without access to the target hardware becomes
 increasingly difficult @Rovara2024, as we hit the limits of what can be
 simulated classically.
-Quantum simulation is a vibrant research area that has been and will
-continue to be the subject of theses (e.g. @Flannigan2020 @Azad2024)
+Quantum simulation is a vibrant research area that has been---and will
+continue to be---the subject of theses (e.g. @Flannigan2020 @Azad2024)
 in its own right.
 
 On the flip side, using classical hardware for quantum program compilation
@@ -198,7 +199,6 @@ Meanwhile, every gate that must be performed comes at a high cost:
 it may fail, introduce errors, or take a long time to complete.
 It therefore behoves us to use all the classical resources at our disposal
 to reduce quantum operations to a minimum.
-Due to the stringent hardware limitations
 
 Given the strict hardware limitations, all near-term architectures are
 expected to face,
@@ -206,35 +206,39 @@ quantum compilation must evolve into cross-compilers that are able
 to utilise the full power of classical hardware available to them;
 doing so will push the boundaries of what is possible with quantum
 computing just a bit further---in a field where every marginal gain may unlock
-new applications. 
+new applications.
 
-### The confluence of classical and quantum compilation
-
-{{% hint danger %}}
-TODO: rewrite this section
-{{% /hint  %}}
+#### The confluence of classical and quantum compilation
 
 Finally, quantum compilation also stands in front of some momentous engineering
 challenges.
-Until recently, the great majority of research efforts in the field were focused
-on the compilation and optimisation of quantum programs expressed as quantum
-circuits---more on these in section XY.
+As we will see in {{% reflink "sec:quantum-sota" %}},
+significant research efforts have focused
+on the compilation and optimisation of quantum programs expressed as [quantum
+circuits](#the-quantum-circuit-representation).
 This formalism has its roots in quantum information theory, the field that gave
 birth to quantum computing.
 It makes for an ideal framework to develop the theory and optimisation
 techniques. However, it does not include any of the fundaments of compiler
 and programming language design that make classical software engineering
-as compostable and scalable as it is today.
+as composable and scalable as it is today.
+
 For example, there is no concept of subroutine or function calls; neither
-can a program execution branch or loop based on runtime values.
+can a program execution be branching or looping based on runtime values.
 This makes code reuse impossible, resulting in huge program sizes and
 unsurmountable challenges for scaling up compilation to problems of
-real-world interest.
+real-world interest @Ittah_2022.
+Another motivation for these code abstractions are the emergence
+of hybrid quantum-classical computations, discussed in {{% reflink "sec:hybrid" %}}.
 
-The community is thus moving away from circuit-based representations to
-incorporate learnings from the decades of experience that have been gathered in
-computer science.
+With applications of quantum computing that cannot be expressed as quantum
+circuits proliferating,
+a move away from circuit-based representations is becoming
+unavoidable @openqasm3 @qir.
+This is also an opportunity to incorporate learnings from the decades
+of experience that have been gathered in computer science.
 Many of the tools and software that were originally developed for the classical
-community are now being adopted and adapted to the specificities of quantum.
-We are thus finding ourselves at the confluence of two fascinating fields,
-heralding significant future developments.
+community are thus being adopted and adapted to the specificities of quantum.
+This convergence of quantum computing and classical compiler technologies
+is heralding new opportunities---but also pose important questions around
+how to represent quantum programs and optimise them.

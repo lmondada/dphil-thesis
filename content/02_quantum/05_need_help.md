@@ -5,7 +5,7 @@ layout = "section"
 slug = "sec:need-help"
 +++
 
-We have (hopefully!) by now convinced ourselves that quantum
+We have (hopefully!) by now convinced our readership that quantum
 programs must interface with our established classical infrastructure, and
 should rather be understood as an interleaved execution of both classical and
 quantum operations.
@@ -79,7 +79,7 @@ each measurement and avoid overwriting outcomes.
 However, there are also many other ways to break this wires-based representation:
 suppose you have an operation with one input and two outputs, such as a copy
 operation $x \mapsto (x,x)$.
-We would need two wires for the output, but the input would only provide us with 
+We would need two wires for the output, but the input would only provide us with
 one...
 We now have to start creating addition wires ahead of time
 for this purpose and solve memory allocation problems to
@@ -125,13 +125,13 @@ that would do away with error correction.
 
 A sketch of quantum error correction goes roughly as follows: the data that
 would be stored on $k$ qubits is instead encoded in a redundant way on a larger
-number $n > k$ of qubits. Thus when errors occur on a subset of the $n$ qubits, 
+number $n > k$ of qubits. Thus when errors occur on a subset of the $n$ qubits,
 the data can be restored using the qubits that have not been corrupted.
 Before errors can be corrected they must be detected. To this end, we first
 add fresh ancilla qubits to the program. Through smartly designed interactions
 with the data qubits, the ancilla qubits pick up the errors from the data.
 When we subsequently perform measurements on the ancilla qubits, these errors
-result in modified outcomes, called the error "syndrome". 
+result in modified outcomes, called the error "syndrome".
 
 The challenging bit comes next: from a run of syndrome measurements, one must
 infer the most likely errors---a step known as "syndrome decoding".
@@ -207,7 +207,7 @@ need to embrace and encompass the full breadth and depth of classical compilers.
 This leaves us with no choice but to fully transform and integrate the existing
 quantum tooling and quantum optimisation research into the established compilers
 ecosystem.
-What this means exactly is the subject of the rest of this chapter. 
+What this means exactly is the subject of the rest of this chapter.
 
 
 ### A new quantum programming paradigm? A quantum IR?
@@ -237,7 +237,7 @@ on how well the ideas from classical programming really translate to
 quantum.
 
 It is thus all the more notable that we are seeing a new generation of quantum
-programming tooling being developed @Koch2024 @Ittah_2024 @Cudaq, driven by 
+programming tooling being developed @Koch2024 @Ittah_2024 @Cudaq, driven by
 the need to write more expressive programs for the improving hardware
 (as we have been discussing), as well
 as for performance reasons, to scale quantum compilation to
@@ -258,7 +258,7 @@ time---this is particularly important for quantum programs as there is
 no graceful way of handling runtime errors on quantum hardware: by the
 time the error has been propagated to the caller, all
 quantum data stored on qubits is probably corrupted and lost,
-3. **memory management** such as reference counting and data ownership models. Current hardware follows a static memory model, in which the 
+3. **memory management** such as reference counting and data ownership models. Current hardware follows a static memory model, in which the
 number of available qubits is fixed and every operation acts on a set
 of qubits assigned at compile time.
 This becomes impossible to keep track of in instances such as
@@ -269,7 +269,7 @@ like classical memory.
 
 
 To facilitate such a large swath of abstractions, the first step
-quantum compilers must take 
+quantum compilers must take
 is to make a distinction between the language frontend and
 the **internal representation** (IR) that the compiler uses to
 reason about the program and perform optimisations.
@@ -278,6 +278,3 @@ mutate quantum circuits, which is the same data structure the compiler
 leverages and transforms to produce (another) circuit, which is in
 turn sent to and executed on hardware or a simulator---it is circuits
 all the way down!
-
-
-

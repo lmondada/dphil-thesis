@@ -7,7 +7,7 @@ slug = "sec:hybrid"
 
 ### Quantum measurements
 
-We have until now skipped over a crucial part of the quantum computation 
+We have until now skipped over a crucial part of the quantum computation
 process: the role of quantum measurements.
 Quantum data, in isolation, is inherently inaccessible to humans:
 we cannot consume or process it!
@@ -22,8 +22,13 @@ of quantum mechanics:
 what data is within the qubits remains undefined until a measurement
 is performed.
 The act of observation will transform the quantum data:
-looking inside the proverbial box will at random
-either kill the cat or spare it.
+looking inside the box will at random
+either kill the cat or spare it[^schrcat].
+[^schrcat]: It is ironic that Schrödinger's thought experiment @Schroedinger1935, intended to
+highlight the absurdity of quantum mechanics, has become the field's most famous
+PR campaign.
+Sorry to disappoint---you won't find felines occupying multipe states of
+existence (though qubits absolutely do)!
 
 We thus need to add the measurement operation as a special case to our computer
 scientist's model of quantum computing.
@@ -39,7 +44,7 @@ the full state can be eventually reconstructed by repeating measurements and
 analysing the distribution of outcomes[^tomography].
 Given no-cloning, however, this is unlikely to be the case, and so the full
 quantum result is hardly ever known. We must instead rely on well-designed
-measurement schemes to extract useful information from the partial access 
+measurement schemes to extract useful information from the partial access
 we have to the quantum states.
 
 [^tomography]: This is known as _state tomography_ @Allahverdyan2004. You will need to perform
@@ -80,7 +85,7 @@ one operation.
 ### Measurements as first class citizens
 
 It is very tempting to our feeble classical brains---and admittedly
-we just did it ourselves in the previous paragraphs---to view measurements 
+we just did it ourselves in the previous paragraphs---to view measurements
 as merely a readout operation; an auxiliary operation that we are forced
 to perform at the end of a computation for operative reasons.
 This could not be further from the truth!
@@ -98,7 +103,7 @@ quantum operations.
 We will not explore MBQC further in this chapter
 (nor in this thesis, for that matter)---rather we will use this
 as a motivation to explore further what we can achieve with measurements.
-We have so far spared you from any mathematical alphabet soup. 
+We have so far spared you from any mathematical alphabet soup.
 As we start discussing more concrete constructions of quantum computations,
 some basic linear algebra and conventions around notation will
 become unavoidable.
@@ -112,7 +117,7 @@ written $\ket{0}$ and $\ket{1}$.
 
 Several states can be joined and considered together, as one overall state.
 This is expressed using the tensor $\otimes$ symbol:
-$\ket{\psi_1} \otimes \ket{\psi_2}$ is the joint system of 
+$\ket{\psi_1} \otimes \ket{\psi_2}$ is the joint system of
 $\ket{\psi_1}$ and $\ket{\psi_2}$.
 When the states in question are all explicitly qubit states,
 we use the shorthand binary notation
@@ -121,7 +126,7 @@ $\ket{0} \otimes \ket{1} \otimes \ket{0} = \ket{010}$.
 We will introduce more notation along the way.
 {{% /hint %}}
 
-With this out of the way, let us look in more details at the first smart use 
+With this out of the way, let us look in more details at the first smart use
 of measurements: the block-encoding technique.
 Consider the following scenario: you would like to perform an operation
 $A$ on an arbitrary
@@ -142,7 +147,7 @@ $$\tilde{A} = \begin{pmatrix}A & G_1\\ G_2 & G_3 \end{pmatrix}$$
 where $G_1, G_2$ and $G_3$ are garbage matrices that we do not care about, but
 should combine into a matrix $\tilde{A}$ that we know how to execute
 on a quantum computer.
-Quantum computations must be matrices with a row and column number that is a 
+Quantum computations must be matrices with a row and column number that is a
 power of two; so at a minimum, $\tilde{A}$ must be of size
 $2^{n+1} \times 2^{n+1}$, i.e. be a computation on $n + 1$ qubits.
 We thus need to add a qubit to our $\ket\psi$ state to be able to pass it to
@@ -187,7 +192,7 @@ we can thus effect computations that would have been otherwise difficult or
 impossible to perform.
 There is however one important wrinkle that we cannot forget about: measurements
 are non-deterministic!
-We cannot assume that all measurements of the ancilla qubit will return the 
+We cannot assume that all measurements of the ancilla qubit will return the
 zero state. When $\ket 1$ is measured on the ancilla, the remaining qubits
 are left in the $G_1 \ket\psi$ state. The computation has thus failed,
 and the execution must be aborted and restarted.
@@ -203,7 +208,7 @@ SOTA: LCU, QSVT, etc.
 ### Who said quantum computers could not fix their mistakes
 Failed computations are an expensive mistake in quantum computing as the
 no-cloning theorem prevents us from keeping a "backup" of the initial state.
-The fact that failures are in fact unlucky measurement outputs 
+The fact that failures are in fact unlucky measurement outputs
 makes matters worse, given that measurements are the only irreversible
 quantum operation.
 It is therefore impossible in general to recover from a "wrong" measurement.
@@ -211,7 +216,7 @@ It is therefore impossible in general to recover from a "wrong" measurement.
 There are, however, prominent cases in which the computation _can_ be corrected
 based on the measurement outcome, thus yielding deterministic results.
 Recall the general framework we introduced in the previous section: there is
-a computation $A$ on $n$ qubits, that can be probabilistically computed 
+a computation $A$ on $n$ qubits, that can be probabilistically computed
 using $m > n$ qubits using $\tilde{A}$:
 $$\tilde{A} (\ket 0 \otimes \ket \psi) \mapsto \ket 0 \otimes (A\ket\psi) + \ket 1 \otimes (G\ket\psi).$$
 for some "garbage" $G$.
@@ -227,7 +232,7 @@ $G \approx A$ in the sense that it should somehow be closely related to $A$.
 This way, the resulting correction $A \circ G^{-1} \approx Id$ would
 be close to the identity, and would be cheap to compute.
 
-This is the beginning of quantum-classical hybrid computing: we start by 
+This is the beginning of quantum-classical hybrid computing: we start by
 performing quantum operations followed by measurements, the outcomes of which
 dictate what further quantum operations must be applied.
 We define the **classically controlled gate**, a quantum operation that
@@ -248,7 +253,7 @@ and the corresponding classically controlled operations.
 
 #### Quantum Teleportation
 
-Quantum teleportation is a beautifully simple example of 
+Quantum teleportation is a beautifully simple example of
 performing classically controlled quantum operation to perform corrections
 in the circuit based on measurement outcomes.
 It is also coincidentally one of the most fundamental protocols of quantum theory.
@@ -262,7 +267,7 @@ using plain old school copper wires
 
 This is predicated on one crucial action being performed before the
 start of the communication: for every qubit that should be transmitted, the
-parties must beforehand create and share among themselves a pair of qubits 
+parties must beforehand create and share among themselves a pair of qubits
 that will serve as the quantum resource during the protocol execution.
 This resource state is widespread enough that it
 got its own name, the Bell pair state.
@@ -312,7 +317,7 @@ We are now interested in combining a Bell resource state in a joint system with
 the arbitrary state $\ket \psi$.
 The resulting three-qubit state is obtained with the $\otimes$ operation, which
 distributes over sums just like usual multiplication:
-$$ \underbrace{(\ket {00} + \ket {11})}_{\text{first two qubits}} \otimes \underbrace{(\alpha \ket 0 + \beta \ket 1)}_{\text{third qubit}} = \alpha \ket {000} + \alpha \ket {110} + \beta \ket {001} + \beta \ket {111}.$$
+$$\begin{aligned} &\underbrace{(\ket {00} + \ket {11})}_{\text{first two qubits}} \otimes \underbrace{(\alpha \ket 0 + \beta \ket 1)}_{\text{third qubit}}\\=\ &\alpha \ket {000} + \alpha \ket {110} + \beta \ket {001} + \beta \ket {111}.\end{aligned}$$
 We chose to place the Bell pair on the first two qubits
 and the arbitrary state on the third.
 The goal is to move the data that sits on that last qubit to the first qubit.
@@ -323,7 +328,7 @@ $$\alpha \ket{\underline{\mathbf{0}}00} + {\color{gray}(\alpha \ket {110} + \bet
 This sounds very much like the measurement operations we have used before
 to isolate terms---but we need to isolate two terms simultaneously.
 We can resolve this issue by reorganising the expression[^reorg]
-$$\begin{aligned}\alpha \ket{000} + \alpha \ket{110} + \beta \ket {001} + \beta \ket {111}=\ &\overbrace{(\alpha \ket 0 + \beta \ket 1)}^{= \ket \psi}\otimes \overbrace{( \ket {00} + \ket {11})}^{\text{Bell pair}}\\&+(\beta \ket 0 + \alpha \ket 1) \otimes (\ket {01} + \ket {10})\\&+(\alpha\ket 0 - \beta \ket 1) \otimes (\ket{01} - \ket {10})\\&+(\beta \ket 0 - \alpha \ket 1) \otimes (\ket {00} - \ket {11})\end{aligned}$$
+$$\begin{aligned}&\alpha \ket{000} + \alpha \ket{110} + \beta \ket {001} + \beta \ket {111}\\ =\ &\underbrace{(\alpha \ket 0 + \beta \ket 1)}_{= \ket \psi}\otimes \underbrace{( \ket {00} + \ket {11})}_{\text{Bell pair}}\\&+(\beta \ket 0 + \alpha \ket 1) \otimes (\ket {01} + \ket {10})\\&+(\alpha\ket 0 - \beta \ket 1) \otimes (\ket{01} - \ket {10})\\&+(\beta \ket 0 - \alpha \ket 1) \otimes (\ket {00} - \ket {11})\end{aligned}$$
 Obtaining the $\ket \psi$ state on the first qubit is thus as simple as
 isolating the first of these four terms.
 We do not know a priori how to measure $\ket {00} + \ket{11}$ but we do know
@@ -448,7 +453,8 @@ outcome. If the probability of failure is below a certain threshold
 (e.g. 50% for a binary output), then with basic statistics one can extrapolate
 the number of runs required to obtain any desired accuracy[^Hoeffding].
 
-[^Hoeffding]: This is fiendishly effective: the Hoeffding bounds guarantee
+[^Hoeffding]: This is fiendishly effective: the
+[Hoeffding bounds](https://en.wikipedia.org/wiki/Hoeffding%27s_inequality) guarantee
 that the probability of success
 will converge to 1 exponentially with the number of runs.
 
@@ -479,7 +485,7 @@ measure 0. As a pseudo-quantum circuit, we could express this as:
             "targets": [{ "qId": 0 }]
         },
         {
-            "gate": "X", 
+            "gate": "X",
             "isControlled": true,
             "controls": [{ "qId": 0 }],
             "targets": [{ "qId": 1 }]
