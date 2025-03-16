@@ -205,8 +205,6 @@ disadvantage of an otherwise very powerful quantum technique.
 We will now explore two strategies to deal with "fails" in measurements.
 At the core of them is the idea of hybrid quantum-classical programs.
 
-SOTA: LCU, QSVT, etc.
-
 ### Who said quantum computers could not fix their mistakes
 Failed computations are an expensive mistake in quantum computing as the
 no-cloning theorem prevents us from keeping a "backup" of the initial state.

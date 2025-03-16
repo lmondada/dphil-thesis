@@ -2,6 +2,7 @@ baseURL = 'https://example.org/'
 languageCode = 'en-gb'
 title = 'DPhil Thesis'
 theme = "hugo-book"
+timeout = "60s"
 
 [params]
 BookSection = '*'
