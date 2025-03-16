@@ -5,6 +5,15 @@ weight = 1
 layout = "chapter"
 +++
 
+{{% hint "danger" %}}
+Dear readers, welcome to my WIP thesis! Please skip this chapter,
+there is nothing here at the moment, just a scrapyard of text removed from
+elsewhere.
+
+I suggest you move directly to {{% reflink "chap:basics" %}}.
+{{% /hint %}}
+
+
 This thesis is, first and foremost, a story about compilers.
 It is interesting to note that whereas the term *quantum compilation* has been in use for the longest part
 of the existence of quantum computing as a field,

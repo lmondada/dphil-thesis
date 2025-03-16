@@ -5,10 +5,6 @@ layout = "section"
 slug = "sec:litt"
 +++
 
-{{% hint danger %}}
-Rewrite this
-{{% /hint %}}
-
 This introductory chapter covered some of the basic principles of
 quantum computation,
 and in doing so has hopefully made a convincing argument why we should expect
@@ -95,7 +91,7 @@ tolerant (FT) quantum computing.
 Arguably the most well-known such scheme for FT is magic state distillation,
 a procedure expected to be a core building block of many FT architectures.
 State preparation is in general an ubiquitous problem for FT, as the error
-correcting codes that are employed initiate computations starting from a 
+correcting codes that are employed initiate computations starting from a
 "logical" zero state, which may be expensive to prepare on the qubits of the
 hardware.
 
@@ -110,7 +106,7 @@ measurement outcomes that infer the errors that must have occured)
 and, finally,
 _iii)_ error correction (classically-controlled quantum operations that
 correct the inferred errors).
-The QEC literature is vast and can get very technical very quickly, but 
+The QEC literature is vast and can get very technical very quickly, but
 diving into it promises bountiful rewards.
 The field is one of the most fast evolving areas of research in the field.
 These work-in-progress lecture notes by a coryphaeus of the field make

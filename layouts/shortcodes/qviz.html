@@ -1,9 +1,11 @@
+{{- if .Get "file" -}}
+  {{- $file := .Get "file" -}}
+  {{- $content := readFile $file -}}
 <div class="qviz">
-    {{ if .Get "file" }}
-        {{ $file := .Get "file" }}
-        {{ $content := readFile $file }}
-        {{ $content | safeHTML }}
-    {{ else }}
-        {{ .Inner }}
-    {{ end }}
+  <script type="application/json">{{ $content | safeJS }}</script>
 </div>
+{{- else -}}
+<div class="qviz">
+  <script type="application/json">{{ .Inner | safeJS }}</script>
+</div>
+{{- end -}}

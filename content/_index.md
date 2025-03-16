@@ -36,7 +36,7 @@ This document is available online in its latest version [here](https://luca.mond
 
 {{% hint %}}
 This is very very work in progress. Currently worth reading:
-{{< reflink "chap:basics" "chap:compiler" "chap:matching" >}}.
+{{< reflink "chap:basics" "chap:compiler" "chap:matching" "chap:parallel" >}}.
 {{% /hint %}}
 ---
 

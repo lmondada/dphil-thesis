@@ -1,5 +1,5 @@
 +++
-title = "Quantum circuit optimisations: a review"
+title = "Quantum circuit optimisation: a review"
 layout = "section"
 weight = 3
 slug = "sec:quantum-sota"
@@ -37,7 +37,7 @@ objective of the optimisation---the cost function to be minimised.
 Unlike much of classical compiler research, which can rely on an established set
 of hardware targets and benchmarking datasets to profile the empirial, "real world"
 performance of compiled programs,
-the quantum world must often contend with simplified noise and architecture models 
+the quantum world must often contend with simplified noise and architecture models
 to design proxy metrics, given the limited
 scale and availability of current quantum devices.
 
@@ -71,9 +71,9 @@ When considering error-corrected computations, on the other hand,
 what is an "expensive" computation is no longer dictated by hardware noise,
 but rather by the affordances of the error correcting code: depending on how
 the quantum data is redundantly encoded in the code space, the fault tolerant
-execution of specific operations 
+execution of specific operations
 may be anywhere between very straight forward and nigh-impossible[^cliff].
-Concretely, the bottleneck is widely expected to be the execution of a 
+Concretely, the bottleneck is widely expected to be the execution of a
 single-qubit (non-Clifford) gate, such as the `T` gate.
 [^cliff]: Indeed, much of quantum error correction theory is built on
 the Clifford group, a subset of quantum operations that preserve
@@ -106,7 +106,7 @@ it also---crucially---provides in the form of the Haar measure a sound distance
 metric on the space of all circuits that can be used to measure the distance
 between synthesised circuits and direct the search towards the optimal solution.
 
-Early work explored general unitary decomposition schemes obtained analytically 
+Early work explored general unitary decomposition schemes obtained analytically
 from linear algebra.
 These express arbitrary unitaries as a a product of unitaries that typically
 correspond to one and two-qubit
@@ -119,7 +119,7 @@ and fail to synthesise short circuits when such circuits exist.
 The size of synthesised circuits grows exponentially with the number of qubits,
 making most such schemes impractical beyond three qubits.
 
-Unitary matrix decomposition can also be combined with tools from classical 
+Unitary matrix decomposition can also be combined with tools from classical
 circuit design:
 in @Loke2014, Loke et al. proposed an approach merging
 reversible circuit (see below), a classical compilation problem,
@@ -130,10 +130,10 @@ using the Cosine-Sine decomposition for the unitaries $U$ and $U'$.
 
 To address the shortcomings of analytical decompositions,
 search-based approaches have been developed.
-Unlike the algebraic approaches, 
+Unlike the algebraic approaches,
 in search-based circuit synthesis the circuit decomposition problem is viewed
 as an
-optimisation problem. The space of all possible quantum 
+optimisation problem. The space of all possible quantum
 circuits is explored to find the one that implements the desired unitary whilst
 minimising the cost function.
 The major challenge of such methods is the gigantic (typically super-exponential)
@@ -154,7 +154,7 @@ Outputs of this approach are no longer provably optimal but the results match
 optimal decompositions in all known instances.
 This line of work has subsequently be further refined with heuristics
 based on pre-defined circuit templates @Smith2023 @Madden2022,
-parameter instantiation @Younis2022 @qfast @Rakyta_2022, 
+parameter instantiation @Younis2022 @qfast @Rakyta_2022,
 machine learning @Weiden2023 and tensor networks @qfactor.
 
 Some of these heuristics also make it possible to synthesise circuits
@@ -181,7 +181,7 @@ they are heavily dependent on the quality of the partitioning.
 
 Our study of unitary synthesis introduced us to a convenient two-step approach
 to quantum computation optimisation. The input circuit is first transformed
-into a "global" 
+into a "global"
 representation that captures the computation as a whole, abstracting away
 the precise sequences of gates that composed the original circuit.
 This representation is then the input for the second half of the problem, which
@@ -209,7 +209,7 @@ a measure zero subset of $SU(2^n)$ with respect to the Haar measure.
 
 Another fruitful avenue of work for quantum optimisation has thus been
 the development of alternative representations for quantum computations that
-can encode polynomially sized quantum programs efficiently 
+can encode polynomially sized quantum programs efficiently
 whilst enabling novel optimisations.
 
 #### Phase Polynomials and Pauli Gadgets
@@ -225,7 +225,7 @@ In this formulation, $n$ fixes the number of qubits of the computation.
 
 These exponentials are always valid $n$-qubit unitaries and can
 express entangling operations across any number of
-qubits: the qubits on which an operation $exp(i \alpha \cdot s)$ acts 
+qubits: the qubits on which an operation $exp(i \alpha \cdot s)$ acts
 non-trivially are given by the indices of the characters in $s$ that are
 not the identity $I$. For instance, the exponential
 $$exp(i \frac\pi2 XIZ)$$
@@ -238,7 +238,7 @@ chemistry @McClean2016.
 The use of these primitives for quantum compilation was first explored
 in @Cowtan2019, and further generalised in @Cowtan2020.
 Starting from an (unordered) sequence of Pauli gadgets, the gadgets
-are clustered into sets of mutually commuting gadgets. 
+are clustered into sets of mutually commuting gadgets.
 These can then be jointly synthesised into a circuit, markedly reducing
 the number of entangling operations as compared to naively implementing
 one exponential at a time.
@@ -271,7 +271,7 @@ $Z$, and $\oplus$ denotes the boolean XOR operation.
 The exponential expression is just a real number---indeed each term in the
 sum simply evaluates to either $a_i$ or $0$.
 A phase polynomial is thus a diagonal unitary matrix: it maps
-every basis state $\ket {b_1 \cdots b_n}$ to itself, multiplied by 
+every basis state $\ket {b_1 \cdots b_n}$ to itself, multiplied by
 some phase $e^{i \theta}$.
 
 Polynomially-sized circuits that implement diagonal matrices
@@ -322,11 +322,11 @@ $\Theta(2n^2)$-sized program representation
 known as **Clifford tableau** @Aaronson_2004.
 This has been used profusely for compiler optimisation.
 In @Aaronson_2004 the first Clifford circuit synthesis procedure is given, using
-an analytical decomposition of clifford tableaus 
+an analytical decomposition of clifford tableaus
 into $O(n^2 /\log n)$ one and two-qubit gates.
 An improved, Bruhat-based decomposition that is optimal in the number
 of Hadamard gates was subsequently proposed in @Maslov2018.
-In the case of a clifford fragment directly followed by measurements, 
+In the case of a clifford fragment directly followed by measurements,
 the procedure can be further refined to replace gates with classical
 computation on the measurement outcomes @Bravyi_2021.
 Finally, an alternative normal form that is well-suited to hardware with
@@ -343,7 +343,7 @@ Clifford circuits could be found up to 6 qubits.
 Using modern SAT solvers, optimal clifford synthesis has recently been pushed
 much further, with known optimal circuits beyond 20 qubits @Peham2023 @Schneider2023.
 
-Heuristic optimisation approaches have also been shown to be effective on 
+Heuristic optimisation approaches have also been shown to be effective on
 Clifford optimisation @Bravyi_2021 @Fagan2018 and scale to larger systems.
 For Clifford computations on devices with restricted connectivity, an
 architecture-aware synthesis method was proposed in @Winderl2024.
@@ -357,8 +357,8 @@ in a graphical language and have---as a nice side-effect---led to a plethoral of
 state of the art quantum circuit optimisation techniques!
 
 A diagrammatic representation of a quantum computation is obtained
-by lifting the gates 
-that form a quantum circuit into the nodes of a more abstract graph-based 
+by lifting the gates
+that form a quantum circuit into the nodes of a more abstract graph-based
 graphical calculus.
 The most commonly used flavour of calculus used for circuit optimisation
 is the ZX calculus @Coecke2008 @Coecke2012 @vandewetering2020 @Yeung2024.
@@ -400,7 +400,7 @@ much more complete, albeit ageing, survey of @Saeedi2013.
 
 Up to 4 (qu)bits, all reversible circuits and their optimal synthesis can
 be generated by brute force @Li2014.
-Viewing reversible circuits as a permutation of all $2^n$ bitstrings, 
+Viewing reversible circuits as a permutation of all $2^n$ bitstrings,
 Susam et al. pre-compute optimal circuits only
 for swaps of two bitstrings (transpositions).
 These can then be used as part of a standard selection sort to synthesise arbitrary permutations.
@@ -411,7 +411,7 @@ in a fraction of a second, with good performance.
 Truth-table or matrix representations of reversible circuits suffer from the
 same exponential scaling as unitaries.
 To address these, other representations that have been used include
-exclusive sums of product terms (ESOP) @Fazel2007 @Bandyopadhyay2014, 
+exclusive sums of product terms (ESOP) @Fazel2007 @Bandyopadhyay2014,
 positive polarity Reed-Müller codes (PPRM) @Jegier2017 and
 decision diagrams @Stojkovic2019 @Wille2010 @Pang2011.
 
@@ -438,7 +438,7 @@ In summary, a variety of scalable representations---such as
 phase polynomials, Pauli gadgets, Clifford tableaus, diagrammatic calculi, and
 reversible circuits---have been developed to abstract computations and
 enable highly tailored optimisation methods. These approaches leverage the
-unique structure and symmetries of quantum computations, achieving significant 
+unique structure and symmetries of quantum computations, achieving significant
 reductions in circuit size, depth, and hardware-specific overheads. Techniques
 such as phase polynomial synthesis and Clifford tableau representations
 are widely applicable and are a cornerstore of modern quantum

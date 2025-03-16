@@ -57,7 +57,9 @@ In the circuit formalism, measurements are often implicitly added at the end
 of every qubit. If we wish to make them explicit or add them elsewhere in the
 computation, we must introduce a graphical representation for the classical bit of
 data that is produced by the measurement.
-The field has adopted the double wire for this (SVG db-wire), even though
+The field has adopted the double wire
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 10" width="30" height="10"><line x1="2" y1="3" x2="28" y2="3" stroke="black" stroke-width="1.5"/><line x1="2" y1="7" x2="28" y2="7" stroke="black" stroke-width="1.5"/></svg>
+for this, even though
 a "half" wire would arguably have been more appropriate to reflect the reduced
 information density relative to quantum wires.
 Ladies and gentlemen, I present to you, the measurement box:
@@ -247,7 +249,9 @@ circuit representation to its knees.
 In this thesis, we adopt the following interactive representation to show
 the circuit and classically controlled operations that result from
 various measurement outcomes.
+
 {{< qviz file="figs/blockenc.json" />}}
+
 Clicking on the blue pill toggles the measurement outcome between `0` and `1`,
 and the corresponding classically controlled operations.
 
@@ -283,7 +287,7 @@ which every computation starts in, into the Bell pair state:
     "qubits": [{ "id": 0 }, { "id": 1 }],
     "operations": [
         {
-            "gate": "Bell",
+            "gate": "<svg height='10.5205pt' version='1.1' viewBox='278.91 104.822 24.5579 10.5205' width='24.5579pt' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><defs><path d='M0.514072 -8.16538V-7.81868H0.753176C1.61395 -7.81868 1.64981 -7.69913 1.64981 -7.25679V-0.908593C1.64981 -0.466252 1.61395 -0.3467 0.753176 -0.3467H0.514072V0H5.00922C6.55143 0 7.6274 -1.0401 7.6274 -2.1878C7.6274 -3.15616 6.75467 -4.11258 5.332 -4.268C6.46775 -4.48319 7.29265 -5.24832 7.29265 -6.14496C7.29265 -7.1731 6.25255 -8.16538 4.68643 -8.16538H0.514072ZM2.55841 -4.36364V-7.34047C2.55841 -7.73499 2.58232 -7.81868 3.10834 -7.81868H4.61469C5.81021 -7.81868 6.2406 -6.79054 6.2406 -6.14496C6.2406 -5.35592 5.61893 -4.36364 4.29191 -4.36364H2.55841ZM3.10834 -0.3467C2.58232 -0.3467 2.55841 -0.430386 2.55841 -0.824907V-4.12453H4.79402C5.94172 -4.12453 6.53948 -3.1203 6.53948 -2.19975C6.53948 -1.23138 5.81021 -0.3467 4.63861 -0.3467H3.10834Z' id='g0-66'/><path d='M4.57883 -2.7736C4.84184 -2.7736 4.86575 -2.7736 4.86575 -3.00075C4.86575 -4.20822 4.22017 -5.332 2.7736 -5.332C1.41071 -5.332 0.358655 -4.10062 0.358655 -2.61818C0.358655 -1.0401 1.57808 0.119552 2.90511 0.119552C4.32777 0.119552 4.86575 -1.17161 4.86575 -1.42267C4.86575 -1.4944 4.80598 -1.54222 4.73425 -1.54222C4.63861 -1.54222 4.61469 -1.48244 4.59078 -1.42267C4.27995 -0.418431 3.47895 -0.143462 2.97684 -0.143462S1.26725 -0.478207 1.26725 -2.54645V-2.7736H4.57883ZM1.2792 -3.00075C1.37484 -4.87771 2.4269 -5.0929 2.76164 -5.0929C4.04085 -5.0929 4.11258 -3.40722 4.12453 -3.00075H1.2792Z' id='g0-101'/><path d='M2.05629 -8.29689L0.394521 -8.16538V-7.81868C1.20747 -7.81868 1.30311 -7.73499 1.30311 -7.14919V-0.884682C1.30311 -0.3467 1.17161 -0.3467 0.394521 -0.3467V0C0.729265 -0.0239103 1.31507 -0.0239103 1.67372 -0.0239103S2.63014 -0.0239103 2.96488 0V-0.3467C2.19975 -0.3467 2.05629 -0.3467 2.05629 -0.884682V-8.29689Z' id='g0-108'/></defs><g id='page1' transform='matrix(1.25 0 0 1.25 0 0)'><use x='223.128' xlink:href='#g0-66' y='92.1544'/><use x='231.387' xlink:href='#g0-101' y='92.1544'/><use x='236.57' xlink:href='#g0-108' y='92.1544'/><use x='239.809' xlink:href='#g0-108' y='92.1544'/></g></svg>",
             "children": [
                 {
                     "gate": "H",
@@ -335,59 +339,7 @@ We do not know a priori how to measure $\ket {00} + \ket{11}$ but we do know
 how to map that state to $\ket {00}$: that's the inverse of the Bell pair state
 preparation circuit!
 This results in the following circuit:
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1, "numChildren": 1 }, { "id": 2, "numChildren": 1 }],
-    "operations": [
-        {
-            "gate": "Bell",
-            "children": [
-                {
-                    "gate": "H",
-                    "targets": [{ "qId": 0 }]
-                },
-                {
-                    "gate": "X",
-                    "isControlled": true,
-                    "controls": [{ "qId": 0 }],
-                    "targets": [{ "qId": 1 }]
-                }
-            ],
-            "targets": [{"qId": 0 }, { "qId": 1 }],
-            "conditionalRender": 1
-        },
-        {
-            "gate": "Bell-inv",
-            "children": [
-                {
-                    "gate": "X",
-                    "isControlled": true,
-                    "controls": [{ "qId": 1 }],
-                    "targets": [{ "qId": 2 }]
-                },
-                {
-                    "gate": "H",
-                    "targets": [{ "qId": 1 }]
-                }
-            ],
-            "targets": [{"qId": 1 }, { "qId": 2 }],
-            "conditionalRender": 1
-        },
-        {
-            "gate": "Measure",
-            "isMeasurement": true,
-            "controls": [{ "qId": 1 }],
-            "targets": [{ "type": 1, "qId": 1, "cId": 0 }]
-        },
-        {
-            "gate": "Measure",
-            "isMeasurement": true,
-            "controls": [{ "qId": 2 }],
-            "targets": [{ "type": 1, "qId": 2, "cId": 0 }]
-        }
-    ]
-}
-{{< /qviz >}}
+{{< qviz file="figs/bell.json" />}}
 This brings us to the same situation as we had for the block encoding
 application above: conditioned on the measurement outcome of the second and
 third qubits being 0, the computation performs a state "teleportation", moving
@@ -476,29 +428,17 @@ We can then discard all qubits and restart from the $\ket 0$ state, applying
 $P$ followed by $\tilde{A}$ and an ancilla measurement, repeating until we
 measure 0. As a pseudo-quantum circuit, we could express this as:
 
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1, "numChildren": 1 }],
-    "operations": [
-        {
-            "gate": "H",
-            "targets": [{ "qId": 0 }]
-        },
-        {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-        },
-        {
-            "gate": "Measure",
-            "isMeasurement": true,
-            "controls": [{ "qId": 1 }],
-            "targets": [{ "type": 1, "qId": 1, "cId": 0 }]
-        }
-    ]
-}
-{{< /qviz >}}
+{{% negativespace %}}
+```
+while True:
+   q0, q1 = create_qubits(2)
+   obtain measurement m from:
+
+{{< qviz file="figs/iter.json" />}}    if m == 0:
+        break  # success! we can exit loop and proceed
+    else:
+        discard_qubits(q0, q1)
+```
 
 But pseudo circuits do not run on hardware! The only way to express this
 computation as an actual circuit is to set a `max_iter` constant and to repeat
