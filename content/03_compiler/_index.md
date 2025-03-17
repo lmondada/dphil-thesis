@@ -6,6 +6,15 @@ layout = "chapter"
 slug = "chap:compiler"
 +++
 
+{{% hint "danger" %}}
+TODOs.
+
+- Redo figure at the end of 3.4
+- dowhile figure at the end of 3.3
+- Proof of "Proposition: MinIR subgraph rewrite"
+- Proper numbering/referencing of definitions/propositions
+{{% /hint %}}
+
 This thesis proposes to interpret quantum compilation as a graph
 transformation system (GTS).
 This allows us to decouple the hardware primitives, constraints and cost function

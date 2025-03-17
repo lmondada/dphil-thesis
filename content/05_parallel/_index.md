@@ -6,6 +6,13 @@ layout = "chapter"
 slug = "chap:parallel"
 +++
 
+{{% hint "danger" %}}
+TODOs.
+
+- Proper numbering/referencing of definitions/propositions
+{{% /hint %}}
+
+
 This chapter proposes a new data structure for graph rewriting that result
 in significant speed ups for certain use cases.
 Mutable data structures are typically _ephemeral_: modifying the data structure
