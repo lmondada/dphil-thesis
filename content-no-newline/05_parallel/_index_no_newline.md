@@ -1,5 +1,10 @@
 +++ title = "Fully and Confluently Persistent Graph Rewriting" sort_by = "weight" weight = 5 layout = "chapter" slug = "chap:parallel" +++
 
+{{% hint "danger" %}} TODOs.
+
+- Proper numbering/referencing of definitions/propositions {{% /hint %}}
+
+
 This chapter proposes a new data structure for graph rewriting that result in significant speed ups for certain use cases. Mutable data structures are typically _ephemeral_: modifying the data structure overwrites information and invalidates any references to the old data. In contrast, a _persistent_ data structure applies changes to the data in a way that both the old and new versions remain accessible---a famous example of this are [version control systems such as git](https://martinfowler.com/bliki/VersionControlTools.html).
 
 A data structure is _fully_ persistent if past versions of the data structure remain mutable. Instead of a linear edit history of all mutations, the result is an edit history tree, with possibly many "most recent" versions---leaves in the edit history. Finally, a fully data structure is also _confluently_ persistent if different versions of the data in the edit history can be joined together. As a result, the edit history forms a directed acyclic graph (DAG) of versions of the data, linked by data mutation and merge operations. Adopting terminology from git, we call a join of two or more versions a _merge_ of multiple versions.
