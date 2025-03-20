@@ -354,6 +354,7 @@ there will be at most $O(e^{\alpha \cdot d})$ applicable linear rewrites.
 
 TODO: $A$ etc would depend on $d$...
 {{< /proposition >}}
+
 Note that this definition of linear rewrite corresponds exactly to the rewrites that are valid
 if terms represent linear values.
 The sets $A_{t,i}$ are then the sets of terms that result from a single graph rewrite, split into

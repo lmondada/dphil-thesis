@@ -46,6 +46,7 @@ with
 - $\mu: V^- \rightharpoonup V_R$ is the _gluing relation_, a partial function
 that maps a subset of the deleted vertices of $G$ to vertices in the replacement graph.
 {{< /definition >}}
+
 We will write $Dom(\mu)$ and $Im(\mu)$ for the domain and image of $\mu$, respectively.
 
 Define the graph $G_L = (V_L, E_L)$ given by

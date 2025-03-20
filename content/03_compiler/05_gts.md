@@ -76,6 +76,7 @@ there is $G_R'$ and $\mu'$ such that the graph $r_\varphi(G)$ obtained from the 
 $$r_\varphi = (G_R', \varphi(V_L), O_B, \mu')$$
 is a valid minIR graph.
 {{< /proposition >}}
+
 Note that proposition 3.2 and its proof give an explicit construction for
 $r_\varphi$ and $r_\varphi(G)$ that we do not repeat here.
 

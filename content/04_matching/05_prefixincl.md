@@ -71,6 +71,7 @@ their contracted string tuples.
 Then $T_1 \subseteq T_2$ if and only if the trees share the same root, are isomorphic, have the same $split$ and $contract'$ maps
 and for all $i \in \{1, \dots, 2w\}$: $s_i \subseteq t_i$.
 {{< /proposition >}}
+
 The proof of this follows directly from the definition and presentation above.
 
 Why restricting ourselves to trees of the same width $w$?

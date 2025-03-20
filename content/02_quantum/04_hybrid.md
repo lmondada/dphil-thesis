@@ -304,6 +304,7 @@ which every computation starts in, into the Bell pair state:
     ]
 }
 {{< /qviz >}}
+
 It is enough for us to think of it as a black box---or a blue box in this case.
 
 We are interested in "teleporting" an arbitrary, single-qubit quantum state.
@@ -337,7 +338,9 @@ We do not know a priori how to measure $\ket {00} + \ket{11}$ but we do know
 how to map that state to $\ket {00}$: that's the inverse of the Bell pair state
 preparation circuit!
 This results in the following circuit:
+
 {{< qviz file="figs/bell.json" />}}
+
 This brings us to the same situation as we had for the block encoding
 application above: conditioned on the measurement outcome of the second and
 third qubits being 0, the computation performs a state "teleportation", moving
@@ -377,6 +380,7 @@ Putting these observations together, we can leverage classically controlled
 operations to obtain a protocol that is fully deterministic!
 The correct circuit implementating quantum teleportation is given by
 {{< qviz file="figs/teleportation.json" />}}
+
 In the scenario where a first party (Alice) wants to send a
 one-qubit quantum state to Bob, they can achieve that by
 creating a Bell pair state, the first qubit of which is given to Bob and the

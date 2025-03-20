@@ -77,6 +77,7 @@ Let $G$ be a connected graph and let $X$ be the anchors of its canonical spannin
 Then `CanonicalAnchors(G, root, seen_paths={})` returns $X$, the set of
 all paths in $G$ and the empty graph.
 {{% /proposition %}}
+
 The proof follows directly from the previous paragraphs.
 
 #### Maximal spanning tree reductions
@@ -285,9 +286,9 @@ Let $H \subseteq G$ be a connected subgraph of $G$ of width $w$.
 We prove inductively over $w$ that if
 $(X, S', H') = $`CanonicalAnchors`$(H, r, S)$
 then there is a graph $G'$ such that $H' \subseteq G' \subseteq G$ such that
-{{% centered %}}
+
 $(X, S', G') \in$ `AllAnchors`$(G, r, w, S)$
-{{% /centered %}}
+
 for all valid root operations $r$ of $H$ and all subsets of the linear paths of $H$
 `seen_paths`.
 The statement in the proposition follows from this claim directly.

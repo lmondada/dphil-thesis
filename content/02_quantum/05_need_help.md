@@ -71,6 +71,7 @@ This for example means that in the following program
     ]
 }
 {{< /qviz >}}
+
 it would be impossible to append a gate controlled on the first measurement outcome
 to this circuit, as that value was overwritten on the classical wire
 by the second measurement.

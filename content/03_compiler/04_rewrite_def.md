@@ -103,6 +103,7 @@ The rewritten graph resulting from applying
 $r$ to $G$ is
 $$r(G) = (G_L \cup G_R) / \sim_\mu.$$
 {{< /definition >}}
+
 When there are no edges between $V \smallsetminus V^-$ and $V^- \smallsetminus dom(\mu)$,
 this definition corresponds to graph rewrites that can be produced using DPO transformations
 (see discussion in {{% reflink "sec-gts-def" %}}).

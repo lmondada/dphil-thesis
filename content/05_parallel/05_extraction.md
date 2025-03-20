@@ -87,6 +87,7 @@ A cost function $f$ on graphs is _local_ if for all rewrites $r$ there
 is a cost $\Delta f_r$ such that for all graphs $G$ that $r$ applies to
 $$f(r(G)) = f(G) + \Delta f_r.$$
 {{< /definition >}}
+
 $\Delta f_r$ must be independent of the graph $G$ it applies to, and as such
 we can also associate a cost $\Delta f_\delta$ with each edit $\delta \in \mathcal{D}$,
 given by the cost of any of the rewrites that $\delta$ defines.

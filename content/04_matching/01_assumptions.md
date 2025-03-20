@@ -19,6 +19,7 @@ $f$ operations of types $o_1, \dots, o_f$ as _operation splitting_.
     caption="Splitting an operation with 3 uses and 2 defines. The choice of endpoint partition made here, obtained by pairing the $i$-th use with the $i$-th define, is arbitrary, although often a \"natural\" choice."
     width="50%"
 >}}
+
 We also use the endpoint partitions to define _linear paths_.
 Two values $v, v'$ in a minIR graph are on the same linear path if there are
 values $u_1, \dots, u_k$ with $v = u_1$ and $v' = u_k$ such that $u_i$
@@ -82,6 +83,7 @@ that is not in the fully split graph of $\varphi(P)$.
 Given that $P$ is convex, this path must be in $P$, which contradicts the preservation of operation
 splitting under embeddings.
 {{% /proof %}}
+
 In this chapter, whenever we define a subgraph $H \subseteq G$ of a graph $G$,
 we will assume that $H$ satisfies the above weakened convexity condition.
 

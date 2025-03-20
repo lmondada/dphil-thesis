@@ -106,6 +106,7 @@ and so-called **structured control flow**.
 
 We can define for all operations $o \in O$
 $$region(o) = \begin{cases}r & \textrm{if there exists } o' \in dom(parent) \\& \textrm{ with }o \sim o' \textrm{ and }parent(o') = r,\\ \mathit{root} & \textrm{otherwise,}\end{cases}$$
+
 where $root$ is a new symbol disjoint from $O$.
 The $region$ function is well-defined by the fourth constraint in Definition 3.?.
 We call $region(o)$ the parent of $o$.
