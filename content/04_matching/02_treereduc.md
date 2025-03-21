@@ -16,7 +16,7 @@ The following result shows that a spanning tree reduction using operation splitt
 is always possible.
 We say a graph $G$ is tree-like if it is connected and there are no cycles in the underlying
 undirected graph $G_U$ of $G$.
-{{< proposition title="Spanning tree reduction" number="4.3" >}}
+{{< proposition title="Spanning tree reduction" id="prop-treereduction" >}}
 A tree-like graph $G_T$ can always be obtained from any connected graph $G$ by successively applying
 operation splittings.
 {{< /proposition >}}
@@ -56,7 +56,7 @@ by taking the dual of $G_T$:
 
 We call the resulting tree $T$ the dual spanning tree of $G$.
 
-{{% proposition title="Dual spanning tree" number="4.4" %}}
+{{% proposition title="Dual spanning tree" id="prop-dualspanningtree" %}}
 A root operation $r \in O_T$ can always be chosen such that the
 dual spanning tree $T$ of a graph $G$ rooted in $r$ is a ternary tree,
 i.e. every node of $T$ has at most three children.
@@ -113,13 +113,13 @@ Contracted spanning trees are particularly useful for the study of the
 asymptotic complexity of the pattern matching algorithm we propose, as they
 have a very regular structure, which we summarise in terms of its dual:
 
-{{% proposition title="Contracted spanning tree" number="4.5" %}}
+{{% proposition title="Contracted spanning tree" id="prop-contractedspanningtree" %}}
 There is a root operation $r \in O_C$ such that the dual contracted spanning tree
 $T_C$ of a graph $G$ rooted in $r$ is a
 ternary tree with $width(G) - 1$ nodes.
 {{% /proposition %}}
 {{% proof %}}
-That the tree is ternary follows from proposition 4.4.
+That the tree is ternary follows from {{% refproposition "prop-dualspanningtree" %}}.
 Every node of the tree corresponds to an operation in $G_C$, which is
 on exactly two linear paths. As a result of acyclicity of the tree,
 a tree of $k$ nodes spans $k+1$ linear paths---and hence,
@@ -129,7 +129,7 @@ we conclude $k = width(G) - 1$.
 We conclude the construction presented in this section
 with the following result, expressing graph pattern matching in terms of
 tree equality:
-{{% proposition title="Reduction to Tree Pattern matching" number="4.6" %}}
+{{% proposition title="Reduction to Tree Pattern matching" id="prop-tree-patternmatching" %}}
 Let $P$ be a pattern graph and $G$ a graph. Let $P_{CD}$ be the dual
 of a contracted spanning tree of $P$.
 There is an embedding $P \hookrightarrow G$ if and only if

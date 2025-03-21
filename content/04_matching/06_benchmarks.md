@@ -5,7 +5,7 @@ weight = 6
 slug = "sec:benchmarks"
 +++
 
-Proposition 4.15 shows that pattern independent matching can scale to large
+{{% refproposition "prop-main" %}} shows that pattern independent matching can scale to large
 datasets of patterns but imposes some restrictions on the patterns and embeddings
 that can be matched.
 In this section we discuss these limitations and
@@ -51,6 +51,7 @@ The results are summarised in this figure.
 {{% figure
     src="/svg/eccs-plot.svg"
     width="95%"
+    enlarge="half"
     caption="Runtime of pattern matching for $\ell = 0\dots 10^4$ patterns on 2, 3 and 4 qubit quantum circuits from the Quartz ECC dataset, for our implementation (Portmatching) and the Quartz project. All $\ell = 1954$ two qubit circuits were used, whereas for 3 and 4 qubit circuits, $\ell = 10^4$ random samples were drawn."
 %}}
 
@@ -58,20 +59,21 @@ We also provide a more detailed scaling analysis of our implementation
 by generating random sets of 10'000 quantum circuits with 15 gates
 for qubit numbers between $w=2$ and $w=10$, using the previous gate set;
 the results are shown in the figure below.
-From Proposition 4.15, we expect that the pattern matching runtime is
+From {{% refproposition "prop-main" %}}, we expect that the pattern matching runtime is
 upper bounded by a $\ell$-independent constant.
 Runtime seems indeed to saturate for $w=2$ and $w=3$ qubit patterns,
 with an observable runtime plateau at large $\ell$.
-From the exponential $c^w$ dependency in the complexity bound of Proposition 4.15,
+From the exponential $c^w$ dependency in the complexity bound of {{% refproposition "prop-main" %}},
 it is however to be expected
 that this upper bound increases rapidly for qubit counts $w \geq 4$.
 A runtime ceiling is not directly observable at this experiment size but
 the gradual decrease in the slope
 of the curve is consistent with the existence of the $\ell$-independent upper bound predicted
-in Proposition 4.15.
+in {{% refproposition "prop-main" %}}.
 
 {{% figure
     src="svg/random-plot.svg"
     caption="Runtime of our pattern matching for random quantum circuits with up to 10 qubits."
+    enlarge="half"
     width="75%"
 %}}
