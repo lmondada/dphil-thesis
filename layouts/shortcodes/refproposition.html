@@ -1,0 +1,3 @@
+{{- $id := .Get 0 -}}
+{{- $propositionNumber := index (.Site.Store.Get "proposition_map") $id -}}
+Proposition <a href="#{{ $id }}">{{- $propositionNumber -}}</a> 

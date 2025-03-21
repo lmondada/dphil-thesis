@@ -1,0 +1,3 @@
+{{- $id := .Get 0 -}}
+{{- $definitionNumber := index (.Site.Store.Get "definition_map") $id -}}
+Definition <a href="#{{ $id }}">{{- $definitionNumber -}}</a>

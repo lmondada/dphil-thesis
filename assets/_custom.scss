@@ -3,18 +3,18 @@
 // @import "plugins/_numbered.scss";
 
 .chapter-number {
-    font-size: 1.8em;
-    font-style: italic;
-    margin-bottom: -1em;
-    color: #666;
-    font-family: "Shadows Into Light", serif;
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 0.07em;
+  font-size: 1.8em;
+  font-style: italic;
+  margin-bottom: -1em;
+  color: #666;
+  font-family: "Shadows Into Light", serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.07em;
 }
 
 h1.chapter {
-    margin-bottom: 1.5em;
+  margin-bottom: 1.5em;
 }
 
 // .chapter-head::after {
@@ -22,7 +22,29 @@ h1.chapter {
 // }
 
 article {
-    hyphens: auto;
+  hyphens: auto;
+}
+
+p {
+  margin-block-start: 0em;
+}
+
+pre {
+  margin-block-start: 0em;
+}
+
+article.markdown ul {
+  list-style-type: none;
+  padding-left: 1.6em;
+  line-height: 2em;
+  margin-block-start: 0em;
+
+  li::before {
+    content: "—";
+    display: inline-block;
+    width: 1.4em;
+    margin-left: -1.4em;
+  }
 }
 
 ////// GRID LAYOUT //////
@@ -30,164 +52,166 @@ article {
 $floating-footnotes-width: 20rem;
 
 .book-page {
-    position: relative;
+  position: relative;
 
-    @media screen and (min-width: 56rem) {
-        padding-right: 0;
-        margin-right: 0;
-    }
+  @media screen and (min-width: 56rem) {
+    padding-right: 0;
+    margin-right: 0;
+  }
 }
 
 article.markdown {
-    @media screen and (min-width: 56rem) {
-        display: grid;
-        grid-template-columns: 1rem 1fr $floating-footnotes-width;
-        
-        > * {
-            grid-column: 2;
-        }
-        
-        > .floating-footnotes {
-            grid-column: 3;
-            grid-row: 1;
-        }
+  @media screen and (min-width: 56rem) {
+    display: grid;
+    grid-template-columns: 1rem 1fr $floating-footnotes-width;
 
-        > .enlarge-12, > .enlarge-14 {
-            grid-column: 1 / 4;
-        }
-
-        > .enlarge-14 {
-            margin-right: calc(#{$floating-footnotes-width} * 3 / 4);
-        }
-
-        > .enlarge-12 {
-            margin-right: calc(#{$floating-footnotes-width}  / 2);
-        }
+    > * {
+      grid-column: 2;
     }
+
+    > .floating-footnotes {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    > .enlarge-full,
+    > .enlarge-half,
+    > .enlarge-quarter {
+      grid-column: 1 / 4;
+    }
+
+    > .enlarge-quarter {
+      margin-right: calc(#{$floating-footnotes-width} * 3 / 4);
+    }
+
+    > .enlarge-half {
+      margin-right: calc(#{$floating-footnotes-width} / 2);
+    }
+  }
 }
 
 ////// FLOATING FOOTNOTES //////
 
 .floating-footnotes {
+  position: absolute;
+  margin: 0 2rem 0 1rem;
+  top: 0;
+  width: calc(#{$floating-footnotes-width} - 3rem);
+
+  font-size: 0.9rem;
+
+  ol li {
     position: absolute;
-    margin: 0 2rem 0 1rem;
-    top: 0;
-    width: calc(#{$floating-footnotes-width} - 3rem);
 
-    font-size: 0.9rem;
-
-    ol li {
-        position: absolute;
-
-        p {
-            margin-top: 0px;
-        }
+    p {
+      margin-top: 0px;
     }
+  }
 }
 
 ////// QVIZ //////
 
 .qviz {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 ////// FIGURES //////
 ///
 .markdown figure {
-    &.figure-bg {
-        background-color: #f5f5f0;
-        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  &.figure-bg {
+    background-color: #f5f5f0;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  }
+  padding: 1rem 0;
+
+  .figure-div {
+    display: block;
+    margin: 0 auto;
+
+    img {
+      width: 100%;
     }
-    padding: 1rem 0;
+  }
 
-    .figure-div {
-        display: block;
-        margin: 0 auto;
+  figcaption {
+    font-style: italic;
+    margin: 0 auto;
+    width: 90%;
 
-        img {
-            width: 100%;
-        }
+    p {
+      margin-bottom: 0;
     }
-
-    figcaption {
-        font-style: italic;
-        margin: 0 auto;
-        width: 90%;
-
-        p {
-            margin-bottom: 0;
-        }
-    }
+  }
 }
 
 ////// References //////
 .markdown details summary {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 ////// CITATIONS //////
 .citation {
-    position: relative;
+  position: relative;
 }
 
 .citation-key,
 .citation-number {
-    cursor: pointer;
-    color: rgb(132, 64, 241);
+  cursor: pointer;
+  color: rgb(132, 64, 241);
 
-    &:hover {
-        text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
+  }
 
-    a {
-        color: inherit;
-    }
+  a {
+    color: inherit;
+  }
 }
 
 .citation-key {
-    &:before {
-        content: "[";
-    }
+  &:before {
+    content: "[";
+  }
 
-    &:after {
-        content: "]";
-    }
+  &:after {
+    content: "]";
+  }
 }
 
 .citation-number {
-    &.citation-left:before {
-        content: "[";
-    }
+  &.citation-left:before {
+    content: "[";
+  }
 
-    &.citation-right:after {
-        content: "]";
-    }
+  &.citation-right:after {
+    content: "]";
+  }
 
-    &.citation-middle:after {
-        content: ",";
-    }
+  &.citation-middle:after {
+    content: ",";
+  }
 }
 
 .citation-full {
-    display: none;
-    position: absolute;
-    border: 1px solid #000;
-    background-color: #fff;
-    padding: 2px 2px 2px 8px;
-    bottom: 1.4rem;
-    font-size: 0.9rem;
-    width: 300px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  display: none;
+  position: absolute;
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 2px 2px 2px 8px;
+  bottom: 1.4rem;
+  font-size: 0.9rem;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-    @media screen and (min-width: 56rem) {
-        right: 0rem;
-    }
+  @media screen and (min-width: 56rem) {
+    right: 0rem;
+  }
 
-    .citation-key:hover + &,
-    .citation-number:hover + & {
-        display: block;
-    }
+  .citation-key:hover + &,
+  .citation-number:hover + & {
+    display: block;
+  }
 }
 
 @import "titlepage";
@@ -195,188 +219,164 @@ article.markdown {
 ////// DEFINITIONS //////
 
 .definition-block {
-    border: 1px solid var(--gray-200);
-    border-radius: $border-radius;
-    margin: $padding-16 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+  border: 1px solid var(--gray-200);
+  border-radius: $border-radius;
+  margin: $padding-16 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .definition-header {
-    background-color: var(--gray-100);
-    padding: $padding-8 $padding-16;
-    border-bottom: 1px solid var(--gray-200);
-    display: flex;
-    align-items: center;
-    gap: $padding-8;
+  background-color: var(--gray-100);
+  padding: $padding-8 $padding-16;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  gap: $padding-8;
 }
 
 .definition-label {
-    font-weight: bold;
-    color: black;
+  font-weight: bold;
+  color: black;
 }
 
 .definition-title {
-    font-style: italic;
-    color: var(--body-font-color);
-    opacity: 0.8;
+  font-style: italic;
+  color: var(--body-font-color);
+  opacity: 0.8;
 }
 
 .definition-content {
-    padding: $padding-16;
-    color: var(--body-font-color);
-
-    ul {
-        list-style-type: none;
-        padding-left: 1.6em;
-        line-height: 2em;
-
-        li::before {
-            content: "—";
-            display: inline-block;
-            width: 1.4em;
-            margin-left: -1.4em;
-        }
-    }
+  padding: $padding-16;
+  color: var(--body-font-color);
 }
 
 ////// PROPOSITIONS //////
 
 .proposition-block {
-    border: 1px solid var(--gray-200);
-    border-radius: $border-radius;
-    margin: $padding-16 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+  border: 1px solid var(--gray-200);
+  border-radius: $border-radius;
+  margin: $padding-16 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .proposition-header {
-    background-color: var(--gray-100);
-    padding: $padding-8 $padding-16;
-    border-bottom: 1px solid var(--gray-200);
-    display: flex;
-    align-items: center;
-    gap: $padding-8;
+  background-color: var(--gray-100);
+  padding: $padding-8 $padding-16;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  gap: $padding-8;
 }
 
 .proposition-label {
-    font-weight: bold;
-    color: black;
+  font-weight: bold;
+  color: black;
 }
 
 .proposition-title {
-    font-style: italic;
-    color: var(--body-font-color);
-    opacity: 0.8;
+  font-style: italic;
+  color: var(--body-font-color);
+  opacity: 0.8;
 }
 
 .proposition-content {
-    padding: $padding-16;
-    color: var(--body-font-color);
-
-    ul {
-        list-style-type: none;
-        padding-left: 1.6em;
-        line-height: 2em;
-
-        li::before {
-            content: "—";
-            display: inline-block;
-            width: 1.4em;
-            margin-left: -1.4em;
-        }
-    }
+  padding: $padding-16;
+  color: var(--body-font-color);
 }
 
 .highlight.numbered {
+  position: relative;
+  counter-reset: line;
+
+  pre {
+    margin: 0;
+    padding-left: 2.1em; /* Space for line numbers */
+
+    /* Style for the line numbers column */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1.7em;
+      height: 100%;
+      border-right: 1px solid #666;
+      background-color: #2f3129; /* Slightly lighter than the main background */
+      z-index: 0;
+    }
+  }
+
+  /* Line number markers */
+  pre > code > span {
     position: relative;
-    counter-reset: line;
+    counter-increment: line;
 
-    pre {
-        margin: 0;
-        padding-left: 2.1em; /* Space for line numbers */
+    /* Only show line numbers for every 5th line */
+    &:nth-child(5n)::before {
+      content: counter(line);
+      position: absolute;
+      left: -3.5em;
+      width: 2.5em;
+      color: #888;
+      font-size: 0.8em;
+      text-align: right;
+      padding-right: 0.5em;
+      user-select: none;
 
-        /* Style for the line numbers column */
-        &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1.7em;
-            height: 100%;
-            border-right: 1px solid #666;
-            background-color: #2f3129; /* Slightly lighter than the main background */
-            z-index: 0;
-        }
+      /* Vertical alignment improvements */
+      top: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      box-sizing: border-box;
     }
-
-    /* Line number markers */
-    pre > code > span {
-        position: relative;
-        counter-increment: line;
-
-        /* Only show line numbers for every 5th line */
-        &:nth-child(5n)::before {
-            content: counter(line);
-            position: absolute;
-            left: -3.5em;
-            width: 2.5em;
-            color: #888;
-            font-size: 0.8em;
-            text-align: right;
-            padding-right: 0.5em;
-            user-select: none;
-
-            /* Vertical alignment improvements */
-            top: 0;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            box-sizing: border-box;
-        }
-    }
+  }
 }
 
 ////// CENTERED ENVIRONMENT //////
 .centered {
-    margin: -0.5em auto;
-    width: 100%;
-    text-align: center;
-    position: relative;
+  margin: -0.5em auto;
+  width: 100%;
+  text-align: center;
+  position: relative;
 }
 
 .centered.numbered::after {
-    content: "(" attr(data-number) ")";
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+  content: "(" attr(data-number) ")";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 ////// PROOFS //////
+details.proof-details {
+    margin-bottom: 1em;
+}
+
 .proof {
-    padding: $padding-16;
-    border: 1px solid var(--gray-200);
-    border-radius: $border-radius;
-    margin: $padding-16 0;
-    background: var(--body-background);
+  padding: $padding-16;
+  border: 1px solid var(--gray-200);
+  border-radius: $border-radius;
+  margin: $padding-16 0;
+  background: var(--body-background);
 
-    .proof-header {
-        font-style: italic;
-        display: inline;
-        margin-right: 0.5em;
+  .proof-header {
+    font-style: italic;
+    display: inline;
+    margin-right: 0.5em;
+  }
+
+  .markdown-inner {
+    display: inline;
+
+    // Remove extra margins in nested markdown content
+    > :first-child {
+      margin-top: 0;
     }
-
-    .markdown-inner {
-        display: inline;
-
-        // Remove extra margins in nested markdown content
-        > :first-child {
-            margin-top: 0;
-        }
-        > :last-child {
-            margin-bottom: 0;
-        }
+    > :last-child {
+      margin-bottom: 0;
     }
+  }
 }

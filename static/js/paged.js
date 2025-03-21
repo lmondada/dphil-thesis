@@ -3,40 +3,52 @@ class MyHandler extends Paged.Handler {
     super(chunker, polisher, caller);
   }
 
-  afterPageLayout(pageFragment, page) {
-    const isLeftPage = pageFragment.classList.contains("pagedjs_left_page");
-    const marginSelector = isLeftPage
-      ? ".pagedjs_margin-right"
-      : ".pagedjs_margin-left";
-    const margin = pageFragment.querySelector(marginSelector);
-    const footnoteToRef = Array.from(
-      pageFragment.querySelectorAll("sup"),
-    ).reduce((acc, el) => {
+  afterPageLayout(pageFragment, page, breakToken) {
+    // Get all footnote references on this page
+    const footnoteRefs = Array.from(pageFragment.querySelectorAll("sup"));
+    
+    console.log(page);
+    console.log(breakToken);
+
+    // If no footnotes on this page, return
+    if (footnoteRefs.length === 0) {
+      return;
+    }
+    
+    // Create footnote container
+    const footnoteDiv = document.createElement("div");
+    footnoteDiv.classList.add("footnotes", "paged-footnotes");
+    
+    // Get start index for footnote numbering
+    const startIndex = getSupStartIndex(pageFragment);
+    
+    // Create ordered list for footnotes
+    const footnoteList = document.createElement("ol");
+    footnoteList.setAttribute("start", startIndex);
+    footnoteDiv.appendChild(footnoteList);
+    
+    // Map footnote references to their ids
+    const footnoteToRef = footnoteRefs.reduce((acc, el) => {
       const id = el.id.replace("fnref", "fn");
       acc[id] = el;
       return acc;
     }, {});
-    if (Object.keys(footnoteToRef).length === 0) {
-      return;
-    }
-
-    const footnoteDiv = document.createElement("div");
-    footnoteDiv.classList.add("footnotes", "paged-footnotes");
-    const startIndex = getSupStartIndex(pageFragment);
-    const footnoteList = document.createElement("ol");
-    footnoteList.setAttribute("start", startIndex);
-    footnoteDiv.appendChild(footnoteList);
+    
+    // Add footnotes to the list
     Object.keys(footnoteToRef).forEach((id) => {
       const footnote = this.footnoteMap[id];
       if (footnote) {
-        footnoteList.appendChild(footnote);
+        footnoteList.appendChild(footnote.cloneNode(true));
       }
     });
-    margin.insertBefore(footnoteDiv, margin.firstChild);
-
-    // Now place the li at the right height
-    // Admittedly this shouldn't be copied over from footnotes.js, but share
-    // the logic in a separate function
+    
+    // Add footnote div to the article element (it will be positioned by CSS grid)
+    const article = pageFragment.querySelector("article.markdown");
+    if (article) {
+      article.appendChild(footnoteDiv);
+    }
+    
+    // Position footnotes vertically aligned with their references
     let lastOffset = null;
     footnoteList.querySelectorAll("li").forEach((li) => {
       const ref = footnoteToRef[li.id];
@@ -84,13 +96,21 @@ function getSupStartIndex(pageFragment) {
 
 function removeFootnotes(footnotes) {
   const footnoteMap = {};
+  
+  // Process each footnote section
   footnotes.forEach((f) => {
+    // Extract all footnote list items
     const listItems = f.querySelectorAll("ol > li");
+    
+    // Add each footnote to our map, but create a deep clone to preserve for later use
     listItems.forEach((li) => {
-      footnoteMap[li.id] = li;
+      footnoteMap[li.id] = li.cloneNode(true);
     });
+    
+    // Remove the original footnote section as we'll recreate it in the grid
     f.remove();
   });
+  
   return footnoteMap;
 }
 

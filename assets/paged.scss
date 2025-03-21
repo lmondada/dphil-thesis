@@ -1,95 +1,153 @@
 nav,
 aside,
 header {
-    display: none !important;
+  display: none !important;
+}
+
+div.book-page {
+    padding: 0 !important;
 }
 
 $footnote-margin-width: 55mm;
 
 div.footnotes {
-    font-size: 0.9rem;
-    line-height: 1.4rem;
-    width: 100%;
+  font-size: 0.9rem;
+  line-height: 1.4rem;
+  width: 100%;
 
-    pagedjs_margin-left-top {
-        height: 0;
-    }
+  pagedjs_margin-left-top {
+    height: 0;
+  }
 
-    ol {
-    @page: left {
-        margin-left: -7mm;
-    }
-    }
-    ol li {
-        position: absolute;
-        width: calc(#{$footnote-margin-width} - 40px);
+  ol {
+    padding: 0;
+    margin: 0;
+    list-style-position: inside;
+  }
 
-        p {
-            margin-top: 0px;
-        }
-    }
+  ol li {
+    position: absolute;
+    width: calc(#{$footnote-margin-width} - 15px);
+    margin: 0;
 
-    hr {
-        display: none;
+    p {
+      margin-top: -1.4rem;
+      padding-left: 1.5em;
     }
+  }
+
+  hr {
+    display: none;
+  }
 }
 
 .book-columns pre {
-    overflow: hidden
+  overflow: hidden;
 }
 
 @media print {
+  /* Use A4 paper in landscape orientation */
+  @page {
+    size: A4;
+    margin-top: 30mm;
+    margin-bottom: 30mm;
+    margin-left: 15mm;
+    margin-right: 15mm;
+  }
 
-    /* Use A4 paper in landscape orientation */
-    @page {
-        size: A4;
-        margin-top: 30mm;
-        margin-bottom: 30mm;
+  @page: left {
+    @bottom-left {
+      content: counter(page);
     }
 
-    @page: left {
-        margin-left: 15mm;
-        margin-right: $footnote-margin-width;
+    @top-center {
+      content: string(title);
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+  }
 
-        @bottom-left {
-            content: counter(page);
-        }
-
-        @top-center {
-            content: string(title);
-            text-transform: uppercase;
-            font-size: 9px;
-        }
+  @page: right {
+    @bottom-right {
+      content: counter(page);
     }
 
-    @page: right {
-        margin-left: $footnote-margin-width;
-        margin-right: 15mm;
+    @top-center {
+      content: string(subtitle);
+      text-transform: uppercase;
+      font-size: 9px;
+    }
+  }
 
-        @bottom-right {
-            content: counter(page);
-        }
+  /* Grid layout for article.markdown */
+  article.markdown {
+    display: grid;
 
-        @top-center {
-            content: string(subtitle);
-            text-transform: uppercase;
-            font-size: 9px;
-        }
+    h2 {
+        break-before: page;
     }
 
-    h1 {
-        string-set: title content(text);
+    /* Default grid for all pages */
+    grid-template-columns: 1rem 1fr 1rem;
+
+    > * {
+      grid-column: 2;
     }
 
-    h2 .section-name {
-        string-set: subtitle content(text);
+    > .paged-footnotes {
+      grid-row: 1;
     }
 
-    .chapter-number {
-        margin-bottom: 0;
-        margin-top: 4em !important;
+    /* Right pages (odd) - footnotes on the right */
+    .pagedjs_right_page & {
+      grid-template-columns: 1rem 1fr $footnote-margin-width;
+
+      > .paged-footnotes {
+        grid-column: 3;
+        padding-left: 15px;
+      }
+
+      > .enlarge-quarter,
+      > .enlarge-half {
+        margin-right: calc(#{$footnote-margin-width} / 2);
+      }
     }
-    h1.chapter {
-        margin-bottom: 2em;
+
+    /* Left pages (even) - footnotes on the left */
+    .pagedjs_left_page & {
+      grid-template-columns: $footnote-margin-width 1fr 1rem;
+
+      > .paged-footnotes {
+        grid-column: 1;
+        padding-right: 15px;
+      }
+
+      > .enlarge-quarter,
+      > .enlarge-half {
+        margin-left: calc(#{$footnote-margin-width} / 2);
+      }
     }
+
+    > .enlarge-full,
+    > .enlarge-half,
+    > .enlarge-quarter {
+      grid-column: 1 / 4;
+    }
+  }
+
+  h1 {
+    string-set: title content(text);
+  }
+
+  h2 .section-name {
+    string-set: subtitle content(text);
+  }
+
+  .chapter-number {
+    margin-bottom: 0;
+    margin-top: 4em !important;
+  }
+  h1.chapter {
+    margin-bottom: 2em;
+  }
 }

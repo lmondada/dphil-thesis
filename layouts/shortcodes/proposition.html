@@ -1,12 +1,27 @@
-{{ $title := .Get "title" | markdownify }} {{ $number := .Get "number" | default
-"" }}
-<div class="proposition-block enlarge-14">
-    <div class="proposition-header">
-        <span class="proposition-label"
-            >Proposition{{ if $number }} {{ $number }}{{ end }}</span
-        >
-        {{ if $title }}<span class="proposition-title">{{ $title }}</span>{{ end
-        }}
-    </div>
-    <div class="proposition-content">{{ .InnerDeindent | markdownify }}</div>
+{{- $title := .Get "title" | markdownify -}}
+{{- $id := .Get "id" -}}
+
+{{ if not (.Page.Parent.Store.Get "proposition_counter") }}
+    {{ .Page.Parent.Store.Set "proposition_counter" 0 }}
+{{ end }}
+
+{{ if not (.Site.Store.Get "proposition_map") }}
+    {{ .Site.Store.Set "proposition_map" dict }}
+{{ end }}
+
+{{ .Page.Parent.Store.Add "proposition_counter" 1 }}
+{{ $counter := .Page.Parent.Store.Get "proposition_counter" }}
+{{ $chapternb := index (findRESubmatch `^0*(\d+)` .Page.File.Dir) 0 1 }}
+{{ $propositionNumber := printf "%s.%d" $chapternb $counter }}
+
+{{ if $id }}
+    {{ .Site.Store.SetInMap "proposition_map" $id $propositionNumber }}
+{{ end }}
+
+<div class="proposition-block enlarge-quarter"{{ if $id }} id="{{ $id }}"{{ end }}>
+<div class="proposition-header">
+<span class="proposition-label">Proposition {{ $propositionNumber }}</span>
+{{- if $title -}}<span class="proposition-title">{{ $title }}</span>{{- end -}}
+</div>
+<div class="proposition-content">{{ .InnerDeindent | markdownify }}</div>
 </div>

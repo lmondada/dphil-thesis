@@ -1,5 +1,13 @@
 {{- $otherClass := .Get "class" -}}
-{{- $figureBgClass := cond (.Get "nobg") "" "figure-bg enlarge-14" -}}
+{{- $enlarge := .Get "enlarge" -}}
+{{- $figureBgClass := "" -}}
+{{- if not (.Get "nobg") -}}
+  {{- $figureBgClass = "figure-bg" -}}
+  {{- if $enlarge -}}
+    {{- $figureBgClass = printf "%s enlarge-%s" $figureBgClass $enlarge -}}
+  {{- end -}}
+{{- end -}}
+
 <figure{{ if or $otherClass $figureBgClass }} class="{{ $otherClass }} {{ $figureBgClass }}"{{ end }}>
   <div class="figure-div"
     {{- with .Get "width" }} style="width: {{ . }};"{{ end -}}

@@ -1,12 +1,26 @@
-{{ $title := .Get "title" | markdownify }} {{ $number := .Get "number" | default
-"" }}
-<div class="definition-block enlarge-14">
-    <div class="definition-header">
-        <span class="definition-label"
-            >Definition{{ if $number }} {{ $number }}{{ end }}</span
-        >
-        {{ if $title }}<span class="definition-title">{{ $title }}</span>{{ end
-        }}
-    </div>
-    <div class="definition-content">{{ .Inner | markdownify }}</div>
+{{- $title := .Get "title" | markdownify -}}
+{{- $id := .Get "id" -}}
+
+{{ if not (.Page.Parent.Store.Get "definition_counter") }}
+    {{ .Page.Parent.Store.Set "definition_counter" 0 }}
+{{ end }}
+
+{{ if not (.Site.Store.Get "definition_map") }}
+    {{ .Site.Store.Set "definition_map" dict }}
+{{ end }}
+
+{{ .Page.Parent.Store.Add "definition_counter" 1 }}
+{{ $counter := .Page.Parent.Store.Get "definition_counter" }}
+{{ $chapternb := index (findRESubmatch `^0*(\d+)` .Page.File.Dir) 0 1 }}
+{{ $definitionNumber := printf "%s.%d" $chapternb $counter }}
+{{ .Site.Store.SetInMap "definition_map" $id $definitionNumber }}
+
+<div class="definition-block enlarge-quarter" id="{{ $id }}">
+<div class="definition-header">
+    <span class="definition-label">Definition {{ $definitionNumber }}</span>
+    {{- if $title -}}<span class="definition-title">{{- $title -}}</span>{{- end -}}
+</div>
+<div class="definition-content">
+    {{ .Inner | safeHTML }}
+</div>
 </div>

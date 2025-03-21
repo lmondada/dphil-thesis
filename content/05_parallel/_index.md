@@ -38,14 +38,14 @@ as applications require it.
 This means the data structure and algorithms we present applies directly to minIR graphs,
 but also more broadly to most instances of graph rewriting.
 
-{{< definition number="5.1" >}}
+{{% definition id="def-rewrite" %}}
 A rewrite $r$ on a graph $G = (V, E)$ is given by a tuple $r = (G_R, V^-, \mu)$,
 with
 - $G_R = (V_R, E_R)$ is a graph called the replacement graph,
 - $V^- \subseteq V$ is the vertex deletion set, and
 - $\mu: V^- \rightharpoonup V_R$ is the _gluing relation_, a partial function
 that maps a subset of the deleted vertices of $G$ to vertices in the replacement graph.
-{{< /definition >}}
+{{% /definition %}}
 
 We will write $Dom(\mu)$ and $Im(\mu)$ for the domain and image of $\mu$, respectively.
 

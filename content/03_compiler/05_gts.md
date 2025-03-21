@@ -46,7 +46,7 @@ Using interface morphisms, we can define transformation rules on minIR in the
 familiar way, using pairs of morphisms with domain $G_I$, also known as
 [_spans_](https://ncatlab.org/nlab/show/span#in_category_theory):
 
-{{< definition title="MinIR transformation rule" >}}
+{{% definition title="MinIR transformation rule" id="minirtransfo" %}}
 Let $G_I, G_L$ and $G_R$ be minIR graphs that implement interfaces $I, I_L$ and
 $I_R$ respectively.
 
@@ -55,7 +55,7 @@ two IO preserving interface morphisms
 $\varphi_L: G_I \to G_L$ and $\varphi_R: G_I \to G_R$
 such that $\varphi_L$ is def-injective and $G_R$ is use-injective.
 We write the transformation rule as $G_L \leftarrow G_I \rightarrow G_R$.
-{{< /definition >}}
+{{% /definition %}}
 
 A transformation rule along with an interface morphism of $G_L$ into a minIR graph
 $G$ defines a rewrite on $G$:
@@ -71,18 +71,18 @@ Then we have that the interface $I_R \triangleright I_H$.
 
 _Corollary:_ Let $B$ be the boundary values of $\varphi(G_L)$ and let
 $$O_B = \{o \in \varphi(O_L) \mid v \in B\textrm{ for all }v \in \mathit{def}\,(o) \cup use(o)\}.$$
-It follows by Proposition 3.2 that
+It follows by {{% refproposition "prop-fullrewrite" %}} that
 there is $G_R'$ and $\mu'$ such that the graph $r_\varphi(G)$ obtained from the rewrite
 $$r_\varphi = (G_R', \varphi(V_L), O_B, \mu')$$
 is a valid minIR graph.
 {{< /proposition >}}
 
-Note that proposition 3.2 and its proof give an explicit construction for
+Note that {{% refproposition "prop-fullrewrite" %}} and its proof give an explicit construction for
 $r_\varphi$ and $r_\varphi(G)$ that we do not repeat here.
 
 {{% proof %}}
 The second half of the statement (under "corollary") follows directly from
-Proposition 3.2. All that remains to be shown is $I_R \triangleright I_H.$
+{{% refproposition "prop-fullrewrite" %}}. All that remains to be shown is $I_R \triangleright I_H.$
 
 Let $\varphi_L: G_I \to G_L$ and $\varphi_R: G_I \to G_R$ be the interface
 morphisms that make up the transformation rule.
@@ -120,7 +120,7 @@ map $\varphi_R$ on the
 image $\varphi_R(U)$ and the map $$\rho_U^{(L)}: \mathrm{Idx}(U) \to \mathrm{Idx}(U_L)$$
 is obtained from the restriction of $\varphi \circ \varphi_L$ to the domain $U$.
 Defining $\rho_U = \rho_U^{(L)} \circ \rho_U^{(R)}$ gives us a pair of index
-maps $(\rho_D, \rho_U)$ that satisfy Definition ?? and hence we conclude that
+maps $(\rho_D, \rho_U)$ that satisfy {{% refdefinition "def-interface" %}} and hence we conclude that
 $I_R \triangleright I_H$.
 {{% /proof %}}
 
@@ -134,6 +134,7 @@ some of the edge cases where DPO and our minIR rewriting formalism differ:
 **Implicit edge removal.**&emsp;
 A DPO transformation is not defined when there is an edge in $G$ that is not
 in the image of $\varphi$: $$e \in E(G) \smallsetminus \varphi(E_L)$$
+
 but has an endpoint $v \in e$ such that $v \in \varphi(V_L \smallsetminus \varphi_L(V_I)),$
 i.e. that is in the image of $\varphi$ but not in the image of $\varphi \circ \varphi_L$.
 In minIR graphs, this corresponds to the case of a boundary value $v \in B \subseteq G$
@@ -200,7 +201,7 @@ if the map $\varphi$ that is obtained from the restrictions of
 $\overline{\varphi}_V$ and $\overline{\varphi}_O$ to their respective domains of definition
 define a valid interface morphism.
 
-{{< definition title="Equivalence class" number="3.6" >}}
+{{% definition title="Equivalence class" id="minireqclass" %}}
 Let $G_I$ be a minIR graph that implements an interface $I$.
 An equivalence class of graphs $\mathcal E$ is a set of partial interface morphisms
 $$\mathcal E = \{\overline{\varphi}_\alpha: G_I \to G_\alpha\mid \alpha \in \mathcal A\}$$
@@ -216,7 +217,7 @@ $$\begin{aligned}V_J &\subseteq dom((\overline{\varphi}_L)_V) \cap dom((\overlin
 and such that the restrictions $\varphi_L$ and $\varphi_R$
 of $\overline{\varphi}_L$ and $\overline{\varphi}_R$ to the subgraph $G_J$
 define interface morphisms and are respectively def-injective and use-injective.
-{{< /definition >}}
+{{% /definition %}}
 
 The following example illustrates a set of equivalent minIR graphs that
 a minIR equivalence class could capture.

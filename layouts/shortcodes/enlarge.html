@@ -1,0 +1,8 @@
+{{ $size := .Get 0 }}
+{{ if not (or (eq $size "full") (eq $size "half") (eq $size "quarter")) }}
+    {{ errorf "Enlarge shortcode size parameter must be one of: full, half, quarter. Got: %s" $size }}
+{{ end }}
+
+<div class="enlarge-{{ $size }}">
+{{ .Inner | safeHTML }}
+</div> 

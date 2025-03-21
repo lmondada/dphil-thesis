@@ -72,7 +72,7 @@ It creates a hierarchy on the set of operations that we will use below to struct
 The right harpoon arrow $f: A \rightharpoonup B$ denotes a partial function from $A$ to
 $B$, i.e. with a domain of definition $dom(f) \subseteq A$.
 
-{{% definition title="MinIR Graph" number="3.1" %}}
+{{% definition title="MinIR Graph" id="minirdef" %}}
 A minIR graph $(V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$
 is given by a set of values $V$, a subset of which are linear $V_L \subseteq V$, and a set of operations $O$,
 along with the (partial) functions
@@ -85,6 +85,7 @@ $$\begin{cases}o \preccurlyeq o' &\textrm{if }o \leadsto o'\\ o \preccurlyeq o' 
 is a partial order.
 - for all $o, o' \in dom(\mathit{parent}\,)$ such that $o \sim o'$, $\ \mathit{parent}\,(o) = \mathit{parent}\,(o')$.
 {{% /definition %}}
+
 In the context of minIR, $\leadsto$ relations encode the data flow of values
 across the computation. The $\sim$ equivalence relation, which we will call
 the _usedef_ relation, groups values that are connected
@@ -108,7 +109,7 @@ We can define for all operations $o \in O$
 $$region(o) = \begin{cases}r & \textrm{if there exists } o' \in dom(parent) \\& \textrm{ with }o \sim o' \textrm{ and }parent(o') = r,\\ \mathit{root} & \textrm{otherwise,}\end{cases}$$
 
 where $root$ is a new symbol disjoint from $O$.
-The $region$ function is well-defined by the fourth constraint in Definition 3.?.
+The $region$ function is well-defined by the fourth constraint in {{% refdefinition "minirdef" %}}.
 We call $region(o)$ the parent of $o$.
 With the acyclicity constraint of minIR graphs, this defines
 a tree structure rooted in $root$ on the set $O \cup \{root\}$ and a hierarchy of regions.
@@ -177,7 +178,7 @@ This is a both simple and versatile approach to control flow that can be used
 to express any higher level language constructs.
 Unfortunately, conditional branching combined with linear values is a toxic brew.
 
-While linearity, as defined in Definition 3.1, is a simple constraint to impose on
+While linearity, as defined in {{% refdefinition "minirdef" %}}, is a simple constraint to impose on
 our IR in the absence of conditional
 branching, the constraint
 would have to be relaxed to allow for a single use _in each mutually exclusive
@@ -189,7 +190,7 @@ b := h(a)
 <else>    d := h(b)
 ```
 This is a much harder invariant to check on the IR: linearity would no longer be
-enforceable as a syntactic constraint on the minIR graph as in Definition 3.?,
+enforceable as a syntactic constraint on the minIR graph as in {{% refdefinition "minirdef" %}},
 but would instead depend on the semantics of the operations to establish
 mutual exclusivity of control flow[^nophinodes].
 Forbidding arbitrary branching in minIR and resorting instead to
@@ -226,6 +227,7 @@ Using curly bracket scopes to define the nested region
 of a `regiondef`, we can easily describe a minIR program
 in a textual form:
 
+{{% enlarge "half" %}}
 ```python {linenos=inline}
 main := regiondef {
     q0, q1 := in()
@@ -249,10 +251,13 @@ main := regiondef {
     out(q1_2, m0)
 }
 ```
+{{% /enlarge %}}
+
 It corresponds to the following minIR graph:
 {{% figure
     src="/svg/minir-graph-2.svg"
     width="70%"
+    enlarge="half"
     caption="An example minIR graph. Coloured (half) circles are SSA values, with hyperedges spanning between them and labelled with operations. Hyperedges attached to lighter half circles are value definitions, while hyperedges attached to the darker half circles are value uses. Hierarchical dependencies are indicated by dashed arrows; the dashed rectangles are the equivalence classes of $\sim$, i.e. the regions. The value colours refer to their types, see below."
 %}}
 
@@ -264,6 +269,7 @@ we obtain a more familiar representation:
 {{% figure
     src="/svg/minir-graph.svg"
     width="70%"
+    enlarge="half"
     caption="An equivalent representation of the computation above, now representing operations as boxes and values as wires. Arrow direction indicates the flow from value definition to value use(s). Dashed arrows have been changed to point to regions instead of individual operations."
 %}}
 The two representations are equivalent, but the rewriting semantics are clearest when viewing
@@ -285,9 +291,11 @@ of the original edges.
 We extend this definition to the case of minIR graphs by also imposing preservation
 of the $parent$ relation.
 The map $\mathit{children}: O \to \mathcal{P}(O)$ refers to all
-children $$\{o' \in O \mid parent(o') = o\}$$ of an operation $o \in O$.
+children $$\{o' \in O \mid parent(o') = o\}$$
 
-{{% definition title="MinIR graph morphism" number="3.2" %}}
+of an operation $o \in O$.
+
+{{% definition title="MinIR graph morphism" id="def-minir-morphism" %}}
 Given two minIR graphs
 $$\begin{aligned}G_1 &= (V_1, V_{L,1}, O_1, \mathit{def}_1, \mathit{use}_1, \mathit{parent}_1)\\G_2 &= (V_2, V_{L,2}, O_2, \mathit{def}_2, \mathit{use}_2, \mathit{parent}_2).\end{aligned}$$
 A graph morphism $\varphi: G_1 \to G_2$ is given by maps
@@ -324,13 +332,14 @@ A valid type system for our example minIR graph above is the following.
 {{% figure
     src="/svg/minir-graph-types.svg"
     width="100%"
+    enlarge="half"
     caption="The minIR type graph for the example above. Value vertices with the same label (and same colour) form a single vertex in the type graph. They have been split into multiple vertices in this representation for better readability. We used two types for regions differentiated by parameters within `<>`, as well as two region definition operations (`regiondefQB` and `regiondefQQ`). This distinguishes region type signatures, each with their respective nested region as well as separate `in` and `out` operations."
 %}}
 
 This type graph encodes all the structure that the example minIR graph above
 requires to be valid.
 
-{{< definition title="$\Sigma$-typed minIR graph" number="3.3" >}}
+{{% definition title="$\Sigma$-typed minIR graph" id="def-sigmatyped" %}}
 Consider a minIR graph $\Sigma$ with values $T$, linear values $T_L \subseteq T$
 and operations $\Gamma$.
 A minIR graph $G = (V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$
@@ -339,7 +348,7 @@ $type: G \to \Sigma$.
 
 We call $\Sigma$ the type system of $G$, $T$ ($T_L$) the types (linear types) of $G$ and
 $\Gamma$ the optypes of $G$.
-{{< /definition >}}
+{{% /definition %}}
 
 From here onwards, we always consider minIR graphs that are $\Sigma$-typed.
 

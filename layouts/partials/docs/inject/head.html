@@ -6,8 +6,9 @@
 {{ if isset .Site.Params "pdfgen" }}
 {{- $styles := resources.Get "paged.scss" | resources.ExecuteAsTemplate "paged.scss" . | css.Sass | resources.Minify | resources.Fingerprint }}
 <link rel="stylesheet" href="{{ $styles.RelPermalink }}" {{ template "integrity" $styles }}>
-<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+<script src="{{ "js/paged.polyfill.min.js" | relURL }}"></script>
 <script src="{{ "js/paged.js" | relURL }}"></script>
+<link href="{{ "dev/pagedjs-preview.css" | relURL }}" rel="stylesheet" type="text/css" />
 <!-- <script type="module" src="{{ "js/justify.js" | relURL }}"></script> -->
 {{ else }}
 <script src="{{ "js/footnotes.js" | relURL }}" defer></script>
