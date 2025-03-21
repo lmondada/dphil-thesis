@@ -64,7 +64,7 @@ We state a special case of this property as the following result.
 The $\subseteq$ relation on strings refers to prefix inclusion, i.e. $s \subseteq t$ if and only if $s$ is a prefix of $t$.
 [^noprobtotalorder]: The values can be ordered as usual by using the total lexicographic order on port labels of the tree.
 
-{{% proposition title="Inclusion of equal-width trees" id="prop-treeincl" %}}
+{{< proposition title="Inclusion of equal-width trees" id="prop-treeincl" >}}
 Let $G_1$ and $G_2$ be two graphs of width $w$. Let $T_1$ and $T_2$ be their respective
 dual contracted spanning trees and $(s_1, \dots, s_{2w}), (t_1, \dots, t_{2w}) \in (O^\ast)^{2w}$
 their contracted string tuples.
@@ -84,7 +84,7 @@ to to check for multiple string patterns at the same time using a prefix tree.
 An overview of this problem can be found in appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 We can thus obtain a solution for the pattern matching problem for $\ell$ patterns:
 
-{{% proposition title="Fixed anchor pattern matching" id="prop-fixedanchors" %}}
+{{< proposition title="Fixed anchor pattern matching" id="prop-fixedanchors" >}}
 Let $G$ be a graph, $P_1, \dots, P_\ell$ be patterns of width $w$ and depth $d$
 and $X \subseteq V$ be a set of $w - 1$ operations in $G$.
 Let $r_1,\dots, r_\ell$ be the root operations of the patterns $P_1, \dots, P_\ell$
@@ -142,9 +142,9 @@ the computation of all anchor set candidates, and the execution of
 the prefix string matcher for each of the trees resulting from these sets of fixed anchors.
 As `AllAnchors` must be run for every choice of root vertex $r$ in $G$,
 the runtime is thus obtained by multiplying
-i) $|G|$ with
-ii) the runtime of the prefix tree matching ({{% refproposition "prop-fixedanchors" %}}), and with
-ii) the number of anchor lists returned by `AllAnchors` ({{% refproposition "prop-nanchors" %}}):
+_i)_ $|G|$ with
+_ii)_ the runtime of the prefix tree matching ({{% refproposition "prop-fixedanchors" %}}), and with
+_iii)_ the number of anchor lists returned by `AllAnchors` ({{% refproposition "prop-nanchors" %}}):
 $$O(|G| \cdot w \cdot d \cdot C_w ),$$
 where $C_w$ is the bound for the number of anchor lists returned by `AllAnchors`.
 The result follows.
