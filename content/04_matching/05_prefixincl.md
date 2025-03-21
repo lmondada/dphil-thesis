@@ -24,7 +24,7 @@ As seen in {{< reflink "sec:treereduc" >}}, this is equivalent to the spanning t
 and the original graph, provided that we keep track of the $split$ and $contract$ weight maps.
 In a dual contracted spanning tree,
 evyer node in the tree represents an anchor operation of the spanning tree reduction.
-Per Proposition 4.5, a dual contracted spanning tree is a ternary tree and has
+Per {{% refproposition "prop-contractedspanningtree" %}}, a dual contracted spanning tree is a ternary tree and has
 exactly $width(G) - 1$ nodes.
 
 #### Reduction of tree inclusion to string prefix matching
@@ -53,7 +53,7 @@ It is easy to derive from this inclusion definition and the definition of tree c
 there is an inclusion relation between two dual trees of spanning tree reductions
 if and only if the same relation holds between their contracted versions.
 
-Using Proposition 4.2, there are at most 2 open values for each linear path in the graph,
+Using {{% refproposition "prop-widthbound" %}}, there are at most 2 open values for each linear path in the graph,
 and thus at most $2 \cdot w$ open values in a dual contracted spanning tree of a graph of width $w$.
 For each contracted dual tree, we can thus define a _contracted string tuple_ $(s_1, \dots, s_{2w}) \in (O^\ast)^{2w}$
 given by the values of the $contract$ map evaluated in the (up to) $2w$ open values[^noprobtotalorder].
@@ -64,7 +64,7 @@ We state a special case of this property as the following result.
 The $\subseteq$ relation on strings refers to prefix inclusion, i.e. $s \subseteq t$ if and only if $s$ is a prefix of $t$.
 [^noprobtotalorder]: The values can be ordered as usual by using the total lexicographic order on port labels of the tree.
 
-{{< proposition title="Inclusion of equal-width trees" number="4.13" >}}
+{{% proposition title="Inclusion of equal-width trees" id="prop-treeincl" %}}
 Let $G_1$ and $G_2$ be two graphs of width $w$. Let $T_1$ and $T_2$ be their respective
 dual contracted spanning trees and $(s_1, \dots, s_{2w}), (t_1, \dots, t_{2w}) \in (O^\ast)^{2w}$
 their contracted string tuples.
@@ -84,7 +84,7 @@ to to check for multiple string patterns at the same time using a prefix tree.
 An overview of this problem can be found in appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 We can thus obtain a solution for the pattern matching problem for $\ell$ patterns:
 
-{{< proposition title="Fixed anchor pattern matching" number="4.14" >}}
+{{% proposition title="Fixed anchor pattern matching" id="prop-fixedanchors" %}}
 Let $G$ be a graph, $P_1, \dots, P_\ell$ be patterns of width $w$ and depth $d$
 and $X \subseteq V$ be a set of $w - 1$ operations in $G$.
 Let $r_1,\dots, r_\ell$ be the root operations of the patterns $P_1, \dots, P_\ell$
@@ -104,7 +104,7 @@ a multi-dimensional prefix tree for each group of patterns that share the same s
 Given a graph $G$, we can compute the spanning tree reduction $T_G$ of $G$ for anchors $X$ and map
 it to the corresponding prefix tree. This can be done in $O(|T_G|)$ time by using a search tree.
 We can restrict $T_G$ to a graph of size $O(w \cdot d)$ by truncating
-the linear paths to at most $2d$ length, as in the proof of Proposition 4.12.
+the linear paths to at most $2d$ length, as in the proof of {{% refproposition "prop-allanchors" %}}.
 Thus we can assume $|T_G| \in O(w \cdot d)$.
 
 The rest of the proof and the runtime follows from the multi-dimensional prefix tree construction
@@ -112,8 +112,9 @@ detailed in appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 {{% /proof %}}
 
 #### Combining everything
-Finally, putting Proposition 4.14 and 4.12 together, we obtain our main result.
-{{% proposition title="Pattern matching" number="4.15" %}}
+Finally, putting {{% refproposition "prop-fixedanchors" %}} 
+and {{% refproposition "prop-allanchors" %}} together, we obtain our main result.
+{{% proposition title="Pattern matching" id="prop-main" %}}
   Let $P_1, \dots, P_\ell$ be patterns with width $w$
   and depth $d$.
   The pre-computation runs in time and space complexity
@@ -130,8 +131,8 @@ Finally, putting Proposition 4.14 and 4.12 together, we obtain our main result.
 {{% proof %}}
 The pre-computation consists of running the `CanonicalAnchors` procedure on
 each of the $\ell$ patterns and then transforming them into a map of prefix trees
-using Proposition 4.14.
-By proposition 4.7, `CanonicalAnchors` runs in $O(w\cdot d)$ for each pattern, where
+using {{% refproposition "prop-fixedanchors" %}}.
+By {{% refproposition "prop-canonical-correctness" %}}, `CanonicalAnchors` runs in $O(w\cdot d)$ for each pattern, where
 we used that $|P_i| \leqslant w \cdot d$ for all patterns.
 The total runtime of prefix construction is thus
 $$O \left( (d\cdot \ell)^w \cdot \ell + \ell \cdot w \cdot d \right).$$
@@ -142,8 +143,8 @@ the prefix string matcher for each of the trees resulting from these sets of fix
 As `AllAnchors` must be run for every choice of root vertex $r$ in $G$,
 the runtime is thus obtained by multiplying
 i) $|G|$ with
-ii) the runtime of the prefix tree matching (Proposition 4.14), and with
-ii) the number of anchor lists returned by `AllAnchors` (Proposition 4.11):
+ii) the runtime of the prefix tree matching ({{% refproposition "prop-fixedanchors" %}}), and with
+ii) the number of anchor lists returned by `AllAnchors` ({{% refproposition "prop-nanchors" %}}):
 $$O(|G| \cdot w \cdot d \cdot C_w ),$$
 where $C_w$ is the bound for the number of anchor lists returned by `AllAnchors`.
 The result follows.

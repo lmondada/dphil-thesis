@@ -60,7 +60,7 @@ According to proposition 3.2, a condition for subgraph $S$ to be outlined
 is that the embedding $L' \hookrightarrow G$ be _convex_.
 In this chapter we weaken this requirement and propose a condition based
 on graph width:
-{{< proposition title="Necessary condition for convexity" number="4.1" >}}
+{{< proposition title="Necessary condition for convexity" id="prop-convexity" >}}
 If an embedding $\varphi: P \to G$ of a pattern $P$ into a minIR graph $G$ with linear
 types is convex, then
 for every subgraph $H \subseteq G$
@@ -153,7 +153,7 @@ Define an _open_ value as a value with a missing use or define operation (i.e.
 an open value can never be part of a valid minIR graph, but will be found in
 pattern graphs).
 Using these assumptions we can obtain the following notable bound on graph width.
-{{< proposition title="Bound on graph width" number="4.2" >}}
+{{< proposition title="Bound on graph width" id="prop-widthbound" >}}
 Let $G$ be a graph with $n_\textrm{odd}$ operations of odd degree
 and $n_\omega$ open values.
 Then the graph width of $G$ is $width(G) = \lfloor(n_\textrm{odd} + n_\omega) / 2\rfloor$.

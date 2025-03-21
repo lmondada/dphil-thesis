@@ -7,7 +7,8 @@ slug = "sec:canonical"
 
 The reduction of graph matching to ternary trees from the previous section
 is a big step towards an algorithm for graph matching.
-However, proposition 4.6 is expressed in terms of _existence_ of spanning
+However, {{% refproposition "prop-tree-patternmatching" %}}
+is expressed in terms of _existence_ of spanning
 trees---it is as yet unclear how the trees can be constructed.
 This is the purpose of this section.
 
@@ -65,7 +66,7 @@ have their standard meanings.
 [^sortkey]: The `sort_key` parameter of the `sort` function defines the total
 order according to which the elements are sorted, from smallest to largest.
 
-{{% proposition title="Correctness of `CanonicalSpanningTree`" number="4.7" %}}
+{{% proposition title="Correctness of `CanonicalSpanningTree`" id="prop-canonical-correctness" %}}
 For a graph $G$, the graph returned by `CanonicalSpanningTree(G)`
 is a valid spanning tree reduction of $G$.
 It is deterministic and invariant under isomorphism of $G$.
@@ -74,7 +75,7 @@ where $|G|$ is the number of operations in the graph $G$.
 {{% /proposition %}}
 {{% proof %}}
 _Valid spanning tree reduction._
-From the discussion in the proof of 4.3,
+From the discussion in the proof of {{% refproposition "prop-treereduction" %}},
 we know it is sufficient to show that the linear path
 interaction graph $I$ of the returned
 graph $G_T$ is acyclic and connected.

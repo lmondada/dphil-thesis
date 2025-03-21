@@ -71,7 +71,7 @@ no visited operation remains in `G`.
 As a consequence, `CanonicalAnchors` may be called on disconnected graphs,
 which explains the additional call to `ConnectedComponent` on line 4.
 
-{{% proposition title="Equivalence of `CanonicalSpanningTree` and `CanonicalAnchors`" number="4.8" %}}
+{{% proposition title="Equivalence of `CanonicalSpanningTree` and `CanonicalAnchors`" id="prop-tree-equiv" %}}
 Let $G$ be a connected graph and let $X$ be the anchors of its canonical spanning tree reduction
 `CanonicalSpanningTree(G)`.
 Then `CanonicalAnchors(G, root, seen_paths={})` returns $X$, the set of
@@ -93,7 +93,7 @@ For the following proposition we introduce a $\subseteq$ relation on dual trees 
 $T_H \subseteq T_G$ if the trees share the same root operation $r$, $T_H$ is
 a subtree of $T_G$ up to isomorphism, and their types as well as the $split$ map
 coincide on the common subtree.
-{{% proposition title="Maximal spanning tree reductions" number="4.9" %}}
+{{% proposition title="Maximal spanning tree reductions" id="prop-maxspanningtree" %}}
 Let $G$ be a connected graph, $X$ a set of operations in $G$ and $r \in X$
 a root operation. Let
 $$\mathcal{G}_X = \{H \subseteq G \mid \textrm{anchors}(H, r) = X\},$$
@@ -192,7 +192,7 @@ for every possible subgraph of $G$, it is sufficient to proceed as follows:
 In other words, if `AllAnchors` is a procedure that enumerates all possible
 sets of anchors $X$ in $G$
 and `MaximalSpanningTree` computes the maximal spanning tree as presented in the
-proof of Proposition 4.9, then
+proof of {{% refproposition "prop-maxspanningtree" %}}, then
 `AllSpanningTrees(G)` can simply be obtained by
 calling `AllAnchors` and then returning their
 respective maximal spanning tree reductions in $G$:
@@ -262,13 +262,13 @@ def AllAnchors(
 ```
 
 The part of the pseudocode that is uncommented is unchanged
-from `CanonicalAnchors`. Using Proposition 4.4, we know that
+from `CanonicalAnchors`. Using {{% refproposition "prop-dualspanningtree" %}}, we know that
 we can assume that every operation has at most 3 children, and thus
 3 neighbours in `G`, given that the operations equivalent to parent nodes
 were removed.
 
 
-{{< proposition title="Correctness of AllAnchors" number="4.10" >}}
+{{< proposition title="Correctness of AllAnchors" id="prop-allanchors-correctness" >}}
 Let $G$ be a graph and $H \subseteq G$ be a subgraph of $G$ of width $w$.
 Let $r$ be a choice of root operation in $H$. We have
 `CanonicalAnchors(H, r, {})` $\in$ `AllAnchors(G, r, w, {})`.
@@ -357,7 +357,7 @@ we conclude that the induction hypothesis holds for $w$.
 We will see that the overall runtime complexity of `AllAnchors` can be easily
 derived from a bound on the size of the returned list.
 For this we use the following result:
-{{% proposition title="Number of anchor sets in `AllAnchors`" number="4.11" %}}
+{{% proposition title="Number of anchor sets in `AllAnchors`" id="prop-nanchors" %}}
   For a graph $G$, a root operation $r$ in $G$ and $1 \leq w \leq width(G)$,
   the length of the list `AllAnchors`$(G, r, w)$ is in
   $O(c^w \cdot w^{-3/2})$, where $c = 6.75$ is a constant.
@@ -403,7 +403,7 @@ We can thus equivalently call `AllAnchors` on a subgraph of $G$ such that
 no linear path is longer than $2d$.
 We thus obtain the following runtime.
 
-{{< proposition title="Runtime of `AllAnchors`" number="4.12" >}}
+{{< proposition title="Runtime of `AllAnchors`" id="prop-allanchors" >}}
 For patterns with at most width $w$ and depth $d$,
 the total runtime of `AllAnchors` is in
 $$O\left(\frac{c^w \cdot d}{w^{1/2}}\right).$$
@@ -415,7 +415,7 @@ operations on the linear path in each direction, starting at the anchor operatio
 operations more than distance $d$ away
 from the anchor cannot be part of a pattern of depth $d$.
 
-We use the bound on the length of the list returned by calls to `AllAnchors` of Proposition 4.11
+We use the bound on the length of the list returned by calls to `AllAnchors` of {{% refproposition "prop-nanchors" %}}
 to bound the runtime.
 We can ignore the non-constant runtime of the concatenation of the outputs of recursive calls
 on line 35,
