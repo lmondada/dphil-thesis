@@ -1,0 +1,14 @@
+{{- $ratio := (split (.Get "ratio") ":") -}}
+{{- $enlarge := .Get "enlarge" -}}
+{{- $columnsClass := "book-columns flex flex-wrap" -}}
+{{- if $enlarge -}}
+  {{- $columnsClass = printf "%s enlarge-%s" $columnsClass $enlarge -}}
+{{- end -}}
+<div class="{{ $columnsClass }}{{ with .Get "class" }} {{ . }}{{ end }}">
+{{ range $index, $content := split .InnerDeindent "<--->" }}
+  {{- $grow := default 1 (index $ratio $index) -}}
+  <div class="flex-even markdown-inner" style="flex-grow: {{ $grow }};">
+    {{ $content | safeHTML }}
+  </div>
+{{ end }}
+</div>

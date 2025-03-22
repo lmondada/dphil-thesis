@@ -30,7 +30,8 @@ The other operations, i.e. those on two linear paths that have already been
 visited, are split, resulting in two operations on a single linear path.
 The following pseudocode implements this algorithm.
 
-```python {.numbered}
+{{% enlarge "full" %}}
+```python {linenos=inline}
 def CanonicalSpanningTree(G: Graph, root: Operation) -> Graph:
   new_G := G
   all_operations := Operations(G)
@@ -53,6 +54,8 @@ def CanonicalSpanningTree(G: Graph, root: Operation) -> Graph:
         seen_paths = union(seen_paths, op_linear_paths)
   return new_G
 ```
+{{% /enlarge %}}
+
 We used `Operations(G)` to retrieve all the operations
 on the graph `G`; `LinearPaths(G, op)` to retrieve the indices of the
 linear paths of the operation `op`, which can be pre-computed, numbered
@@ -145,7 +148,7 @@ then, given a graph $G$, we can find all embeddings of patterns into $G$
 by iterating over all possible spanning trees within $G$.
 Naively, this involves enumerating all posible subgraphs of $G$, and then
 for each of them, iterating over all possible root choices.
-{{% columns ratio="1:1" %}}
+{{% columns ratio="1:1" enlarge="full" %}} 
 **Naive pattern matching.**
 ```python
 # Precompute all spanning trees

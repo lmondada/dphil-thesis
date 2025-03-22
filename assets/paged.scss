@@ -151,3 +151,8 @@ div.footnotes {
     margin-bottom: 2em;
   }
 }
+
+//// Fixing page breaks
+div.proposition-header {
+    break-after: avoid;
+}

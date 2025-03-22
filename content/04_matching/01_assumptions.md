@@ -7,7 +7,9 @@ slug = "sec:simplifying-assumptions"
 #### Linear paths and operation splitting
 For every operation type $o \in \Gamma$ in the type system $\Sigma$ of the minIR graphs,
 let us fix a partition of the edge endpoints $P_o = def(o) \cup use(o)$ (viewed as multiset)
-into disjoint pairs $$P_o = \{p_1, p_1'\} \,\cup\, \{p_2, p_2'\} \,\cup\, \cdots,$$ where the last set of the
+into disjoint pairs
+$$P_o = \{p_1, p_1'\} \,\cup\, \{p_2, p_2'\} \,\cup\, \cdots,$$
+where the last set of the
 partition may be a singleton if $|P_o|$ is odd.
 For every $o$ we can then define $f = \lceil |P_o| / 2 \rceil$ _split operations_ $o_1, \dots, o_f$ such that
 the the $i$-th operation $o_i$ has endpoints $p_i$ and $p_i'$ in $P_o$.
@@ -16,6 +18,7 @@ $f$ operations of types $o_1, \dots, o_f$ as _operation splitting_.
 {{< figure
     src="svg/operation-split.svg"
     alt="Operation splitting"
+    enlarge="quarter"
     caption="Splitting an operation with 3 uses and 2 defines. The choice of endpoint partition made here, obtained by pairing the $i$-th use with the $i$-th define, is arbitrary, although often a \"natural\" choice."
     width="50%"
 >}}
@@ -125,6 +128,7 @@ each on two linear paths as follows:
 {{< figure
     src="svg/gate-decomp.svg"
     alt="Gate decomposition"
+    enlarge="quarter"
     caption="Expressing an operation on $\Delta = 3$ linear paths as a composition of two operations on 2 linear paths." width="70%">}}
 
 This transformation leaves graph width unchanged but may multiply the
