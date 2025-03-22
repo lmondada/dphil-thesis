@@ -11,7 +11,9 @@ subtree relation, for many trees representing the set of all patterns we wish to
 More precisely, for patterns $P_1, \dots, P_\ell$ with width $w$, fix a root operation $r_i$ in $P_i$ for each $1 \leqslant i \leqslant \ell$
 and consider the tree dual of the spanning tree reduction of the patterns $T_{P_1}, \dots, T_{P_\ell}$.
 We wish to compute the set
+
 $$\{1 \leqslant i \leqslant \ell \mid T_{P_i} \subseteq T_G\},$$
+
 where $T_G$ is the tree we wish to match on.
 This corresponds to the `IsSubTree` predicate introduced in the sketch of the algorith in {{< reflink "sec:canonical" >}}.
 In our use case, the tree $T_G$ is obtained from the subject graph $G$ that
