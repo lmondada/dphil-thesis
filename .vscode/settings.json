@@ -1,4 +1,7 @@
 {
-    "editor.minimap.enabled": false,
-    "prettier.proseWrap": "always",
+  "editor.minimap.enabled": false,
+  "prettier.proseWrap": "always",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false
 }
