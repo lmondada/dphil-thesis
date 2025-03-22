@@ -163,11 +163,13 @@ labels of the operations traversed, which we order using the lexicographical
 ordering on strings. Given a root value $r$, for every value $v$ in $G$ there is
 thus a unique smallest path from $r$ to $v$ in $G$[^thisisdfs]. This path is
 invariant under isomoprhism of the underlying graph (i.e. relabelling of the
-values and operations, but preserving the port labels). [^thisisdfs]: Remark
-that the ordering of the operations thus defined is a particular case of a
-depth-first search (DFS) ordering of the graph: given an operation $o$ that has
-been visited, all its descendants will be visited before proceeding to any other
-operation.
+values and operations, but preserving the port labels).
+
+[^thisisdfs]:
+    Remark that the ordering of the operations thus defined is a particular case
+    of a depth-first search (DFS) ordering of the graph: given an operation $o$
+    that has been visited, all its descendants will be visited before proceeding
+    to any other operation.
 
 Define an _open_ value as a value with a missing use or define operation (i.e.
 an open value can never be part of a valid minIR graph, but will be found in

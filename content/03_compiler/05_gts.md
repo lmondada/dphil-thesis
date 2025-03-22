@@ -213,7 +213,9 @@ $$\mathcal E = \{\overline{\varphi}_\alpha: G_I \to G_\alpha\mid \alpha \in \mat
 for some collection of minIR graphs $G_\alpha$, $\alpha \in \mathcal A.$
 
 We say that a transformation rule
+
 $$G_L \overset{\varphi_L}{\longleftarrow} G_J \overset{\varphi_R}{\longrightarrow} G_R$$
+
 is _contained_ in $\mathcal E$ if there are
 $\overline{\varphi}_L, \overline{\varphi}_R \in \mathcal E$ and a minIR graph
 $G_J$ with values $V_J \subseteq V_I$ and operations $O_J \subseteq O_I$ such

@@ -400,11 +400,10 @@ $$C_w = \frac{{3w \choose w}}{2w + 1} = \Theta \left(\frac{c^w}{w^{3/2}} \right)
 satisfying the above recurrence relation with equality, where $c = 27/4 = 6.75$
 is a constant obtained from the Stirling approximation:
 
-$$
-\begin{aligned}{3w \choose w} = \frac{(3w)!}{(2w)!w!} &= \Theta\left(\frac{1}{\sqrt{w}}\right)
+<!-- prettier-ignore -->
+$$\begin{aligned}{3w \choose w} = \frac{(3w)!}{(2w)!w!} &= \Theta\left(\frac{1}{\sqrt{w}}\right)
 \Big(\frac{(3w)^3}{e^3}\Big)^{w}\Big(\frac{e^2}{(2w)^2}\Big)^{w}\Big(\frac{e}{w}\Big)^{w}\\
-&= \Theta\left(\frac{(27/4)^w}{w^{1/2}}\right).\end{aligned}
-$$
+&= \Theta\left(\frac{(27/4)^w}{w^{1/2}}\right).\end{aligned}$$
 
 <!-- prettier-ignore -->
 {{% /proof %}}

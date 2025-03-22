@@ -348,8 +348,9 @@ such that
 - $\varphi_O$ is bijective on all children sets, i.e. for all $o \in O_1$,
   $$\varphi_O|_{children(o)}: children(o) \to children(\varphi_O(o))$$ is a
   bijection.
-  <!-- prettier-ignore -->
-  {{% /definition %}}
+
+<!-- prettier-ignore -->
+{{% /definition %}}
 
 This definition would be the standard extension of graph morphisms to minIR
 graphs, if it were not for the third constraint that we impose on the
