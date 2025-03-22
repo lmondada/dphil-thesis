@@ -145,6 +145,7 @@ div.footnotes {
 
   h1 {
     string-set: title content(text);
+    grid-column: 2 / 4 !important;
   }
 
   h2 .section-name {
@@ -163,4 +164,8 @@ div.footnotes {
 //// Fixing page breaks
 div.proposition-header {
     break-after: avoid;
+}
+
+.toc {
+  break-before: right;
 }
