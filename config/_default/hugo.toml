@@ -1,6 +1,6 @@
-baseURL = 'https://example.org/'
+baseURL = 'http://localhost:1313'
 languageCode = 'en-gb'
-title = 'DPhil Thesis'
+title = "Luca Mondada's DPhil Thesis"
 theme = "hugo-book"
 timeout = "60s"
 
@@ -16,10 +16,11 @@ BookToC = false
 
   [markup.goldmark.extensions]
     katex = true
-  [markup.goldmark.extensions.bibtex]
-    enable = true
-    bibtexPath = "thesis.bib"
-  [markup.goldmark.parser]
-    [markup.goldmark.parser.attribute]
-        block = true
-        title = true
+    [markup.goldmark.extensions.bibtex]
+      enable = true
+      bibtexPath = "thesis.bib"
+  [markup.goldmark.parser.attribute]
+    block = true
+    title = true
+  [markup.goldmark.renderHooks.image]
+    enableDefault = true

@@ -45,6 +45,10 @@ div.footnotes {
   overflow: hidden;
 }
 
+.pagedjs_blank_page .pagedjs_margin-content {
+  display: none;
+}
+
 @media print {
   /* Use A4 paper in landscape orientation */
   @page {
@@ -83,9 +87,13 @@ div.footnotes {
   article.markdown {
     display: grid;
 
-    h2 {
-        break-before: page;
+    .chapter-number {
+        break-before: right;
     }
+
+    // h2 {
+    //     break-before: page;
+    // }
 
     /* Default grid for all pages */
     grid-template-columns: 1rem 1fr 1rem;

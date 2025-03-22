@@ -6,7 +6,7 @@ sort_by = "weight"
 
 # Scaling<br />Quantum Compilation<br />with<br />Graph Rewriting
 
-![Oxford logo](titlepage/oxford-logo.svg)
+![Oxford logo](/svg/oxford-logo.svg)
 {.logo}
 
 Luca Mondada

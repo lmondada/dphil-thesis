@@ -1,4 +1,5 @@
-{{ define "main" }} {{ $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 }}
+{{- define "main" -}}
+{{- $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 -}}
 
 <article class="markdown book-article">
     <p class="chapter-number">Chapter {{ $chapternb }}</p>
@@ -19,4 +20,4 @@
     {{ end }}
 </article>
 
-{{ end }}
+{{- end -}}
