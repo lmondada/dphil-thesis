@@ -94,7 +94,8 @@ article.markdown {
       margin-right: calc(#{$floating-footnotes-width} * 3 / 4);
     }
 
-    > .enlarge-half {
+    > .enlarge-half,
+    > .enlarge-full {
       margin-right: calc(#{$floating-footnotes-width} / 2);
     }
   }

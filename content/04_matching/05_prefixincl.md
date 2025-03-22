@@ -41,11 +41,13 @@ We say that $T_1 \subseteq T_2$ if and only if
 - the trees share the same root operation,
 - $T_1$ is a subtree of $T_2$,
 - their types as well as the $spilt$ map coincide on the common subtree, and
-- the $contract$ map satisfies
-$$\textrm{for all }v \in V_1: \begin{cases}
+- the $contract$ map satisfies for all $v \in V_1$: 
+$$\begin{cases}
 contract(v) \subseteq contract(f(v))\quad&\textrm{if }v\textrm{ is an open value},\\
 contract(v) = contract(f(v))\quad&\textrm{otherwise},\\
-\end{cases}$$ where $f: V_1 \hookrightarrow V_2$ designates the embedding of $V_1$ into $V_2$ given by the tree embedding.
+\end{cases}$$
+
+where $f: V_1 \hookrightarrow V_2$ designates the embedding of $V_1$ into $V_2$ given by the tree embedding.
 
 The first three conditions are equivalent to the $\subseteq$ relation introduced on non-contracted trees, whilst the
 fourth introduces an additional condition specific to contracted trees.
@@ -145,7 +147,9 @@ the runtime is thus obtained by multiplying
 _i)_ $|G|$ with
 _ii)_ the runtime of the prefix tree matching ({{% refproposition "prop-fixedanchors" %}}), and with
 _iii)_ the number of anchor lists returned by `AllAnchors` ({{% refproposition "prop-nanchors" %}}):
+
 $$O(|G| \cdot w \cdot d \cdot C_w ),$$
+
 where $C_w$ is the bound for the number of anchor lists returned by `AllAnchors`.
 The result follows.
 {{% /proof %}}

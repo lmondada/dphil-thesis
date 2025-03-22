@@ -77,7 +77,9 @@ operation in the original graph.
 Recalling that we assumed that every operation is on at most two linear paths,
 we can store the pairs of split operations that correspond to each operation
 by adding weights to (a subset of) the operations $O_T$ of the spanning tree
+
 $$split: O_T \rightharpoonup P^\ast$$
+
 that maps a split operaton $o$ to the unique path in $G_T$
 from $o$ to the other half of the split operation.
 <!-- Writing $\mathcal{G}$ for the set of graphs and
@@ -97,7 +99,9 @@ of $G$.
 We employ a similar trick as above to make this reduction reversible,
 this time by introducing weights on the _values_ of $G_C$ that store the
 string of operations that were contracted[^whystring]
+
 $$contract: V_C \rightharpoonup \Gamma_T^\ast$$
+
 where $\Gamma_{G_T}$ are the optypes of operations in $G_T$, i.e. the optypes
 of the minIR graph $G$ along with optypes for the split operations.
 This defines a second map $\sigma_2: (G_C, contract) \mapsto G_T$.

@@ -8,7 +8,9 @@ slug = "sec:simplifying-assumptions"
 For every operation type $o \in \Gamma$ in the type system $\Sigma$ of the minIR graphs,
 let us fix a partition of the edge endpoints $P_o = def(o) \cup use(o)$ (viewed as multiset)
 into disjoint pairs
+
 $$P_o = \{p_1, p_1'\} \,\cup\, \{p_2, p_2'\} \,\cup\, \cdots,$$
+
 where the last set of the
 partition may be a singleton if $|P_o|$ is odd.
 For every $o$ we can then define $f = \lceil |P_o| / 2 \rceil$ _split operations_ $o_1, \dots, o_f$ such that
