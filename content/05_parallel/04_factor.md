@@ -53,8 +53,11 @@ Naively, this search tree will contain all $n!$ orderings of partition subgraphs
 and for each $\Pi_i$ of them, all $2^n$ possible choices of rewrites---resulting
 in a search tree with $2^n \cdot n!$ leaves. If we instead detect and merge
 duplicate graphs within the search tree, this reduces to "only" $2^n$ unique
-graphs[^sameres]. [^sameres]: The same result can be obtained by simply fixing
-the ordering in which the possible rewrites are applied.
+graphs[^sameres].
+
+[^sameres]:
+    The same result can be obtained by simply fixing the ordering in which the
+    possible rewrites are applied.
 
 We can generalise this to a lower bound for the naive search tree of all graphs
 reachable within depth $\Delta$.
@@ -106,7 +109,7 @@ $\Delta$ in a GTS contains $\Omega(2^{\Delta \cdot n})$ graphs.
 <!-- prettier-ignore -->
 {{% /proposition %}}
 
-Noe that this is a very rough lower bound on the size of $T$. The subtree $T'$
+Note that this is a very rough lower bound on the size of $T$. The subtree $T'$
 does not contain any rewrites that span more than one partition subgraph; and
 even within $T'$, there are reachable graphs that are not accounted for, such as
 graphs obtained by applying a sequence of $\delta \leqslant \Delta$ overlapping
@@ -201,12 +204,15 @@ $$A_{\widetilde\Pi_i} = \left\{j \mid \textrm{there is }r\in E(T) \textrm{ that 
 
 and define $\gamma$ as an upper bound on the number of elements in the sets
 $A_{\widetilde\Pi_i}$, i.e. such that $\gamma \geqslant |A_{\widetilde\Pi_i}|$
-for all $i$ and all graphs $G'$ in $T$[^badsgamma]. [^badsgamma]: The
-construction of the coverings of graphs in $T$ is not unique and in fact leaves
-a lot of room for choices. Poor choices of coverings can be constructed, which
-will result in large values for $s$ and $\gamma$ and result in worse asymptotic
-bounds. In the _ideal_ case (similar to the naive search tree), we expect
-asymptotically that $n = \Theta(|G|)$, $s = const$ and $\gamma = const$.
+for all $i$ and all graphs $G'$ in $T$[^badsgamma].
+
+[^badsgamma]:
+    The construction of the coverings of graphs in $T$ is not unique and in fact
+    leaves a lot of room for choices. Poor choices of coverings can be
+    constructed, which will result in large values for $s$ and $\gamma$ and
+    result in worse asymptotic bounds. In the _ideal_ case (similar to the naive
+    search tree), we expect asymptotically that $n = \Theta(|G|)$, $s = const$
+    and $\gamma = const$.
 
 We will make the further assumption that all applicable rewrites within a
 covering subgraph are mutually exclusive, i.e. they modify a shared subgraph so

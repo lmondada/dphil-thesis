@@ -39,12 +39,3 @@ This is very very work in progress. Currently worth reading:
 {{< reflink "chap:basics" "chap:compiler" "chap:matching" "chap:parallel" >}}.
 {{% /hint %}}
 ---
-
-TODOs:
-- [ ] Unfinished paragraphs in chapters 2 and 3
-- [x] Citations do not render on GH Pages
-- [ ] Bottom of chapter pages, link to next chapter
-- [ ] In left-hand side menu: track reading progress by highlight the current section
-- [ ] PDF: improve font rendering (justify text?, serif?)
-- [ ] PDF: improve/control page breaks
-- [ ] PDF: no page numbers and asymmetric margins on title page

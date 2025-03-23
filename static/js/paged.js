@@ -7,9 +7,6 @@ class MyHandler extends Paged.Handler {
     // Get all footnote references on this page
     const footnoteRefs = Array.from(pageFragment.querySelectorAll("sup"));
     
-    console.log(page);
-    console.log(breakToken);
-
     // If no footnotes on this page, return
     if (footnoteRefs.length === 0) {
       return;

@@ -24,7 +24,6 @@ $o_1, \dots, o_f$ as _operation splitting_.
 {{< figure
     src="svg/operation-split.svg"
     alt="Operation splitting"
-    enlarge="quarter"
     caption="Splitting an operation with 3 uses and 2 defines. The choice of endpoint partition made here, obtained by pairing the $i$-th use with the $i$-th define, is arbitrary, although often a \"natural\" choice."
     width="50%"
 >}}
@@ -145,7 +144,6 @@ on two linear paths as follows:
 {{< figure
     src="svg/gate-decomp.svg"
     alt="Gate decomposition"
-    enlarge="quarter"
     caption="Expressing an operation on $\Delta = 3$ linear paths as a composition of two operations on 2 linear paths." width="70%">}}
 <!-- prettier-ignore-end -->
 

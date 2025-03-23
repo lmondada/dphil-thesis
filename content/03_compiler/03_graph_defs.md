@@ -218,11 +218,14 @@ enforceable as a syntactic constraint on the minIR graph as in
 the operations to establish mutual exclusivity of control flow[^nophinodes].
 Forbidding arbitrary branching in minIR and resorting instead to structured
 control flow as described above to express control flow is just as expressive
-and gives the linearity constraint a much simpler form. [^nophinodes]: You might
-be thinking "_oh, but all that is required here are phi nodes!_", if you are
-familiar with those. No---you'd also need a sort of "phi inverse". Besides, see
-[this discussion](https://mlir.llvm.org/docs/Rationale/Rationale/#block-arguments-vs-phi-nodes)
-for more arguments on why no phi nodes.
+and gives the linearity constraint a much simpler form.
+
+[^nophinodes]:
+    You might be thinking "_oh, but all that is required here are phi nodes!_",
+    if you are familiar with those. No---you'd also need a sort of "phi
+    inverse". Besides, see
+    [this discussion](https://mlir.llvm.org/docs/Rationale/Rationale/#block-arguments-vs-phi-nodes)
+    for more arguments on why no phi nodes.
 
 ### An example minIR program
 
@@ -236,18 +239,17 @@ use values invalid in their branch of control flow.
 
 The value returned by `regiondef` can then be passed as inputs to other control
 flow operations, effectively defining the same data but without nested regions
-on the control flow operation[^llvmblock]. [^llvmblock]: This is like the label
-of a block of code in LLVM IR. You can also view the value as aking to a
-function pointer, though as defined the pointer would always be a known constant
-at compile time.
+on the control flow operation[^llvmblock].
+
+[^llvmblock]:
+    This is like the label of a block of code in LLVM IR. You can also view the
+    value as aking to a function pointer, though as defined the pointer would
+    always be a known constant at compile time.
 
 As in our previous examples, the region nested within a `regiondef` always has
 an unique `in` and `out` operation corresponding to the input and output values
 of the region. Using curly bracket scopes to define the nested region of a
 `regiondef`, we can easily describe a minIR program in a textual form:
-
-<!-- prettier-ignore -->
-{{% enlarge "half" %}}
 
 ```python {linenos=inline}
 main := regiondef {
@@ -274,8 +276,6 @@ main := regiondef {
 ```
 
 <!-- prettier-ignore -->
-{{% /enlarge %}}
-
 It corresponds to the following minIR graph:
 
 <!-- prettier-ignore-start -->
@@ -372,7 +372,7 @@ example minIR graph above is the following.
 {{% figure
     src="/svg/minir-graph-types.svg"
     width="100%"
-    enlarge="half"
+    enlarge="full"
     caption="The minIR type graph for the example above. Value vertices with the same label (and same colour) form a single vertex in the type graph. They have been split into multiple vertices in this representation for better readability. We used two types for regions differentiated by parameters within `<>`, as well as two region definition operations (`regiondefQB` and `regiondefQQ`). This distinguishes region type signatures, each with their respective nested region as well as separate `in` and `out` operations."
 %}}
 <!-- prettier-ignore-end -->
@@ -425,7 +425,7 @@ To make the difference clear, compare the program representations of the
 following computation:
 
 <!-- prettier-ignore-start -->
-{{% columns ratio="4:5" %}}
+{{% columns ratio="1:1" %}}
 **Quantum circuit (pytket)[^pipinstall]**
 ```python
 import pytket as tk

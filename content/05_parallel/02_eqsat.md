@@ -15,29 +15,14 @@ Unlike a general purpose compiler utility, equality saturation is specifically a
 technique for term rewriting. Terms[^ast], are algebraic expressions represented
 as trees, in which tree nodes correspond to operations, the children of an
 operation are the subterms passed as arguments to the operation and leaf nodes
-are either constants or unbound variables [^ast]: Depending on the context,
-computer scientists also call them abstract syntax trees (AST)---it's the same
-thing.
+are either constants or unbound variables. For instance, the term
+$f(x \times 2, 3)$ would be represented as the tree:
 
-<!-- prettier-ignore-start -->
-```goat
-                      .-.
-                     | f |
-                      '+'
-                       |
-                       +
-                      / \
-                   .-.   .-.
-                  | ✱ | | 3 |       The term f(x ✱ 2, 3)
-                   '+'   '-'
-                    |
-                    +
-                   / \
-                .-.   .-.
-               | x | | 2 |
-                '-'   '-'
-```
-<!-- prettier-ignore-end -->
+[^ast]:
+    Depending on the context, computer scientists also call them abstract syntax
+    trees (AST)---for our purposes, it's the same thing.
+
+{{% figure src="svg/term.svg" nobg="true" width="30%" %}}
 
 This representation is particularly suited for any pure functional (i.e. side
 effect free) classical computation. Every node of a term is identified with a
@@ -64,52 +49,17 @@ implemented as Union-Find data structures @Galler1964 @Cormen2009. If we for
 instance applied the rewrite $x * 2 \mapsto x + x$ to the term above, we would
 obtain
 
-<!-- prettier-ignore-start -->
-```goat
-                                            .-.
-                                           | f |
-                                            '+'
-                                             |
-                                             +
-                                            / \
-                           .-.           .-.   .-.
-                          | ➕ |<------->| ✱ | | 3 |
-                           '+'           '+'   '-'
-                            |             |
-                            +             +
-                           / \           / \
-                        .-.   .-.     .-.   .-.
-                       | x | | x |   | x | | 2 |
-                        '-'   '-'     '-'   '-'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/term-eq.svg" nobg="true" width="50%" %}}
 
-This diagram encodes that any occurence of the `x * 2` term can equivalently be
-expressed by the `x + x` term. Henceforth, when matching terms for rewriting,
-both the `*` term and the `+` term are valid choices for the first argument of
-the `f` operation. Suppose for example the existence of a rewrite
+Nodes within a grey box indicate subterms that are equivalent. This diagram
+encodes that any occurence of the `x * 2` term can equivalently be expressed by
+the `x + x` term. Henceforth, when matching terms for rewriting, both the `*`
+term and the `+` term are valid choices for the first argument of the `f`
+operation. Suppose for example the existence of a rewrite
 $f(x + y, z) \mapsto f(x, y * z)$, then this would match in the above data
 structure resulting in
 
-<!-- prettier-ignore-start -->
-```goat
-                                       .-.            .-.
-                                      | f |<-------->| f |
-                                       '+'            '+'
-                                        |              |
-                                        +              +
-                                       / \            / \
-                      .-.           .-.   .-.      .-.   .-.
-                     | ➕ |<------->| ✱ | | 3 |    | x | | ✱ |
-                      '+'           '+'   '-'      '-'   '+'
-                       |             |                    |
-                       +             +                    +
-                      / \           / \                  / \
-                   .-.   .-.     .-.   .-.            .-.   .-.
-                  | x | | x |   | x | | 2 |          | x | | 3 |
-                   '-'   '-'     '-'   '-'            '-'   '-'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/term-eq-eq.svg" nobg="true" width="80%" %}}
 
 A consequence of the use of equivalence relations in the data structure is that
 the ordering in which the rewrites are considered and applied becomes totally
@@ -125,36 +75,15 @@ this is currently not the case: the term $x$ for instance, is present multiple
 times---so is $3$. As a result, the nodes no longer form a forest of trees, but
 instead a directed acyclic graphs:
 
-<!-- prettier-ignore-start -->
-```goat
-                                       .-.            .-.
-                                      | f |<-------->| f |
-                                       '+'            '+'
-                                        |              |
-                                        +              +
-                                       / \            / \
-                      .-.           .-.   \        .-.   \
-                     | ➕ |<------->| ✱ |   \      | ✱ |   |
-                      '+'           '+'     \      '+'    |
-                       |             |       \      |     |
-                       +             +        \     +     |
-                      / \           / \        \   / \    .
-                     .   \         /   .-.      .-.   .  /
-                      \   \       .   | 2 |    | 3 | /  /
-                       \   \     .+.   '-'      '-' /  /
-                        \   '---+   +--------------'  /
-                         '------+ x +----------------'
-                                 '-'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/term-eq-eq-shared.svg" nobg="true" width="80%" %}}
 
-This is commonly known as _term sharing_, or _term graphs_ @Willsey2021.
-Maintaining this invariance is not hard in practice: whenever a new term is
-about to be added by the application of a rewrite, it must first be checked
-whether the term exists already---something that can be done cheaply by keeping
-track of all hashes of existing terms. In the affirmative case, rather than
-adding a new term to the equivalence class of the matched term, the classes of
-both terms must be merged.
+This is commonly known as _term sharing_, and the resulting data structure is
+known as a _term graph_ @Willsey2021. Maintaining this invariance is not hard in
+practice: whenever a new term is about to be added by the application of a
+rewrite, it must first be checked whether the term exists already---something
+that can be done cheaply by keeping track of all hashes of existing terms. In
+the affirmative case, rather than adding a new term to the equivalence class of
+the matched term, the classes of both terms must be merged.
 
 It might be that equivalence classes must be merged recursively: given the terms
 $f(x, 3)$ and $f(y, 3)$, if the classes of $x$ and $y$ are merged (and thus $x$
@@ -168,19 +97,25 @@ that the exploration will eventually _saturate_: as rewrites are applied, there
 will come a point where all equivalent terms have been discovered, i.e. every
 applicable rewrite will correspond to an equivalence within an already known
 class, thereby not providing any new information. This marks the end of the
-exploration phase[^timeout]. [^timeout]: Of course, it is practical to also
-include a timeout parameter in implementations to guarantee timely termination
-even on large or ill-behaved systems.
+exploration phase[^timeout].
+
+[^timeout]:
+    Of course, it is practical to also include a timeout parameter in
+    implementations to guarantee timely termination even on large or ill-behaved
+    systems.
 
 Term optimisation then proceeds to the extraction phase. It is not trivial to
 read out an optimised term out of the saturated term data structure. For every
 equivalence class in the data structure, a representative node must be chosen in
 such a way that the final term, extracted recursively from the root by always
 choosing the representative node of every term class, minimises the desired cost
-function[^sharing]. [^sharing]: Note that we are omitting a subtle point here
-that arises due to term sharing: depending on the cost function, it could be
-favourable to choose different representative nodes for the same class, for the
-different occurences of the term in the computation.
+function[^sharing].
+
+[^sharing]:
+    Note that we are omitting a subtle point here that arises due to term
+    sharing: depending on the cost function, it could be favourable to choose
+    different representative nodes for the same class, for the different
+    occurences of the term in the computation.
 
 The strategy for choosing representative terms depends heavily on the cost
 function. In simple cases, such as minimising the total size of the extracted
@@ -197,7 +132,9 @@ instances @Biere2021.
 Equality saturation is a fast developing subfield of compilation sciences with a
 growing list of applications. Unfortunately for us[^thesis], adapting the ideas
 to quantum computation (and graph rewriting more generally) presents several
-unsolved challenges. [^thesis]: but fortunately for this thesis
+unsolved challenges.
+
+[^thesis]: but fortunately for this thesis
 
 The root of the problem lies in the program representation. The minIR
 representation we presented in {{< reflink "sec:graph-defs" >}}---but also the
@@ -212,31 +149,13 @@ of the computation. Consider for example the simple computation that takes two
 inputs `(x, y)` representing 2D cartesian coordinates and returns its equivalent
 in polar coordinates `(r, θ)`.
 
-<!-- prettier-ignore-start -->
-```goat
-         .----------.
-x ------>+          +------> r
-         | to_polar |
-y ------>+          +------> θ
-         '----------'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/polar.svg" nobg="true" width="50%" %}}
 
-By introducing two operations `to_polar_r` and `to_polar_theta` that compute
-`to_polar` and subsequently discard one of the two outputs, the DAG can
-equivalently be formulated as two terms
+By introducing two operations $\textit{polar}_r$ and $\textit{polar}_\theta$
+that compute $\textit{polar}$ and subsequently discard one of the two outputs,
+the DAG can equivalently be formulated as two terms
 
-<!-- prettier-ignore-start -->
-```goat
-      .--------.       .------------.
-     |to_polar_r|     |to_polar_theta|
-      '---+----'       '-----+------'
-         / \                / \
-      .-.   .-.          .-.   .-.
-     | x | | y |        | x | | y |
-      '-'   '-'          '-'   '-'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/polar-split.svg" nobg="true" width="70%" %}}
 
 corresponding to the two outputs `r` and `θ` of the computation. This involves
 temporarily duplicating some of the data and computations in the DAG---though
@@ -344,9 +263,11 @@ beyond 3 subsequent rewrites.
 
 In constrast, in the absence of clonable values, we claim that the solution
 space can only grow exponentially with rewrite depth[^superexpsmaller]. In other
-words: [^superexpsmaller]: Exponential is super-exponentially smaller than
-super-exponential! Or put mathematically
-$e^{o(n)}/e^{\Theta(n)} = e^{o(n) - \Theta(n)} = e^{o(n)}$.
+words:
+
+[^superexpsmaller]:
+    Exponential is super-exponentially smaller than super-exponential! Or put
+    mathematically $e^{o(n)}/e^{\Theta(n)} = e^{o(n) - \Theta(n)} = e^{o(n)}$.
 
 <!-- prettier-ignore -->
 {{< proposition number="5.1" >}}

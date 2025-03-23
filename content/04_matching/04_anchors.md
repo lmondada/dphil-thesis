@@ -19,7 +19,6 @@ instead of a `for` loop. This form generalises better to the `AllAnchors`
 procedure that we will introduce next to define `AllSpanningTrees`.
 
 <!-- prettier-ignore-start -->
-{{% enlarge "full" %}}
 ```python {linenos=inline}
 def CanonicalAnchors(
     G: Graph, root: Operation, seen_paths: Set[int]
@@ -49,7 +48,6 @@ def CanonicalAnchors(
 
   return (anchors, seen_paths, G)
 ```
-{{% /enlarge %}}
 <!-- prettier-ignore-end -->
 
 We introduced the self-describing `ConnectedComponent`, `Neighbours` and
@@ -200,15 +198,11 @@ tree as presented in the proof of {{% refproposition "prop-maxspanningtree" %}},
 then `AllSpanningTrees(G)` can simply be obtained by calling `AllAnchors` and
 then returning their respective maximal spanning tree reductions in $G$:
 
-<!-- prettier-ignore-start -->
-{{% enlarge "half" %}}
 ```python
 def AllSpanningTrees(G: Graph, root: Operation) -> Set[Graph]:
   all_anchors = AllAnchors(G, root)
   return {MaximalSpanningTree(G, X) for X in all_anchors}
 ```
-{{% /enlarge %}}
-<!-- prettier-ignore-end -->
 
 #### The missing piece: `AllAnchors`
 
@@ -227,8 +221,6 @@ exhaustively iterate over the possible outcomes for different subgraphs of $G$.
 The results of every possible combination of recursive calls are then collected
 into a list of anchor sets, which is returned.
 
-<!-- prettier-ignore-start -->
-{{% enlarge "full" %}}
 ```python {linenos=inline}
 def AllAnchors(
     G: Graph, root: Operation, w: int,
@@ -268,8 +260,6 @@ def AllAnchors(
           all_anchors.push((anchors, seen3, G3))
   return all_anchors
 ```
-{{% /enlarge %}}
-<!-- prettier-ignore-end -->
 
 The part of the pseudocode that is uncommented is unchanged from
 `CanonicalAnchors`. Using {{% refproposition "prop-dualspanningtree" %}}, we

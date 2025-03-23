@@ -247,6 +247,7 @@ embeddings?
 If so, on which partial maps can the constraint be successfully evaluated?
 And do index map extensions preserve constraint validity, or must constraints
 be evaluated repeatedly after each extension?
+
 [^delay]: It would be possible in theory to delay all evaluations of the
 constraints until the end of the pattern matching process, but not without
 incurring a blow up of $|\mathcal F|$.

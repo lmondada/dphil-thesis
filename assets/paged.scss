@@ -9,7 +9,7 @@ header {
 }
 
 div.book-page {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 $footnote-margin-width: 55mm;
@@ -97,7 +97,7 @@ div.footnotes {
     display: grid;
 
     .chapter-number {
-        break-before: right;
+      break-before: right;
     }
 
     // h2 {
@@ -172,8 +172,9 @@ div.footnotes {
 
 //// Fixing page breaks
 div.proposition-header,
-h2 {
-    break-after: avoid;
+h2,
+h4 {
+  break-after: avoid;
 }
 
 .toc {

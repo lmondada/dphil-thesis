@@ -13,7 +13,7 @@ elsewhere.
 I suggest you move directly to {{% reflink "chap:basics" %}}.
 {{% /hint %}}
 
-
+<!-- 
 This thesis is, first and foremost, a story about compilers.
 It is interesting to note that whereas the term *quantum compilation* has been in use for the longest part
 of the existence of quantum computing as a field,
@@ -211,4 +211,4 @@ the _concurrent_ exploration of the state space of GTSs.
 As the name implies, this will allow for a parallelised exploration of the state
 space; but more importantly, we will see that it significantly reduces the
 size of the total search space, whilst keeping the solution space
-unchanged.
+unchanged. -->

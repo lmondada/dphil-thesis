@@ -19,11 +19,13 @@ understanding of just "reading out" data that is already there. This is the
 famous Schrödinger's cat thought experiment of quantum mechanics: what data is
 within the qubits remains undefined until a measurement is performed. The act of
 observation will transform the quantum data: looking inside the box will at
-random either kill the cat or spare it[^schrcat]. [^schrcat]: It is ironic that
-Schrödinger's thought experiment @Schroedinger1935, intended to highlight the
-absurdity of quantum mechanics, has become the field's most famous PR campaign.
-Sorry to disappoint---you won't find felines occupying multipe states of
-existence (though qubits absolutely do)!
+random either kill the cat or spare it[^schrcat].
+
+[^schrcat]:
+    It is ironic that Schrödinger's thought experiment @Schroedinger1935,
+    intended to highlight the absurdity of quantum mechanics, has become the
+    field's most famous PR campaign. Sorry to disappoint---you won't find
+    felines occupying multipe states of existence (though qubits absolutely do)!
 
 We thus need to add the measurement operation as a special case to our computer
 scientist's model of quantum computing. Unlike purely quantum operations,
@@ -127,8 +129,11 @@ measurements: the block-encoding technique. Consider the following scenario: you
 would like to perform an operation $A$ on an arbitrary quantum state
 $\ket{\psi}$. Now, there are unfortunately many cases where implementing $A$ as
 a quantum circuit made of primitive gates that can be executed on hardware is
-very expensive[^impossible]. [^impossible]: or outright impossible, in cases
-where $A$ is not a unitary linear operation, for example.
+very expensive[^impossible].
+
+[^impossible]:
+    or outright impossible, in cases where $A$ is not a unitary linear
+    operation, for example.
 
 However, what we can always do is express $A$ as a matrix of dimensions
 $2^n \times 2^n$, where $n$ is the number of qubits in the state $\ket{\psi}$.

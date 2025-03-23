@@ -1,5 +1,6 @@
 {{- $title := .Get "title" | markdownify -}}
 {{- $id := .Get "id" -}}
+{{- $enlarge := .Get "enlarge" -}}
 
 {{ if not (.Page.Parent.Store.Get "definition_counter") }}
     {{ .Page.Parent.Store.Set "definition_counter" 0 }}
@@ -15,7 +16,12 @@
 {{ $definitionNumber := printf "%s.%d" $chapternb $counter }}
 {{ .Site.Store.SetInMap "definition_map" $id $definitionNumber }}
 
-<div class="definition-block enlarge-quarter" id="{{ $id }}">
+{{- $blockClass := "definition-block" -}}
+{{- if $enlarge -}}
+  {{- $blockClass = printf "%s enlarge-%s" $blockClass $enlarge -}}
+{{- end -}}
+
+<div class="{{ $blockClass }}" id="{{ $id }}">
 <div class="definition-header">
     <span class="definition-label">Definition {{ $definitionNumber }}</span>
     {{- if $title -}}<span class="definition-title">{{- $title -}}</span>{{- end -}}

@@ -10,7 +10,7 @@ slug = "chap:parallel"
 
 {{% hint "danger" %}} TODOs.
 
-- Proper numbering/referencing of definitions/propositions {{% /hint %}}
+- Proper numbering of definitions/propositions {{% /hint %}}
 <!-- prettier-ignore-end -->
 
 This chapter proposes a new data structure for graph rewriting that result in

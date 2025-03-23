@@ -45,7 +45,7 @@ dominated by two architectures, _x86_, used mainly by Intel and AMD, and _ARM_,
 used by a wide range of desktop and mobile chip manufacturers[^cpu].
 
 <!-- prettier-ignore-start -->
-{{% columns ratio="1:1" enlarge="half" %}}
+{{% columns ratio="1:1" enlarge="full" %}}
 **x86 CPU (Intel and AMD)**
 ```asm
 mov eax, 5        ; Load 5 into EAX
@@ -81,7 +81,7 @@ gates on qubits (e.g. superconducting qubits, ion traps, etc.) and, on the other
 hand, a platform based on photons and optical components.
 
 <!-- prettier-ignore-start -->
-{{% columns ratio="1:1" enlarge="half" %}}
+{{% columns ratio="1:1" enlarge="full" %}}
 **Quantum circuit (qubits)**
 ```asm
 h q[0];

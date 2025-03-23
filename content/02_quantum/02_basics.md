@@ -192,13 +192,7 @@ Suppose the user wants to execute an operation $A$ but it is more convenient, or
 the hardware is only capable of executing a different gate $B$. Then, using the
 inverse $B^{-1}$ of $B$, it is always possible to rewrite the program as
 
-<!-- prettier-ignore-start -->
-```goat
-   .---.           .---.  .-----.  .---.
----+ A +---  =  ---+ B +--+ B⁻¹ +--+ A +---
-   '---'           '---'  '-----'  '---'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/abbinv.svg" width="70%" nobg="true" %}}
 
 where these diagrams should be read as operations to be executed from left to
 right. This is nothing but the mathematical trick of multiplying the left-hand
@@ -241,37 +235,21 @@ their graphical representation should be of no surprise to the reader:
    mutate), whereas the left-to-right ordering of the gates reflects their
    ordering in time.
 
-A simple circuit composed of two qubits and three gates $G$, $H$ and $K$ could
-for instance look like this:
+A simple circuit composed of two qubits and three gates $A$, $B$ and $C$ could
+for instance look like this 
 
-<!-- prettier-ignore-start -->
-```goat
-   .---.      .---.
----+   +------+ B +--
-   |   |      '---'
-   | A |
-   |   |      .---.
----+   +------+ C +--
-   '---'      '---'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/abccirc.svg" width="30%" nobg="true" %}}
 
-In this case, $G$ would be executed before $H$ and $K$; $G$ would act on both
-qubits, whereas $H$ and $K$ would only modify the first and second qubits,
-respectively. Note that there is no ordering specified between $H$ and $K$:
+Just as the previous diagram, the computation in a circuit is read from left
+to right (you can think of each wire as an arrow pointing to the right).
+In this case, $A$ would be executed before $B$ and $C$; $A$ would act on both
+qubits, whereas $B$ and $C$ would only modify the first and second qubits,
+respectively. Note that there is no ordering specified between $B$ and $C$:
 because they act on disjoint sets of qubits, their relative ordering makes no
 difference. It is thus common to display them as acting at the same time. We
 could have equivalently chosen to draw them as:
 
-<!-- prettier-ignore-start -->
-```goat
-   .---.   .---.                        .---.         .---.
----+   +---+ H +--------             ---+   +---------+ H +--
-   | G |   '---' .---.        or        | G |   .---. '---'
----+   +---------+ K +--             ---+   +---+ K +--------
-   '---'         '---'                  '---'   '---'
-```
-<!-- prettier-ignore-end -->
+{{% figure src="svg/abcoracb.svg" width="90%" nobg="true" %}}
 
 All these circuits represent the same computation.
 
