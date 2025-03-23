@@ -52,6 +52,11 @@ div.footnotes {
   display: none;
 }
 
+.pagedjs_margin {
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
 @media print {
   /* Use A4 paper in landscape orientation */
   @page {
@@ -147,11 +152,6 @@ div.footnotes {
     }
   }
 
-  h1 {
-    string-set: title content(text);
-    grid-column: 2 / 4 !important;
-  }
-
   h2 .section-name {
     string-set: subtitle content(text);
   }
@@ -159,14 +159,20 @@ div.footnotes {
   .chapter-number {
     margin-bottom: 0;
     margin-top: 4em !important;
+    font-size: 2em;
   }
+
   h1.chapter {
     margin-bottom: 2em;
+    string-set: title content(text);
+    grid-column: 2 / 4 !important;
+    font-size: 3em;
   }
 }
 
 //// Fixing page breaks
-div.proposition-header {
+div.proposition-header,
+h2 {
     break-after: avoid;
 }
 
