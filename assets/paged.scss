@@ -1,3 +1,7 @@
+html {
+  font-size: 12px !important;
+}
+
 nav,
 aside,
 header {
@@ -12,7 +16,6 @@ $footnote-margin-width: 55mm;
 
 div.footnotes {
   font-size: 0.9rem;
-  line-height: 1.4rem;
   width: 100%;
 
   pagedjs_margin-left-top {
@@ -31,7 +34,7 @@ div.footnotes {
     margin: 0;
 
     p {
-      margin-top: -1.4rem;
+      margin-top: -1.12rem;
       padding-left: 1.5em;
     }
   }
@@ -85,6 +88,7 @@ div.footnotes {
 
   /* Grid layout for article.markdown */
   article.markdown {
+    line-height: 1.4;
     display: grid;
 
     .chapter-number {

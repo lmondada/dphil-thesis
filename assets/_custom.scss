@@ -51,9 +51,10 @@ article.markdown ul {
   margin-block-start: 0em;
 
   li::before {
-    content: "—";
+    content: "–";
+    padding-left: 0.2em;
     display: inline-block;
-    width: 1.4em;
+    width: 1.2em;
     margin-left: -1.4em;
   }
 }
