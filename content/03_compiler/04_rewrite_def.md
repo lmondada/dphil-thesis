@@ -5,49 +5,49 @@ layout = "section"
 slug = "sec:rewrite-def"
 +++
 
-As discussed in {{% reflink "sec-compgraphs" %}}, computation graphs with linear values, such as minIR, must adopt strict graph transformations semantics to ensure that linear constraints are satisfied at all times. The definitions we propose generalise the double pushout (DPO) construction for graph transformations @Ehrig1976, as presented e.g. in @Bonchi2017&#x200B;---a well-studied formalism that can be generalised categorically to any adhesive category @Lack2005.
+As discussed in {{% reflink "sec-compgraphs" %}}, computation graphs with linear values, such as minIR, must adopt strict graph transformation semantics to ensure that linear constraints are satisfied at all times. The definitions we propose generalise the double pushout (DPO) construction for graph transformations @Ehrig1976, as presented e.g. in @Bonchi2017&#x200B;---a well-studied formalism that can be generalised categorically to any adhesive category @Lack2005.
 
-However, our presentation is not categorical and we will impose injectivity and bijectivity conditions where required to guarantee existence and uniqueness of the transformation, as well as to handle linear types correctly. We leave it to future work to define a more solid categorical foundation for minIRs graphs.
+However, our presentation is not categorical, and we will impose injectivity and bijectivity conditions where required to guarantee the transformation's existence and uniqueness and to handle linear types correctly. We leave it to future work to define a more solid categorical foundation for minIRs graphs.
 
 The words graph _rewrite_ and _graph \_transformation_ are often used interchangeably in the literature. In the context of this thesis, we will take these words to distinguish two slightly different problems:
 
 The study of equivalences and other relations between graphs under well-defined graph semantics is the subject of **graph transformations**. For instance:
 
 - a _graph transformation rule_ $L \to R$ ({{% refdefinition "minirtransfo" %}}) expresses that an instance of $L$ can always be transformed into an instance of $R$, reflecting the semantics of the system that the graph is modelling.
-- a minIR equivalence class ({{% refdefinition "minireqclass" %}}) is an instance of a _graph transformation system_ (GTS), which uses known semantic relations, expressed for instance as graph transformation rules, to define how graphs can be transformed.
+- a minIR equivalence class ({{% refdefinition "minireqclass" %}}) is an instance of a _graph transformation system_ (GTS), which uses known semantic relations, expressed, for example, as graph transformation rules, to define how graphs can be transformed.
 
 **Graph rewriting**, on the other hand, encapsulates the algorithmic procedures and data structures that mutate graphs. A _rewrite_ ({{% refdefinition "minirrewrite" %}}) is the tuple of data required to turn a graph $G$ into a new graph $G'$.
 
 Given matches of patterns $L$ on a graph $G$, a _graph transformation system_ can consider the set of _graph transformation rules_ that define the semantics of $G$ to produce a set of _rewrites_ that can be applied to $G$ and mutate $G$ in a way that respects the semantics of $G$.
 
-The term "rewriting" is also used in this thesis whenever we mention transformation systems that act not on graphs but on strings and terms, as this is the common terminology in those fields. String and term rewriting are never a topic of research in this work and will only be mentioned in the context of review of relevant past work.
+The term "rewriting" is also used in this thesis whenever we mention transformation systems that act not on graphs but on strings and terms, as this is the standard terminology in those fields. String and term rewriting are never a research topic in this work and will only be mentioned when reviewing relevant past work.
 
-In this section, we will start by introducing the relevant concepts in minIR graph rewriting, i.e. the mutation operations that can be applied to minIR graphs. In the second part, we will pass in review two approaches to define minIR graph transformation semantics, one based on the DPO construction and the other a generalisation of it that formalises the "equivalence classes of circuits" proposed in @Jia2019.
+In this section, we will start by introducing the relevant concepts in minIR graph rewriting, i.e., the mutation operations that can be applied to minIR graphs. In the second part, we will review two approaches to defining minIR graph transformation semantics, one based on the DPO construction and the other a generalisation of it that formalises the "equivalence classes of circuits" proposed in @Jia2019.
 
-#### Graph gluings and rewrites
+#### Graph glueings and rewrites
 
-All graph transformations that we consider operate through local graph rewrites, which we define in terms of graph gluings. Consider first the case of two arbitrary graphs $G_1 = (V_1, E_2)$ and $G_2 = (V_2, E_2)$, along with a relation $\mu\ \subseteq V_1 \times V_2$. Let $\sim_\mu \ \subseteq (V_1 \cup V_2)^2$ be the smallest equivalence relation on $V_1 \cup V_2$ such that for all $v_1 \in V_1$ and $v_2 \in V_2$,
+All graph transformations that we consider operate through local graph rewrites, which we define in terms of graph glueings. Consider first the case of two arbitrary graphs $G_1 = (V_1, E_2)$ and $G_2 = (V_2, E_2)$, along with a relation $\mu\ \subseteq V_1 \times V_2$. Let $\sim_\mu \ \subseteq (V_1 \cup V_2)^2$ be the smallest equivalence relation on $V_1 \cup V_2$ such that for all $v_1 \in V_1$ and $v_2 \in V_2$,
 
 $$(v_1, v_2) \in \mu \Leftrightarrow v_1 \sim_\mu v_2.$$
 
-Then we can define
+Then, we can define
 
 - $V = (V_1 \cup V_2)/\sim_\mu$ is the set of all equivalences classes of $\sim_\mu$, and
 - $\alpha_\mu(v) \in V$ is the equivalence class of $\sim_\mu$ that $v$ belongs to, for all $v \in V_1 \cup V_2$.
 
 <!-- prettier-ignore -->
 {{% definition title="Graph gluing" id="def-graphgluings" %}}
-The gluing of $G_1$ and $G_2$ according to the gluing relation $\mu$ is
+The glueing of $G_1$ and $G_2$ according to the glueing relation $\mu$ is
 given by the vertices $V = (V_1 \cup V_2)/\sim_\mu$ and the edges
 
 $$E = \{(\alpha_\mu(u), \alpha_\mu(v)) \mid (u,v) \in E_1 \cup E_2 \} \subseteq V^2.$$
 
-We write the gluing graph as $(G_1 \cup G_2) / \sim_\mu$.
+We write the glueing graph as $(G_1 \cup G_2) / \sim_\mu$.
 
 <!-- prettier-ignore -->
 {{% /definition %}}
 
-In other words, the gluing is the disjoint union of the two graphs, with identification (and merging) of vertices that are related in $\mu$.
+In other words, the glueing is the disjoint union of the two graphs, with identification (and merging) of vertices that are related in $\mu$.
 
 This allows us to define a rewrite on a graph $G$:
 
@@ -59,7 +59,7 @@ with
 - $G_R = (V_R, E_R)$ is a graph called the replacement graph,
 - $V^- \subseteq V$ is the vertex deletion set,
 - $E^- \subseteq E \cap dom(\mu)^2$ is the edge deletion set, and
-- $\mu: V^- \rightharpoonup V_R$ is the _gluing relation_, a partial function that maps a subset of the deleted vertices of $G$ to vertices in the replacement graph.
+- $\mu: V^- \rightharpoonup V_R$ is the _glueing relation_, a partial function that maps a subset of the deleted vertices of $G$ to vertices in the replacement graph.
 
 The domain of definition $dom(\mu)$ is known as the boundary values of $r$.
 
@@ -67,16 +67,16 @@ Define the subgraph $G_L = (V_L, E_L)$ of $G$ given by
 
 $$\begin{aligned}V_L &= (V \smallsetminus V^-) \ \cup\ dom(\mu)\\E_L &= (E \cap V_L^2) \smallsetminus E^-.\end{aligned}$$
 
-The partial function $\mu$ is a special case of a gluing relation $V_L \times V_R$, and thus defines a gluing of $G_L$ with $G_R$. The rewritten graph resulting from applying $r$ to $G$ is $$r(G) = (G_L \cup G_R) / \sim_\mu.$$
+The partial function $\mu$ is a special case of a glueing relation $V_L \times V_R$, and thus defines a glueing of $G_L$ with $G_R$. The rewritten graph resulting from applying $r$ to $G$ is $$r(G) = (G_L \cup G_R) / \sim_\mu.$$
 
 <!-- prettier-ignore -->
 {{% /definition %}}
 
 When there are no edges between $V \smallsetminus V^-$ and $V^- \smallsetminus dom(\mu)$, this definition corresponds to graph rewrites that can be produced using DPO transformations (see discussion in {{% reflink "sec-gts-def" %}}). Otherwise, such edges are deleted.
 
-The notion of graph gluing and graph rewrite can straightforwardly be lifted to hypergraphs, and by extension, to minIR graphs---notice importantly that in this case, it is _values_ that are glued together, not operations (the latter were defined as the hyperedges of the graph).
+The notions of graph glueing and graph rewrite can straightforwardly be lifted to hypergraphs and, by extension, to minIR graphs. Notice that in this case, values are glued together, not operations (the latter were defined as the graph's hyperedges).
 
-However, the gluing of two valid minIR graphs---as well as the result of applying a valid rewrite---may not itself be a valid minIR graph. Gluing two values of a linear type, for instance, is a sure way to introduce multiple uses (or definitions) of it. We thus need to be careful to only consider gluings and rewrites of minIR graphs that preserve all the constraints we have imposed on the data structure.
+However, the glueing of two valid minIR graphs---and the result of applying a valid rewrite---may not be a valid minIR graph. Glueing two values of a linear type, for instance, is a sure way to introduce multiple uses (or definitions) of it. Thus, we must be careful to only consider glueings and rewrites of minIR graphs that preserve all the constraints we have imposed on the data structure.
 
 #### Ensuring rewrite validity: interfaces
 
@@ -109,7 +109,7 @@ We can define the interface associated with an operation $o$ in a minIR graph $G
 
 $$I_o = (use(type(o)), \mathit{def}\,(type(o))).$$
 
-Similarly, we can define a specific kind of minIR graph that _implements_ an interface $I = (U, D)$. A graph $G_R$ implements $I$ if it contains an unique `in` operation $o_{in}$ and an unique `out` operation $o_{out}$ in the root region of $G_R$ such that
+Similarly, we can define a specific kind of minIR graph that _implements_ an interface $I = (U, D)$. A graph $G_R$ implements $I$ if it contains a unique `in` operation $o_{in}$ and an unique `out` operation $o_{out}$ in the root region of $G_R$ such that
 
 $$I_{o_{in}} = (\varepsilon, U) \quad\textrm{and}\quad I_{o_{out}} = (D, \varepsilon),$$
 
@@ -120,7 +120,7 @@ Consider
 - an operation $o$ with interface $I_o = (U_o, D_o)$ in a minIR graph $G$ with values $V,$ and
 - a minIR graph $G_R$ with values $V_R$ which implements an interface $(U, D) = I \triangleright I_o$.
 
-Let $\rho_U: \mathrm{Idx}(U) \to \mathrm{Idx}(U_o)$ and $\rho_D: \mathrm{Idx}(D_o) \to \mathrm{Idx}(D)$ be the index maps that define the generalisation $I \triangleright I_o$. We can define a gluing relation $\mu_o \subseteq V \times V_R$
+Let $\rho_U: \mathrm{Idx}(U) \to \mathrm{Idx}(U_o)$ and $\rho_D: \mathrm{Idx}(D_o) \to \mathrm{Idx}(D)$ be the index maps that define the generalisation $I \triangleright I_o$. We can define a glueing relation $\mu_o \subseteq V \times V_R$
 
 <!-- prettier-ignore -->
 {{% centered numbered="mu0" %}}
@@ -150,7 +150,7 @@ We call $r_o$ the rewrite of $o$ into $G_R$.
 <!-- prettier-ignore -->
 {{% /proposition %}}
 
-The definition of the rewrite of $o$ into a graph $G_R$ behaves as one would expect---the only subtleties relate to the handling of non-linear (i.e. copyable) values at the boundary of the rewrite. The following example illustrates some of these edges cases.
+The definition of the rewrite of $o$ into a graph $G_R$ behaves as one would expect---the only subtleties relate to handling non-linear (i.e. copyable) values at the boundary of the rewrite. The following example illustrates some of these edge cases.
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -170,7 +170,7 @@ Define $\sim_R \subseteq (V_R)^2$ as the smallest equivalence relation such that
 
 $$use(o)_{\rho_U(i)} = use(o)_{\rho_U(j)} \Rightarrow \textit{def}\,(o_{in})_i \sim_R \textit{def}\,(o_{in})_j.$$
 
-Then we define $G_R'' = G_R / \sim_R$, the graph obtained by gluing together values within the same equivalence class of $\sim_R$.
+Then we define $G_R'' = G_R / \sim_R$, the graph obtained by glueing together values within the same equivalence class of $\sim_R$.
 
 _Claim 1:_ $G_R''$ is a valid minIR graph.
 
@@ -244,7 +244,7 @@ Define the boundary values $B = B_D \cup B_U \subseteq V_H$, as well as the boun
 
 $$O_B = \{o \in O_H \mid v \in B\textrm{ for all }v \in \mathit{def}\,(o) \cup use(o)\}.$$
 
-Consider a minIR graph $G_R$ with values $V_R$ which implements an interface $(U, D) = I \triangleright I_H$ at the `in` and `out` operations $o_{in}$ and $o_{out}.$ We can generalise the definition of $\mu_o$ from {{% refcentered "mu0" %}} to a gluing $\mu\subseteq B \times V_R$ defined as
+Consider a minIR graph $G_R$ with values $V_R$ which implements an interface $(U, D) = I \triangleright I_H$ at the `in` and `out` operations $o_{in}$ and $o_{out}.$ We can generalise the definition of $\mu_o$ from {{% refcentered "mu0" %}} to a glueing $\mu\subseteq B \times V_R$ defined as
 
 <!-- prettier-ignore -->
 {{% centered numbered="mu1" %}}
@@ -275,7 +275,7 @@ We call $r_H$ the rewrite of $H$ into $G_R$.
 {{% proof %}}
 Let $G_o$ be the unique minIR graph given by three operations $o_{in}$, $o_{out}$
 and an operation $o$ such that $G_o$ implements $I_H$
-and let $\tilde \mu$ be the gluing relation given by {{% refcentered "mu1" %}}
+and let $\tilde \mu$ be the glueing relation given by {{% refcentered "mu1" %}}
 for $G_R = G_o$.
 
 Because of {{% refproposition "prop-oprewrite" %}}, it is sufficient to show that there is a rewrite $r$ that replaces $H$ with $G_o$ such that
