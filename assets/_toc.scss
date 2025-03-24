@@ -1,6 +1,5 @@
 // LaTeX-inspired Table of Contents styling
 .toc {
-  font-family: "Noto Serif", serif;
   font-optical-sizing: auto;
   font-style: normal;
   margin: 2rem 0;
@@ -10,12 +9,12 @@
     font-size: 0.9rem;
   }
 
-  h2 {
+  h2.toc-title {
+    font-family: "Noto Serif", serif;
     font-size: 1.5rem;
     font-weight: 500;
     text-align: center;
     margin-bottom: 1.5rem;
-    font-variant: small-caps;
 
     @media print {
       margin-top: 0rem;
@@ -35,6 +34,7 @@
   li {
     margin: 0.5rem 0;
     line-height: 1.4;
+    width: 100%;
 
     a {
       text-decoration: none;
@@ -46,18 +46,25 @@
     }
   }
 
+  .toc-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .toc-chapter-number {
+    width: 100%;
+    margin-bottom: 0;
+    font-weight: 700;
+  }
+
   .toc-chapter {
-    font-weight: 500;
+    font-weight: 700;
     margin-top: 1rem;
 
     // LaTeX-style dotted leaders
     a {
-      display: flex;
-      align-items: baseline;
-
       &::after {
         content: "";
-        flex-grow: 1;
         margin: 0 0.5rem;
         border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
       }

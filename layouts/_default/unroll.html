@@ -1,0 +1,34 @@
+{{- define "main" -}}
+
+<div class="titlepage markdown">
+    {{- with .Site.GetPage "/" -}}
+    {{- .Content -}}
+    {{- end -}}
+</div>
+
+<article class="markdown book-article">
+    {{- $bookSection := default "docs" .Site.Params.BookSection -}}
+    {{- if eq $bookSection "*" -}}
+        {{ $bookSection = "/" -}}
+    {{- end -}}
+    {{- with .Site.GetPage $bookSection -}}
+        {{- range (where .Pages "Params.bookHidden" "ne" true) -}}
+            {{- if .IsSection -}}
+                {{- $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 -}}
+                <p class="chapter-number">Chapter {{ $chapternb }}</p>
+                <h1 class="chapter">{{ .Title }}</h1>
+                {{- .Content -}}
+                {{- range $index, $page := .Pages -}}
+                    <h2 id="{{ .Slug }}">
+                        {{ $chapternb }}.{{ add $index 1 }}.
+                        <span class="section-name">{{ $page.Title }}</span>
+                    </h2>
+                    {{- .Content -}}
+                {{- end -}}
+                <hr class="chapter-separator" />
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+</article>
+
+{{- end -}}
