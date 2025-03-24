@@ -5,16 +5,16 @@ weight = 3
 slug = "sec:persistent-ds"
 +++
 
-We now present a data structure _inspired_ by equality saturation, but for arbitrary graph rewriting. Rather than maintaining equivalence relations between terms, as done in term graphs, we maintain equivalence relations between graph vertices. Our data structure stores in fact the set of all applied rewrites---the main subject of this section is to show how all operations of interest on this data structure can be implemented efficiently.
+We now present a data structure _inspired_ by equality saturation but for arbitrary graph rewriting. Rather than maintaining equivalence relations between terms, as done in term graphs, we maintain equivalence relations between graph vertices. Our data structure stores the set of all applied rewrites---the main subject of this section is to show how all operations of interest on this data structure can be implemented efficiently.
 
 The persistent graph rewriting data structure is given by a set $\mathcal{D}$ of _edits_ $\delta = (G_R, V^-, \mu) \in \mathcal{D}$, with
 
 - vertex deletion set $V^- \subseteq V(\mathcal{D} \smallsetminus \delta)$ and
-- gluing relation $\mu: V^- \rightharpoonup V(G_R)$.
+- glueing relation $\mu: V^- \rightharpoonup V(G_R)$.
 
 We have extended the $V(\cdot)$ notation to $\mathcal{D}$ by defining them by the union of all vertex resp. edge sets of replacement graphs in $\mathcal{D}$. We will similarly use $V(\delta)$ to denote the set of vertices in the replacement graph of a rewrite $\delta$.
 
-Edits are very similar to rewrites as defined in Definition 5.1, but differ in that their definition does not specify a graph $G$ they apply to: the vertices of $V^-$ do not belong to a single graph, but rather to the collection of all replacement graphs in $\mathcal{D}$. We will see below how a graph $G$ can be constructed such that an edit $\delta \in \mathcal{D}$ is indeed a valid rewrite on $G$.
+Edits are very similar to rewrites as defined in Definition 5.1 but differ in that their definition does not specify a graph $G$ they apply to: the vertices of $V^-$ do not belong to a single graph but rather to the collection of all replacement graphs in $\mathcal{D}$. We will see below how a graph $G$ can be constructed such that an edit $\delta \in \mathcal{D}$ is indeed a valid rewrite on $G$.
 
 Importantly, we assume that all vertices $v \in V(\mathcal{D})$ are distinct, i.e. there is a unique replacement graph $G_R$ in an edit of $\mathcal{D}$ such that $v \in V(G_R)$. We write it as $origin(v) = G_R$. The parents of an edit $\delta = (G_R, V^-, \mu)$ are
 
@@ -56,7 +56,7 @@ def add_edit(
 
 that respectively returns an empty $\mathcal{D} = \{\}$ and adds an edit $\delta$ to $\mathcal{D}$. The `are_compatible` function is described and defined below. All other functions (`issubset` and `parents`) have the obvious definition.
 
-Crucially, by the definition of $parents$, only edits may be added to $\mathcal{D}$ if all vertices they refer to in the vertex deletion set $V^-$ belong to graphs that are already present in $\mathcal{D}$. It is thus impossible to create a cyclic parent-child relationship as child edits must always be added to $\mathcal{D}$ after their parents.
+Crucially, by the definition of $parents$, only edits may be added to $\mathcal{D}$ if all vertices they refer to in the vertex deletion set $V^-$ belong to graphs that are already present in $\mathcal{D}$. It is thus impossible to create a cyclic parent-child relationship, as child edits must always be added to $\mathcal{D}$ after their parents.
 
 We say that $\mathcal{D}$ is valid if it can be constructed from a single call to `create_empty`, followed by a sequence of calls to `add_edit`. This is equivalent to requiring that _i)_ the parent-child relationship is acylic and _ii)_ the parents of every edit satisfy `are_compatible`. For the remainder of this chapter, we will always assume that $\mathcal{D}$ is valid. As a consequence, it also follows that the set $ancestors(\delta)$ is always a set of compatible edits.
 
@@ -238,7 +238,7 @@ Suppose you are given a GTS and would like to use $\mathcal{D}$ to perform graph
 
 We are only missing one piece: how do we traverse the search space? In other words, how do we find all applicable rewrites on all graphs within $\mathcal{D}$? A naive solution would iterate over _all_ subsets of $D \subseteq \mathcal{D}$, check whether they form a compatible set of edits, compute `flatten_history` if they do, and finally run pattern matching on the obtained graph. We can do better.
 
-The idea is to traverse the set of edits in $\mathcal{D}$ using the gluing relations $\mu$ that connect vertices between edits. Define the inverse relation $\mu^{-1}$ on all of $V(\mathcal{D}) \to \mathcal{P}(V(\mathcal{D}))$ as follows:
+The idea is to traverse the set of edits in $\mathcal{D}$ using the glueing relations $\mu$ that connect vertices between edits. Define the inverse relation $\mu^{-1}$ on all of $V(\mathcal{D}) \to \mathcal{P}(V(\mathcal{D}))$ as follows:
 
 $$\begin{aligned}\mu^{-1}(v) = \{&w \in V(\mathcal{D})\mid\\&  \text{there exist } \delta \in \mathcal{D}, v \in V^-(\delta): \mu(w) = v\},\end{aligned}$$
 
@@ -267,7 +267,7 @@ We use `equivalent_vertices` to repeatedly extend a set of _pinned_ vertices $Pi
 
 As a result, calling $G$ the flattened history of $D$, it always holds that $Pin \subseteq V(G)$. Furthermore, if $G(Pin) \subseteq G$ is the subgraph of $G$ induced by $Pin$, then for any set of pinned vertices $Pin' \supseteq Pin$, we have $G(Pin) \subseteq G'(Pin')$ where $G'$ is the flattened history of the edits $D'$ of $Pin'$. This follows directly from the second property above and the definition of `flatten_history`.
 
-This gives us a the following simple pseudo-procedure for pattern matching:
+This gives us the following simple pseudo-procedure for pattern matching:
 
 1. Start with a single pinned vertex $Pin = \{v\}$.
 2. Construct partial embeddings $P \rightharpoonup G(Pin)$ for patterns $P$.
@@ -275,15 +275,15 @@ This gives us a the following simple pseudo-procedure for pattern matching:
 4. For all vertices $v'$ in `equivalent_vertices(v, D)`, build new pinned vertex sets $Pin' = Pin \cup \{v'\}$, filter out the sets $Pin'$ that are not valid pinned vertex sets.
 5. Repeat steps 2--4 until all pattern embeddings have been found.
 
-Step 1 is straightforward---notice that pattern matching must be started at a vertex in $V(\mathcal{D})$, so finding all patterns will require iterating over all choices of $v$. The pattern embeddings are constructed over iterations of step 2: each iteration can be seen as one step of the pattern matcher---for instance as presented in {{% reflink "chap:matching" %}}---extending the pattern embeddings that can be extended and discarding those that cannot. If all possible pattern embeddings have been discarded, then matching can be aborted for that $Pin$ set.
+Step 1 is straightforward---notice that pattern matching must be started at a vertex in $V(\mathcal{D})$, so finding all patterns will require iterating over all choices of $v$. The pattern embeddings are constructed over iterations of step 2: each iteration can be seen as one step of the pattern matcher---for instance, as presented in {{% reflink "chap:matching" %}}---extending the pattern embeddings that can be extended and discarding those that cannot. If all possible pattern embeddings have been discarded, then matching can be aborted for that $Pin$ set.
 
-How step 3 should be implemented depends on the types of graphs and patterns that are matched on. It is particularly simple in the case of minIR graphs with only linear values, i.e. hypergraphs with hyperedges that have directed, ordered endpoints and vertices that are incident to exactly one incoming and one outgoing edge. In that case, $v$ can always be chosen in such way as to ensure progress on the next iteration of step 2, i.e. the domain of definition of at least one partial pattern embedding $P \hookrightarrow G(Pin)$ will be extended by one vertex. The info box below explains this case in more detail.
+How step 3 should be implemented depends on the types of graphs and patterns that are matched on. It is straightforward in the case of minIR graphs with only linear values, i.e. hypergraphs with hyperedges that have directed, ordered endpoints and vertices that are incident to exactly one incoming and one outgoing edge. In that case, $v$ can always be chosen in such a way as to ensure progress on the next iteration of step 2, i.e. the domain of definition of at least one partial pattern embedding $P \hookrightarrow G(Pin)$ will be extended by one vertex. The info box below explains this case in more detail.
 
 Step 4 produces all possible extensions of $Pin$ to pinned vertex sets $Pin'$ that include a descendant $v'$ of $v$ (or $v$ itself). All vertices returned by `equivalent_vertices` will be in edits compatible with $D$, so to check that $Pin'$ is a valid pinned vertex set, we only need to check the second property of pinned vertices. Let $P$ be a pattern, let $\mathcal{A}$ be the set of all $Pin$ sets under consideration and let $D$ be the set of edits of vertices in $Pin \in \mathcal{A}$. Step 4 increments the sizes of all pinned vertex sets in $\mathcal{A}$ whilst maintaining the following invariant.
 
 **Invariant for step 4.**&emsp; If there is a superset $D' \supseteq D$ of compatible edits such that $P$ embeds in $G'$, the flattened history of $D'$, then there is a set of pinned vertices $Pin \in \mathcal{A}$ and a superset $Pin' \supseteq Pin$ of vertices such that $P$ embeds in $G(Pin')$.
 
-Finally, step 5 ensures the process is repeated until for all partial pattern embeddings, either the domain of definition is complete, or the embedding of $P$ is not possible. Given that step 4 increments the size of $Pin$ sets at each iteration, this will terminate as long as the vertex picking strategy of step 3 selects vertices that allow to extend (or refute) the partial pattern embeddings constructed and extended in step 2. This is satisfied for example in the case of linear minIR graphs, as explained in the info box.
+Finally, step 5 ensures the process is repeated until, for all partial pattern embeddings, either the domain of definition is complete, or the embedding of $P$ is not possible. Given that step 4 increments the size of $Pin$ sets at each iteration, this will terminate as long as the vertex picking strategy of step 3 selects vertices that allow to extend (or refute) the partial pattern embeddings constructed and extended in step 2. This is satisfied, for example, in the case of linear minIR graphs, as explained in the info box.
 
 <!-- prettier-ignore -->
 {{% hint "info" %}}
@@ -295,8 +295,8 @@ Then $v_P$ uniquely identifies an edge $e_G$ in $G$, the flattened history of $P
 <!-- prettier-ignore -->
 {{% /hint %}}
 
-[^realisethis]: To realise this, notice that all vertices equivalent to $v_G'$ are vertices that will be merged with $v_G'$. Hence they will all be attached to the outgoing edge of $v_G$ at its $i$-th outgoing endvertex.
+[^realisethis]: To realise this, notice that all vertices equivalent to $v_G'$ are vertices that will be merged with $v_G'$. Hence, they will all be attached to the outgoing edge of $v_G$ at its $i$-th outgoing endvertex.
 
-Using the approach we have just sketched, pattern matching can thus be performed on the persistent data structure $\mathcal{D}$. The runtime of steps 2 and 3 depend on the type of graphs and patterns that are matched on---these are however typical problems that appear in most instances of pattern matching, independently of the data structure $\mathcal{D}$ used here. A concrete approach to pattern matching and results for the graph types of interest to quantum compilation are presented in {{% reflink "chap:matching" %}}. TODO: Appendix B further discusses how pattern matching and persistent rewriting can be combined and proposes a compilation platform that leverages both.
+Using the approach we have just sketched, pattern matching can thus be performed on the persistent data structure $\mathcal{D}$. The runtime of steps 2 and 3 depend on the type of graphs and patterns that are matched on---these are, however, typical problems that appear in most instances of pattern matching, independently of the data structure $\mathcal{D}$ used here. A concrete approach to pattern matching and results for the graph types of interest to quantum compilation are presented in {{% reflink "chap:matching" %}}. TODO: Appendix B further discusses how pattern matching and persistent rewriting can be combined and proposes a compilation platform that leverages both.
 
-The runtime of the remaining steps will depend on the number of edits in $\mathcal{D}$ (`equivalent_vertices` depends on `are_compatible`, which runs in runtime linear in the number of ancestors), and also the number of equivalent vertices that successive rounds of step 4 will produce. Rather than providing very loose worst case asymptotic bounds or making stringent assumptions on properties of the GTS and of the pattern matching algorithm used, the next section proposes an analysis of the complexity of persistent rewriting through the prism of the overall size of the search space that is explored.
+The runtime of the remaining steps will depend on the number of edits in $\mathcal{D}$ (`equivalent_vertices` depends on `are_compatible`, which runs in runtime linear in the number of ancestors), and the number of equivalent vertices that successive rounds of step 4 will produce. Rather than providing very loose worst-case asymptotic bounds or making stringent assumptions on properties of the GTS and of the pattern-matching algorithm used, the following section proposes an analysis of the complexity of persistent rewriting through the prism of the overall size of the search space that is explored.
