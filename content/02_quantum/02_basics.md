@@ -274,40 +274,14 @@ specified order. As a solution, common gates were given representations that do
 not spell out their name but mark which qubit they are acting on and in what
 order. Here are the representations of three of the most famous ones, in order:
 the $\mathit{CX}$ (also known as CNOT) gate, the $\mathit{CZ}$ and the
-$\mathit{CCX}$, or Toffoli:
+$\mathit{CCX}$ (also known as the three-qubit Toffoli):
 
 [^drawit]:
     This becomes immediately apparent if you attempt to draw a gate that should
     act on the first and third qubit line of a circuit, but leave the second one
     untouched.
 
-<!-- prettier-ignore-start -->
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
-    "operations": [
-        {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 1 }],
-            "targets": [{ "qId": 2 }]
-        },
-        {
-            "gate": "Z",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-        },
-        {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }, { "qId": 1 }],
-            "targets": [{ "qId": 2 }]
-        }
-    ]
-}
-{{< /qviz >}}
-<!-- prettier-ignore-end -->
+{{% figure src="svg/cx-cz-ccx.svg" width="30%" nobg="true" %}}
 
 You will probably notice that there seems to be a system to this graphical
 notation. There is, but unfortunately, explaining it would require us to discuss

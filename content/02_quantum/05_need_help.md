@@ -30,57 +30,15 @@ in mind: specifically, with the assumption that at any one time, there are
 exactly $n$ (for some fixed value of $n$) resources available for computation.
 This for example means that in the following program
 
-<!-- prettier-ignore-start -->
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0, "numChildren": 1 }, { "id": 1 }],
-    "operations": [
-        {
-            "gate": "Measure",
-            "isMeasurement": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "type": 1, "qId": 0, "cId": 0 }]
-        },
-        {
-            "gate": "X",
-            "targets": [{ "qId": 1 }]
-        },
-        {
-            "gate": "Measure",
-            "isMeasurement": true,
-            "controls": [{ "qId": 1 }],
-            "targets": [{ "type": 1, "qId": 0, "cId": 0 }]
-        },
-        {
-            "gate": "correction-q1",
-            "targets": [],
-            "isConditional": true,
-            "controls": [
-                {
-                    "type": 1,
-                    "qId": 0,
-                    "cId": 0
-                }
-            ],
-            "children": [
-                {
-                    "gate": "X",
-                    "targets": [{ "qId": 0 }],
-                    "conditionalRender": 2
-                }
-            ]
-        }
-    ]
-}
-{{< /qviz >}}
-<!-- prettier-ignore-end -->
+{{% figure src="svg/overwrite-bit.svg" width="40%" nobg="true" %}}
 
-it would be impossible to append a gate controlled on the first measurement
-outcome to this circuit, as that value was overwritten on the classical wire by
-the second measurement. The solution could be to introduce[^alloc] a new, fresh
-classical wire for each measurement and avoid overwriting outcomes. However,
-there are also many other ways to break this wires-based representation: suppose
-you have an operation with one input and two outputs, such as a copy operation
+in which two measurements write to the same classical bit, it would be
+impossible to append a gate controlled on the first measurement outcome after
+the $Z$ gate, as that value was overwritten on the classical wire by the second
+measurement. The solution could be to introduce[^alloc] a new, fresh classical
+wire for each measurement and avoid overwriting outcomes. However, there are
+also many other ways to break this wires-based representation: suppose you have
+an operation with one input and two outputs, such as a copy operation
 $x \mapsto (x,x)$. We would need two wires for the output, but the input would
 only provide us with one... We now have to start creating additional wires ahead
 of time for this purpose and solve memory allocation problems to decide which
@@ -91,9 +49,9 @@ wire should be given to which operation.
 These are run-of-the-mill classical compiler problems! One might at first hope
 that the set of overlapping problems between classical and quantum compilers is
 manageably small. After all, in all the use cases we have covered so far, the
-amount of classical compute was very minimal, limiting itself to conditionals
-and loops based on simple boolean expressions. Surely the full-blown powers of a
-classical compiler are not required!
+amount of classical computation was very minimal, limiting itself to
+conditionals and loops based on simple boolean expressions. Surely the
+full-blown powers of a classical compiler are not required!
 
 You bet.
 
@@ -121,8 +79,8 @@ implement such protocols.
     We should at this point---at the risk of stoking controversy--- acknowledge
     the commendable efforts of scientists chasing the Majorana particle
     @Sau_2010 @Haaf2024 @Mourik_2012. The topological quantum computers these
-    would enable are, to my knowledge, the only quantum architecture proposed
-    that would do away with error correction.
+    would enable are, to our knowledge, the only quantum architecture proposed
+    that could do away with error correction.
 
 A sketch of quantum error correction goes roughly as follows: the data that
 would be stored on $k$ qubits is instead encoded in a redundant way on a larger
@@ -132,10 +90,10 @@ errors can be corrected, they must be detected. To this end, we first add fresh
 ancilla qubits to the program. Through smartly designed interactions with the
 data qubits, the ancilla qubits pick up the errors from the data. When we
 subsequently perform measurements on the ancilla qubits, these errors result in
-modified outcomes, called the error "syndrome".
+modified outcomes, called the error _syndrome_.
 
 The challenging bit comes next: from a run of syndrome measurements, one must
-infer the most likely errors---a step known as "syndrome decoding". This is a
+infer the most likely errors---a step known as _syndrome decoding_. This is a
 purely classical maximum likelihood problem that requires a non-trivial amount
 of compute to resolve. For small problem instances, all possible input syndromes
 can be tabled, and the outputs precomputed---in which case the problem at
@@ -145,10 +103,10 @@ invariably, the problem quickly becomes very demanding computationally.
 
 Meanwhile, these "cycles" of error detection and correction are under strict
 latency constraints: idling qubits waiting for corrections to be applied will
-accumulate new errors that must themselves be corrected---in other words, we
-must be capable of detecting and correcting for errors faster than they are
-being introduced. The entire error correction cycle just described can be
-summarised by the following diagram:
+accumulate new errors that must themselves be corrected---for error correction
+to be workable, we must be capable of detecting and correcting for errors faster
+than they are being introduced. The entire error correction cycle just described
+can be summarised by the following diagram:
 
 <!-- prettier-ignore-start -->
 ```goat
@@ -188,11 +146,11 @@ within the latency requirements of certain trapped ion architectures
 @RyanAnderson2021, but far beyond the sub-microsecond regime that will be
 required to make error correction a reality on superconduction-based quantum
 computers @Vazquez2024. this can be contrasted with the program output by the
-same compiler, but with optimisations activated: the average runtime is reduced
-by a factor close to 10x to $0.078\pm0.004\,ms$---still a factor 100x away from
-the required performance on superconductors, but huge gains nonetheless! The
-details of the experiment with all build flags, the hardware used and how to
-reproduce the results are available
+same compiler, but with all compiler optimisations enabled: the average runtime
+is reduced by a factor close to 10x to $0.078\pm0.004\,ms$---still a factor 100x
+away from the required performance on superconductors, but huge gains
+nonetheless! The details of the experiment with all build flags, the hardware
+used and how to reproduce the results are available
 [here](https://github.com/lmondada/dphil-thesis/tree/main/scripts-datagen).
 
 There is no hope of obtaining these types of speedups without an in-depth
@@ -208,7 +166,7 @@ no choice but to fully transform and integrate the existing quantum tooling and
 quantum optimisation research into the established compiler ecosystem. What this
 means exactly is the subject of the rest of this chapter.
 
-### A new quantum programming paradigm? A quantum IR?
+### A new quantum programming paradigm?
 
 We have seen it---quantum circuits are very limited in their expressiveness.
 They are well suited to presenting sequences of purely quantum operations and
@@ -245,26 +203,25 @@ abstractions. Many of the higher-level primitives, that have proven invaluable
 classically, solve problems that we expect to encounter very soon in our hybrid
 programs---when we have not already. Examples include
 
-1. **structured control flow** to simplify reasoning about branching in
-   quantum-classical hybrid programs,
-2. **type systems** to encode program logic and catch errors at compile
-   time---this is particularly important for quantum programs as there is no
-   graceful way of handling runtime errors on quantum hardware: by the time the
-   error has been propagated to the caller, all quantum data stored on qubits is
-   probably corrupted and lost,
-3. **memory management** such as reference counting and data ownership models.
-   Current hardware follows a static memory model, in which the number of
-   available qubits is fixed, and every operation acts on a set of qubits
-   assigned at compile time. This becomes impossible to keep track of in
-   instances such as qubit allocations within loops with an unknown number of
-   iterations at compile time. It thus becomes necessary to manage qubits
-   dynamically, just like classical memory.
+- **structured control flow** to simplify reasoning about branching in
+  quantum-classical hybrid programs,
+- **type systems** to encode program logic and catch errors at compile
+  time---this is particularly important for quantum programs as there is no
+  graceful way of handling runtime errors on quantum hardware: by the time the
+  error has been propagated to the caller, all quantum data stored on qubits is
+  probably corrupted and lost,
+- **memory management** such as reference counting and data ownership models.
+  Current hardware follows a static memory model, in which the number of
+  available qubits is fixed, and every operation acts on a set of qubits
+  assigned at compile time. This becomes impossible to keep track of in
+  instances such as qubit allocations within loops with an unknown number of
+  iterations at compile time. It thus becomes necessary to manage qubits
+  dynamically, just like classical memory.
 
 To facilitate such a large swath of abstractions, the first step quantum
 compilers must take is to make a distinction between the language frontend and
-the **internal representation** (IR) that the compiler uses to reason about the
-program and perform optimisations. Today in most frameworks, the frontend and
-the IR are one and the same: the user is given an API that can be used to create
-and mutate quantum circuits, which is the same data structure the compiler
-leverages and transforms to produce (another) circuit, which is in turn sent to
-and executed on hardware or a simulator---it is circuits all the way down!
+the _internal representation_ (IR) that the compiler uses to reason about the
+program and perform optimisations. This will be the topic of
+{{% reflink "chap:compiler" %}}. The graph-based IR that we introduce in that
+chapter will then form the foundation for the new quantum compilation techniques
+that will be developed throughout the remainder of the thesis.
