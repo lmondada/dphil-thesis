@@ -5,7 +5,7 @@ weight = 5
 slug = "sec:extraction"
 +++
 
-In this chapter, we have proposed a persistent data structure for graph rewriting; using its confluence properites, we have then shown that the search space that must be traversed in this new proposal for graph rewriting is super-exponentially smaller. However, unlike when exploring the "naive" search space, the optimal solution within the factorised search space stored in the persistent data structure $\mathcal{D}$ cannot simply be _read out_. We must instead solve an extraction problem that is very similar to the second phase of equality saturation for term rewriting.
+In this chapter, we have proposed a persistent data structure for graph rewriting; using its confluence properties, we have then shown that the search space that must be traversed in this new proposal for graph rewriting is super-exponentially smaller. However, unlike when exploring the "naive" search space, the optimal solution within the factorised search space stored in the persistent data structure $\mathcal{D}$ cannot simply be _read out_. Instead, we must solve an extraction problem similar to the second phase of equality saturation for term rewriting.
 
 As we saw in {{% reflink "sec:persistent-ds" %}}, finding a graph $G'$ that is the result of a sequence of rewrites on an input graph $G$ is equivalent to finding a set of compatible edits $D \subseteq \mathcal{D}$---the graph $G'$ is then given by the flattened history of $D$.
 
@@ -39,7 +39,7 @@ The set of valid sequences of rewrites that can be extracted from a set of edits
 
 We now have to find the _optimal_ assignment among all satisfiable assignments for the SAT problem given above. In the most general case where the cost function $f$ to be minimised is given as a black box oracle on the graph $G'$, i.e. on the flattened history of the solution set $D \subseteq \mathcal{D}$, this optimisation problem is hard[^whynphard].
 
-[^whynphard]: Hardness can be seen by considering the special case of the extraction problem in which all edits are compatible and no two edits have a parent-child relation: then there are no constraint on the solution space and the optimisation problem requires finding the minimum of an arbitrary oracle over $2^{|\mathcal{D}|}$ inputs.
+[^whynphard]: Hardness can be seen by considering the special case of the extraction problem in which all edits are compatible and no two edits have a parent-child relation: then there are no constraints on the solution space and the optimisation problem requires finding the minimum of an arbitrary oracle over $2^{|\mathcal{D}|}$ inputs.
 
 However, if $f$ can be expressed as a function of $x_\delta$ instead of the flattened history $G'$, then the 'hardness' can be encapsulated within an instance of a SMT problem (satisfiability modulo theories @Nieuwenhuis2006 @Barrett2018), a well-studied generalisation of SAT problems for which highly optimised solvers exist @Moura2008 @Sebastiani2015. A class of cost functions for which the SMT encoding of the optimisation problem becomes particuarly simple are _local_ cost functions:
 

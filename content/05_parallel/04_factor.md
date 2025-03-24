@@ -5,21 +5,21 @@ weight = 4
 slug = "sec:factor-gts"
 +++
 
-Equality saturation introduces a persistent data structure that encodes not only a single computation (term), but all equivalent computations that can be obtained from sequences of rewrites applied to it. The result of this compact representation is a _factorisation_ of the term rewriting search space: the same solution space (in fact, a strictly greater one) can be covered by a much smaller search space.
+Equality saturation introduces a persistent data structure that encodes not only a single computation (term) but all equivalent computations that can be obtained from sequences of rewrites applied to it. The result of this compact representation is a _factorisation_ of the term rewriting search space: the same solution space (in fact, a strictly greater one) can be covered by a much smaller search space.
 
-The precise data structure of equality saturation may not be directly applicable to computation graphs with linear resources; however, a comparable factorization of the search space can be achieved for GTS search space exploration. Throughout this section, we consider a GTS and will aim to bound the size of the space of possible sequences of rewrites starting from an input graph $G$ using the GTS.
+The precise data structure of equality saturation may not directly apply to computation graphs with linear resources; however, a comparable factorisation of the search space can be achieved for GTS search space exploration. Throughout this section, we consider a GTS and will aim to bound the size of the space of possible sequences of rewrites starting from an input graph $G$ using the GTS.
 
 #### A lower bound for the naive search tree
 
-Consider an input graph $G$. The graphs $G'$ that can be obtained from $G$ by applying a sequence of rewrites from the GTS form the nodes of a (possibly infinite) tree $T$, with edges between graphs given by the rewrites. The path from the root $G$ to $G'$ is the sequence of rewrites that produces $G'$. We call $T$ the naive search tree of $G$.
+Consider an input graph $G$. The graphs $G'$ that can be obtained from $G$ by applying a sequence of rewrites from the GTS from the nodes of a (possibly infinite) tree $T$, with edges between graphs given by the rewrites. The path from the root $G$ to $G'$ is the sequence of rewrites that produces $G'$. We call $T$ the naive search tree of $G$.
 
 As in the previous section, we assume that every rewrite $r \in E(T)$ introduces fresh vertices; that is to say, the new vertices introduced by rewrites in $T$ form disjoint sets. Thus, if a vertex $v$ is contained in the vertex sets of two graphs $G_1, G_2 \in V(T)$, then either $v \in V(G)$ or there is a shared rewrite that introduces $v$ contained in both sequences of rewrites that produce $G_1$ and $G_2$. For two rewrites $r_1$ and $r_2$, we say that $r_2$ overlaps $r_1$ if the former deletes a vertex that the latter introduces, i.e.
 
 $$V^-(r_2) \cap V_R(r_1) \neq \varnothing.$$
 
-For a depth $\Delta \geqslant 0$, we say a graph $G'$ is reachable from $G$ within depth $\Delta$ in the GTS if there is a sequence of rewrites in the GTS from $G$ to $G'$ such that all subsequences formed of overlapping rewrites have length at most $\Delta$. We fix $\Delta$ and from now on consider naive search trees truncated to the set of graphs reachable from $G$ within depth $\Delta$.
+For a depth $\Delta \geqslant 0$, we say a graph $G'$ is reachable from $G$ within depth $\Delta$ in the GTS if there is a sequence of rewrites in the GTS from $G$ to $G'$ such that all subsequences formed of overlapping rewrites have length at most $\Delta$. We fix $\Delta$ and from now on, consider naive search trees truncated to the set of graphs reachable from $G$ within depth $\Delta$.
 
-We wish to derive a lower bound on the size of $T$ for a fixed GTS, fixed $G$ and fixed $\Delta$. We consider for this a partition of $G$ into subgraphs $\Pi_1, \ldots, \Pi_n$ such that on each subgraph $\Pi_i$, there are at least two applicable rewrites in the GTS. We can then consider the subtree of the naive search tree $T$ that only contains the graphs obtained by applying one of the two applicable rewrites in each subgraph of the partition.
+We wish to derive a lower bound on the size of $T$ for a fixed GTS, fixed $G$ and fixed $\Delta$. We consider a partition of $G$ into subgraphs $\Pi_1, \ldots, \Pi_n$ such that on each subgraph $\Pi_i$, there are at least two applicable rewrites in the GTS. We can then consider the subtree of the naive search tree $T$ that only contains the graphs obtained by applying one of the two applicable rewrites in each subgraph of the partition.
 
 Naively, this search tree will contain all $n!$ orderings of partition subgraphs and for each $\Pi_i$ of them, all $2^n$ possible choices of rewrites---resulting in a search tree with $2^n \cdot n!$ leaves. If we instead detect and merge duplicate graphs within the search tree, this reduces to "only" $2^n$ unique graphs[^sameres].
 
@@ -27,7 +27,7 @@ Naively, this search tree will contain all $n!$ orderings of partition subgraphs
 
 We can generalise this to a lower bound for the naive search tree of all graphs reachable within depth $\Delta$.
 
-Notice that if a graph $G'$ is obtained from $G$ by a rewrite $r \in E(T)$ that is fully contained within one of the partition subgraphs $\Pi_i$, then the partition of $G$ also defines a partition of $G'$ by assigning all vertices of $G'$ that are also in $G$ to the same subgraph $\Pi_i$ and the new vertices introduced by the right hand side of $r$ to the same subgraph as all the vertices matched by $r$ in $G$. Define the subtree $T'$ of $T$ recursively as follows:
+Notice that if a graph $G'$ is obtained from $G$ by a rewrite $r \in E(T)$ that is fully contained within one of the partition subgraphs $\Pi_i$, then the partition of $G$ also defines a partition of $G'$ by assigning all vertices of $G'$ that are also in $G$ to the same subgraph $\Pi_i$ and the new vertices introduced by the right-hand side of $r$ to the same subgraph as all the vertices matched by $r$ in $G$. Define the subtree $T'$ of $T$ recursively as follows:
 
 - the root $G$ is in $T'$,
 - the child $G'$ of a graph is in $T'$ if $G'$ is obtained from a rewrite that is fully contained within one of the partition subgraphs $\Pi_i$ of the parent
@@ -78,7 +78,7 @@ so that the linear relation still holds asymptotically for constant $\Delta$ and
 
 Consider all rewrites $E(T)$ in a naive search tree $T$ (truncated to graphs reachable within depth $\Delta$), for some fixed GTS and input graph $G$. The overlapping relation between rewrites in $E(T)$ defines a partial order $\leqslant$: we write $r_1 \leqslant r_2$ if $r_2$ overlaps $r_1$. For any two rewrites without an ordering, i.e. neither $r_1 \not\leqslant r_2$ nor $r_2 \not\leqslant r_1$, the order in which they are applied is irrelevant: it is easy to show that for a sequence of rewrites that includes $r_1$ and $r_2$, the graph obtained is left unchanged by swapping the order of application of $r_1$ and $r_2$.
 
-The persistent data structure $\mathcal{D}$ described in {{% reflink "sec:persistent-ds" %}} uses this symmetry explicitly when exploring the set of reachable graphs. We show that this drastically reduces the size of the search space. We consider the directed acylic graph $F$ given by all edits in $\mathcal{D}$ along with the parent-child relations between edits. In other words, $F$ is given by the transitive reduction of $\leqslant$ on the set of all rewrites $E(T)$. We call $F$ the factorised search space and we wish to estimate its size of $F$.
+The persistent data structure $\mathcal{D}$ described in {{% reflink "sec:persistent-ds" %}} uses this symmetry explicitly when exploring the set of reachable graphs. We show that this drastically reduces the size of the search space. We consider the directed acyclic graph $F$ given by all edits in $\mathcal{D}$ along with the parent-child relations between edits. In other words, $F$ is given by the transitive reduction of $\leqslant$ on the set of all rewrites $E(T)$. We call $F$ the factorised search space and we wish to estimate its size of $F$.
 
 By construction, any graph $G' \in V(T)$ in the naive search tree maps injectively to a _subgraph_ $F_{G'} \subseteq F$ of the factorised search tree, given by the subgraph of $F$ induced by the rewrites on the path from $G$ to $G'$ in $T$.
 
