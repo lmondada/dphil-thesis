@@ -7,7 +7,7 @@ slug = "sec:anchors"
 
 For the spanning tree reduction $G_T$ of a graph $G$, call an operation $o$ of $G$ an _anchor_ operation if it is on two linear paths and it is not split in $G_T$. Remark that the set of anchors operations $X$ in $G_T$ fully determines the spanning tree reduction $G_T$. We can therefore simplify the problem of finding a spanning tree reduction of $G$ to the problem of finding a set of anchor operations $X$.
 
-Instead of the `CanonicalSpanningTree` procedure, we can equivalently consider a `CanonicalAnchors` procedure, that performs the same computation but returns the set of anchor operations $X$. We express this computation below, using recursion instead of a `for` loop. This form generalises better to the `AllAnchors` procedure that we will introduce next to define `AllSpanningTrees`.
+Instead of the `CanonicalSpanningTree` procedure, we can equivalently consider a `CanonicalAnchors` procedure, which performs the same computation but returns the set of anchor operations $X$. We express this computation below, using recursion instead of a `for` loop. This form generalises better to the `AllAnchors` procedure that we will introduce next to define `AllSpanningTrees`.
 
 <!-- prettier-ignore-start -->
 ```python {linenos=inline}
@@ -43,14 +43,14 @@ def CanonicalAnchors(
 
 We introduced the self-describing `ConnectedComponent`, `Neighbours` and `RemoveOperation` procedures to traverse, respectively modify, the graph $G$. Importantly, `Neighbours(G, op)` returns the neighbours of `op` in increasing port label order.
 
-The equivalence of this procedure with `CanonicalSpanningTree` follows directly from the observation made in {{< reflink "sec:simplifying-assumptions" >}} that ordering operations in lexicographic order of the port labels is equivalent to a depth-first traversal of the graph. `CanonicalAnchors` implements a recursive depth-first traversal (DFS), with the twist that the recursion is explicit only on the anchor nodes, and otherwise relying on the lexicographic ordering just like in `CanonicalSpanningTree`: lines 5--15 of `CanonicalAnchors` correspond to the iterations of the `for` loop (line 11--20) of `CanonicalSpanningTree` until an anchor operation is found (i.e. the `else` branch on lines 18--20 is executed). From there, the graph traversal proceeds recursively.
+The equivalence of this procedure with `CanonicalSpanningTree` follows directly from the observation made in {{< reflink "sec:simplifying-assumptions" >}} that ordering operations in lexicographic order of the port labels is equivalent to a depth-first traversal of the graph. `CanonicalAnchors` implements a recursive depth-first traversal (DFS), with the twist that the recursion is explicit only on the anchor nodes and otherwise relying on the lexicographic ordering just like in `CanonicalSpanningTree`: lines 5--15 of `CanonicalAnchors` correspond to the iterations of the `for` loop (line 11--20) of `CanonicalSpanningTree` until an anchor operation is found (i.e. the `else` branch on lines 18--20 is executed). From there, the graph traversal proceeds recursively.
 
 To ensure that the recursive DFS does not visit the same operation twice, we modify the graph with `RemoveOperation` on lines 11 and 15, ensuring that no visited operation remains in `G`. As a consequence, `CanonicalAnchors` may be called on disconnected graphs, which explains the additional call to `ConnectedComponent` on line 4.
 
 <!-- prettier-ignore -->
 {{% proposition title="Equivalence of `CanonicalSpanningTree` and `CanonicalAnchors`" id="prop-tree-equiv" %}}
 
-Let $G$ be a connected graph and let $X$ be the anchors of its canonical spanning tree reduction `CanonicalSpanningTree(G)`. Then `CanonicalAnchors(G, root, seen_paths={})` returns $X$, the set of all paths in $G$ and the empty graph.
+Let $G$ be a connected graph, and let $X$ be the anchors of its canonical spanning tree reduction `CanonicalSpanningTree(G)`. Then `CanonicalAnchors(G, root, seen_paths={})` returns $X$, the set of all paths in $G$ and the empty graph.
 
 <!-- prettier-ignore -->
 {{% /proposition %}}
@@ -63,7 +63,7 @@ In addition to "simplifying" spanning tree reductions, anchor operations have an
 
 Recall that a spanning tree reduction $G_T$ is tree-like and can always be seen as a rooted tree $T_G$ by taking the dual of $G_T$ and picking a root operation $r$ in $G_T$. Furthermore, children of nodes in a tree are ordered by the port label ordering.
 
-For the following proposition we introduce a $\subseteq$ relation on dual trees of spanning tree reductions: $T_H \subseteq T_G$ if the trees share the same root operation $r$, $T_H$ is a subtree of $T_G$ up to isomorphism, and their types as well as the $split$ map coincide on the common subtree. {{% proposition title="Maximal spanning tree reductions" id="prop-maxspanningtree" %}} Let $G$ be a connected graph, $X$ a set of operations in $G$ and $r \in X$ a root operation. Let $$\mathcal{G}_X = \{H \subseteq G \mid \textrm{anchors}(H, r) = X\},$$ where $\textrm{anchors}(H, r)$ refers to the set `CanonicalAnchors(H, r, {})`.
+For the following proposition, we introduce a $\subseteq$ relation on dual trees of spanning tree reductions: $T_H \subseteq T_G$ if the trees share the same root operation $r$, $T_H$ is a subtree of $T_G$ up to isomorphism, and their types, as well as the $split$ map coincide on the common subtree. {{% proposition title="Maximal spanning tree reductions" id="prop-maxspanningtree" %}} Let $G$ be a connected graph, $X$ a set of operations in $G$ and $r \in X$ a root operation. Let $$\mathcal{G}_X = \{H \subseteq G \mid \textrm{anchors}(H, r) = X\},$$ where $\textrm{anchors}(H, r)$ refers to the set `CanonicalAnchors(H, r, {})`.
 
 1. There is a subgraph $G^X \subseteq G$ such that for all subgraphs $H \in \mathcal{G}_X$: $H \subseteq G^X$.
 2. Furthermore, for all graph $P$, $$P \simeq H \in \mathcal{G}_X \quad\Leftrightarrow\quad T_P \subseteq T_{G^X}.$$ where $T_P$ and $T_{G^X}$ are the tree duals rooted in $r$ of the spanning tree reduction with anchors $X$ of $P$ and $G^X$, respectively.

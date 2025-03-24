@@ -5,7 +5,7 @@ weight = 5
 slug = "sec:automaton"
 +++
 
-We have shown in the previous sections how we can reduce the pattern matching problem to a problem on trees, and how we can efficiently enumerate all subtrees of a given pattern width $w$. To complete the pattern matching algorithm, we need to provide a fast way to evaluate the subtree relation, for many trees representing the set of all patterns we wish to match. More precisely, for patterns $P_1, \dots, P_\ell$ with width $w$, fix a root operation $r_i$ in $P_i$ for each $1 \leqslant i \leqslant \ell$ and consider the tree dual of the spanning tree reduction of the patterns $T_{P_1}, \dots, T_{P_\ell}$. We wish to compute the set
+We have shown in the previous sections how we can reduce the pattern-matching problem to a problem on trees and how we can efficiently enumerate all subtrees of a given pattern width $w$. To complete the pattern-matching algorithm, we must provide a fast way to evaluate the subtree relation for many trees representing the set of all patterns we wish to match. More precisely, for patterns $P_1, \dots, P_\ell$ with width $w$, fix a root operation $r_i$ in $P_i$ for each $1 \leqslant i \leqslant \ell$ and consider the tree dual of the spanning tree reduction of the patterns $T_{P_1}, \dots, T_{P_\ell}$. We wish to compute the set
 
 $$\{1 \leqslant i \leqslant \ell \mid T_{P_i} \subseteq T_G\},$$
 
