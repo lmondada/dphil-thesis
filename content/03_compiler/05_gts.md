@@ -5,9 +5,9 @@ layout = "section"
 slug = "sec-gts-def"
 +++
 
-We conclude this chapter by presenting two ways in which the valid transformations of minIR GTSs can be specified. The first and simplest are graph transformation rules, ubiquitous in graph transformation theories; the second generalises transformation rules in the case that they express graph equivalences by storing sets of $n$ equivalent graphs to represent the $\Theta(n^2)$ transformation rules between all pairs of equivalent graphs. Unlike transformation rules, a GTS based on equivalence classes cannot encode any transformation _directedness_ in a rule set[^allandtheirinverse].
+We conclude this chapter by presenting two ways to specify the valid transformations of minIR GTSs. The first and simplest are graph transformation rules, ubiquitous in graph transformation theories; the second generalises transformation rules in the case that they express graph equivalences by storing sets of $n$ equivalent graphs to represent the $\Theta(n^2)$ transformation rules between all pairs of equivalent graphs. Unlike transformation rules, a GTS based on equivalence classes cannot encode any transformation _directedness_ in a rule set[^allandtheirinverse].
 
-[^allandtheirinverse]: Meaning that for every rule in the system there is another rule that is its inverse.
+[^allandtheirinverse]: Meaning that for every rule in the system, there is another rule that is its inverse.
 
 ### Graph transformation rules
 
@@ -50,7 +50,7 @@ interface morphism
 such that the image $H = \varphi(G_L)$ of $G_L$ is a valid minIR subgraph of $G$
 that implements an interface $I_H$.
 
-Then we have that the interface $I_R \triangleright I_H$.
+Then, we have that the interface $I_R \triangleright I_H$.
 
 _Corollary:_ Let $B$ be the boundary values of $\varphi(G_L)$ and let $$O_B = \{o \in \varphi(O_L) \mid v \in B\textrm{ for all }v \in \mathit{def}\,(o) \cup use(o)\}.$$ It follows by {{% refproposition "prop-fullrewrite" %}} that there is $G_R'$ and $\mu'$ such that the graph $r_\varphi(G)$ obtained from the rewrite $$r_\varphi = (G_R', \varphi(V_L), O_B, \mu')$$ is a valid minIR graph.
 
@@ -77,7 +77,7 @@ Similarly, consider $$B_U = \{v \in V_H \mid v \in \mathit{def}\,(o)\textrm{ for
 <!-- prettier-ignore -->
 {{% /proof %}}
 
-The definitions of rewrites and transformation rules we have presented in these paragraphs and in the last section overlap with the graph transformations defined for arbitrary graphs that result from the double pushout construction, as presented in @Koenig2018. The definitions are equivalent _most of the time_, but it is interesting to identify some of the edge cases where DPO and our minIR rewriting formalism differ:
+The definitions of rewrites and transformation rules presented in these paragraphs and in the last section overlap with the graph transformations defined for arbitrary graphs resulting from the double pushout construction, as presented in @Koenig2018. The definitions are equivalent _most of the time_, but it is interesting to identify some of the edge cases where DPO and our minIR rewriting formalism differ:
 
 **Implicit edge removal.**&emsp; A DPO transformation is not defined when there is an edge in $G$ that is not in the image of $\varphi$: $$e \in E(G) \smallsetminus \varphi(E_L)$$
 
@@ -95,7 +95,7 @@ The case $v \in B_U$ is impossible because in a valid minIR there is a unique $o
 
 ### Equivalence classes of graphs
 
-An alternative definition of graph transformations in GTSs is using partitions of graphs into equivalence classes. This is particularly useful in applications where transformation rules encode graph equivalences (rather than, say, graph evolution) and there is no obvious way to fix the direction in which transformations should be applied. Such systems are good candidates for equality saturation-like approaches as discussed in {{% reflink "chap:parallel" %}}.
+An alternative definition of graph transformations in GTSs is using partitions of graphs into equivalence classes. This is particularly useful in applications where transformation rules encode graph equivalences (rather than graph evolution) and there is no obvious way to fix the direction in which transformations should be applied. Such systems are good candidates for equality saturation-like approaches as discussed in {{% reflink "chap:parallel" %}}.
 
 Consider two graph $G$ and $G_I$, with $G_I$ implementing and interface $I$. The values and operations of the graphs are $V_I, O_I$ and $V, O$ respectively. Two maps $\overline{\varphi}_V: V_I \rightharpoonup V$ and $\overline{\varphi}_O: O_I \rightharpoonup O$ define a _partial interface morphism_ that we write $\overline{\varphi}: G_I \rightharpoonup G$ if the map $\varphi$ that is obtained from the restrictions of $\overline{\varphi}_V$ and $\overline{\varphi}_O$ to their respective domains of definition define a valid interface morphism.
 
