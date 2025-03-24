@@ -52,10 +52,22 @@ class MyHandler extends Paged.Handler {
       if (ref) {
         // Find the first <p> ancestor of the footnote reference
         let refParagraph = ref.closest("p") || ref;
-        let offset = computeOffsetForAlignment(li, refParagraph);
+        
+        // First try with top alignment (default behavior)
+        let offset = computeOffsetForAlignment(li, refParagraph, false);
         if (lastOffset !== null) {
           offset = Math.max(offset, lastOffset);
         }
+        
+        // Check if this would cause overlap with .footnote-above
+        if (overlapsWithFootnoteAbove(li, offset, pageFragment)) {
+          // If overlap detected, align to bottom instead
+          offset = computeOffsetForAlignment(li, refParagraph, true);
+          if (lastOffset !== null) {
+            offset = Math.max(offset, lastOffset);
+          }
+        }
+        
         li.style.top = `${offset}px`;
         lastOffset = offset + li.offsetHeight;
       }
@@ -163,9 +175,39 @@ toggleFloatingFootnotes();
 
 // Computes an offset such that setting `top` on `footnote` will put it
 // in vertical alignment with targetAlignment.
-function computeOffsetForAlignment(footnote, targetAlignment) {
+function computeOffsetForAlignment(footnote, targetAlignment, alignToBottom = false) {
   const offsetParentTop = footnote.offsetParent.getBoundingClientRect().top;
-  // Distance between the top of the offset parent and the top of the
-  // target alignment
-  return targetAlignment.getBoundingClientRect().top - offsetParentTop;
+  if (alignToBottom) {
+    // Distance that puts the bottom of the footnote aligned with the bottom of the target
+    return targetAlignment.getBoundingClientRect().bottom - offsetParentTop - footnote.offsetHeight;
+  } else {
+    // Distance between the top of the offset parent and the top of the
+    // target alignment
+    return targetAlignment.getBoundingClientRect().top - offsetParentTop;
+  }
 }
+
+// Function to check if a footnote would overlap with a .footnote-above element
+function overlapsWithFootnoteAbove(footnote, offset, container) {
+  const footnoteRect = footnote.getBoundingClientRect();
+  const potentialPosition = {
+    top: offset + footnote.offsetParent.getBoundingClientRect().top,
+    bottom: offset + footnote.offsetParent.getBoundingClientRect().top + footnoteRect.height,
+    left: footnoteRect.left,
+    right: footnoteRect.right
+  };
+  
+  const footnoteAboveElements = container.querySelectorAll('.footnote-above');
+  for (const element of footnoteAboveElements) {
+    const elementRect = element.getBoundingClientRect();
+    // Check if there's overlap
+    if (!(potentialPosition.right < elementRect.left || 
+          potentialPosition.left > elementRect.right || 
+          potentialPosition.bottom < elementRect.top || 
+          potentialPosition.top > elementRect.bottom)) {
+        return true;
+    }
+  }
+  return false;
+}
+

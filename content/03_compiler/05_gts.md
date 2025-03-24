@@ -151,7 +151,10 @@ but has an endpoint $v \in e$ such that
 $v \in \varphi(V_L \smallsetminus \varphi_L(V_I)),$ i.e. that is in the image of
 $\varphi$ but not in the image of $\varphi \circ \varphi_L$. In minIR graphs,
 this corresponds to the case of a boundary value $v \in B \subseteq G$ such that
-$$v \not\in \varphi(use(o_{L, out}) \cup \textit{def}\,(o_{L, in})).$$ The case
+
+$$v \not\in \varphi(use(o_{L, out}) \cup \textit{def}\,(o_{L, in})).$$
+
+The case
 $v \in B_U$ is impossible because in a valid minIR there is a unique
 $o_L \in O_L$ such that $v \in \varphi(\textit{def}\,(o_L))$---thus either
 $v \in \textit{def}\,(\varphi(o_L))$ and it cannot be in $B_U$, or

@@ -211,7 +211,11 @@ These exponentials are always valid $n$-qubit unitaries and can express
 entangling operations across any number of qubits: the qubits on which an
 operation $exp(i \alpha \cdot s)$ acts non-trivially are given by the indices of
 the characters in $s$ that are not the identity $I$. For instance, the
-exponential $$exp(i \frac\pi2 XIZ)$$ is a valid quantum computation on 3 qubits,
+exponential
+
+$$exp(i \frac\pi2 XIZ)$$
+
+is a valid quantum computation on 3 qubits,
 entangling the first and third qubits. Beyond useful abstractions for
 optimisation, such entangling operations appear naturally when simulating
 quantum systems, for example in quantum chemistry @McClean2016.
@@ -239,7 +243,9 @@ freedom during circuit synthesis.
 The action of phase polynomials on quantum states is actually quite easy to
 understand. Instead of the exponentials of $I$ and $Z$-based Pauli string, the
 computation can equivalently be given by its action on the basis states
+
 $$\ket{b_1 \cdots b_n} \mapsto \underbrace{\exp(i \cdot \sum_{s \in P} a_s \cdot (s_1 b_1 \oplus \cdots \oplus s_n b_n))}_{\in\,\mathbb{R}} \ket{b_1 \cdots b_n}$$
+
 where $b_1 \cdots b_n$ is a bitstring of booleans $b_i \in \{0, 1\}$,
 $s_i \in \{0, 1\}$ is also a boolean with value `1` if and only if the $i$-th
 character in $s$ is $Z$, and $\oplus$ denotes the boolean XOR operation.

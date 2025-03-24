@@ -10,19 +10,19 @@ simplest---is built on the qubit abstraction. As its name suggests, it is the
 quantum analogue of the classical bit, i.e., a value that can take the values
 `0` or `1`.
 
-Whilst we do not want to delve too deeply into the details of the physical
-realisations of qubits in real-world architectures, it is important to note one
-fundamental difference with classical systems. Classical bit values (the famous
-`0`s and `1`s of our computers) are typically encoded using two voltages;
-another way of saying this is that bit values, and hence data, correspond to
-electrical currents on a chip. Gates, i.e. the lowest level of operations that
-can be applied to bits, then correspond to barriers that let the electrical
-current flow through or block it. Generalising slightly, we can picture a
-classical gate as a black box with `n` input wires going into the box and `m`
-output wires leaving it. For any combination of on and off voltages on the input
-wires, the box will turn on some of the output wires. The vital point to take
-away from this classical state of affairs is that we can think of input and
-output bits (i.e. the input and output wires) as physically distinct objects
+We will stick to our promise of not delving into the details of the physical
+realisations of qubits in real-world architectures. Nonetheless, it is important
+to note one fundamental difference with classical systems. Classical bit values
+(the famous `0`s and `1`s of our computers) are typically encoded using two
+voltages; another way of saying this is that bit values, and hence data,
+correspond to electrical currents on a chip. Gates, i.e. the lowest level of
+operations that can be applied to bits, then correspond to barriers that let the
+electrical current flow through or block it. Generalising slightly, we can
+picture a classical gate as a black box with `n` input wires going into the box
+and `m` output wires leaving it. For any combination of on and off voltages on
+the input wires, the box will turn on some of the output wires. The vital point
+to take away from this classical state of affairs is that we can think of input
+and output bits (i.e. the input and output wires) as physically distinct objects
 (the wires).
 
 This is not the case in implementations of qubits. Unlike their classical
@@ -87,19 +87,18 @@ a copy of the original state before modifying it!
 This would allow us to do more than one computation from a temporary value. No,
 big no-no! This is a profound restriction (or property, depending on your point
 of view) with deep roots in the physics of quantum mechanics. This principle,
-known as the no-cloning theorem, is closely linked to many of the observations
-and properties we have described.
+known as the no-cloning theorem, is one of three fundamental properties of
+quantum physics that quantum computing builds upon.
 
-### No-cloning theorem
+### The physical constraints of quantum computation
 
-We are now entering the (short) section of the thesis where we discuss some
-ideas from quantum information theory---so depending on your disposition, either
-indulge yourself or bear with me for a moment. The no-cloning principle
-@Wootters1982 provides a formal foundation for the vague statement _"qubits live
-forever"_ we made earlier. It is a fundamental tenant of quantum information,
-deserving a more rigorous treatment than we are giving it here. We recommend
-that the curious reader refers themselves to more respectful references such as
-@Nielsen2016.
+#### No-cloning theorem
+
+The no-cloning principle @Wootters1982 provides a formal foundation for the
+vague statement _"qubits live forever"_ we made earlier. It is a fundamental
+tenant of quantum information, deserving a more rigorous treatment than we are
+giving it here. We recommend that the curious reader refers themselves to more
+respectful references such as @Nielsen2016.
 
 **No-cloning theorem:** it is impossible to copy an arbitrary unknown state onto
 another (possibly known) qubit, or to copy a (possibly known) qubit to a qubit
@@ -122,7 +121,7 @@ interpret it as some amount of information. The state $\ket{0}$, on the other
 hand, is a fixed state and thus cannot store any information. From the
 perspective of information theory, the map
 $\ket{\psi}\ket{0} \mapsto \ket{0}\ket{0}$ thus destroys information: it turns
-an information storing left -and side into a product of $\ket{0}$ states, devoid
+an information storing left-hand side into a product of $\ket{0}$ states, devoid
 of any information.
 
 We can also revisit the first map
@@ -132,7 +131,7 @@ thin air! Using this interpretation, the no-cloning theorem is thus the
 statement that quantum information is a preserved quantity in quantum
 computations: its amount will never increase or decrease.
 
-### Reversibility
+#### Reversibility
 
 The fact that the amount of quantum information can never increase by
 transforming quantum states matches our intuition: if no new information is
@@ -148,24 +147,27 @@ operation would exist that creates information from nothing! The two halves of
 the no-cloning theorem, as we presented it, thus state the same principle once
 we consider that every operation must be reversible.
 
-### Universality
+#### Universality
 
 Finally, a third distinguishing property of quantum computation is how
-arbitrarily large computations can be generated from single qubit gates and
-pairwise entangling interactions between qubits (two-qubit gates) @Barenco_1995.
-We call a set of gates that can be used to construct any arbitrary quantum
-computation a **universal gate set**.
+arbitrarily large computations can be generated from single-qubit gates and
+pairwise entangling interactions between qubits (two-qubit gates) @Barenco*1995.
+It is furthermore the case that the choice of a \_fixed* two-qubit gate, along
+with single-qubit gates, is sufficient to generate any arbitrary quantum
+computation. We call a set of gates that can be used to construct any arbitrary
+quantum computation a **universal gate set**.
 
-This is a boon for hardware design, as manipulating single qubit systems is
+This is a boon for hardware design, as manipulating single-qubit systems is
 often much more manageable than controlling physical interactions between
-multiple entities. This decomposition into one and two-qubit gates means that
-the architecture _i)_ does not need to support interactions between $n > 2$
-qubits, and _ii)_ can be specialised and hand-tuned to execute the two-qubit
-interaction of choice as faithfully as possible. Having a two-qubit gate as the
-entangling operation is not the only choice. Some architectures, such as neutral
-atoms, choose instead to replace it with a global entangling operation that
-applies to many qubits simultaneously @Evered2023, resulting in a universal gate
-set that is more convenient to implement experimentally in their system.
+multiple entities. This decomposition into single-qubit and (a fixed) two-qubit
+gates means that the architecture _i)_ does not need to support interactions
+between $n > 2$ qubits, and _ii)_ can be specialised and hand-tuned to execute
+the two-qubit interaction of choice as faithfully as possible. Having a
+two-qubit gate as the entangling operation is not the only choice. Some
+architectures, such as neutral atoms, choose instead to replace it with a global
+entangling operation that applies to many qubits simultaneously @Evered2023,
+resulting in a universal gate set that is more convenient to implement
+experimentally in their system.
 
 Gate set universality can be generalised further to approximate universality,
 which is at the centre of the development of error-correcting codes. Indeed, any
@@ -174,18 +176,19 @@ discrete finite sets of one and two-qubit gates @Kitaev2002 @Dawson_2006. This
 represents a significant simplification for error correction, as it removes the
 need for continuously parametrised gates and discretises the problem space.
 
-#### Leveraging quantum properties for compilation
+### Leveraging quantum properties for compilation
 
-We have just spent a long time discussing universality, reversibility, and
-no-cloning. There is a reason for this: these laws of physics that govern
-quantum computations and are absent from classical computer science are an
-excellent foundation for developing quantum-specific computation optimisations
-and compilation techniques in general.
+We have introduces the universality, reversibility and no-cloning properties of
+quantum computations for a reason: these laws of physics that govern quantum
+computations and are absent from classical computer science are an excellent
+foundation for developing quantum-specific computation optimisations and
+compilation techniques in general.
 
 As we have just discussed, the wide variety of universal gate sets are degrees
-of freedom that the compiler can use. Transpilation from one universal gate set
-to another to enable programmers to target different hardware is one of quantum
-compilers's first and most fundamental functions @Sivarajah2020.
+of freedom that the compiler can use. Using universality to translate
+computations between universal gate sets, enabling programmers to seemlessly
+target different hardware, is one of quantum compilers's first and most
+fundamental functions @Sivarajah2020.
 
 Reversibility is also a source of flexibility when expressing quantum programs.
 Suppose the user wants to execute an operation $A$ but it is more convenient, or
@@ -196,26 +199,30 @@ inverse $B^{-1}$ of $B$, it is always possible to rewrite the program as
 
 where these diagrams should be read as operations to be executed from left to
 right. This is nothing but the mathematical trick of multiplying the left-hand
-side with the identity operation expressed as $B^{-1} \cdot B$.
+side with the identity operation expressed as $B \circ B^{-1}$[^matmul].
 
-Now, of course, this rewrite is only sensible if the operation $A \circ B^{-1}$
-is reasonably cheap to perform[^matmul]. There are plenty of instances where
-this is indeed the case. Morally, the quantum compiler always has the freedom to
-execute any quantum operation---at the risk of producing very inefficient
-code---given that reversibility always guarantees that the operation can be
-reversed and the competition undone whenever necessary.
+Now, of course, this rewrite is only sensible if the operation $B^{-1} \circ A$
+is reasonably cheap to perform. There are plenty of instances where this is
+indeed the case. Morally, the quantum compiler always has the freedom to execute
+any quantum operation---at the risk of producing very inefficient code---given
+that reversibility always guarantees that the operation can be reversed and the
+competition undone whenever necessary.
 
 [^matmul]:
-    The $\circ$ is maths for denoting the composition of functions, so unlike
-    the left-to-right diagram, it must be read from right to left. Is your head
-    spinning yet?
+    The $\circ$ denotes the composition of functions, so unlike the
+    left-to-right diagram, it must be read from right to left.
 
-No-cloning is also a very useful guarantee that the compiler can use. In
+Finally, no-cloning is a very useful guarantee that the compiler can use to
+simplify reasoning about computations[^noalias]. In
 {{% reflink "chap:matching" %}} we will see that it dramatically simplifies
 pattern matching, which helps identify all possible optimisations quickly. More
 generally, no-cloning restricts the set of programs that the compiler must
 consider, resulting in elegant graph transformation semantics---a topic we
 explore in {{% reflink "chap:compiler" %}}.
+
+[^noalias]:
+    In particular, no-cloning resolves the problem of
+    [aliasing](https://blog.regehr.org/archives/1307) once and for all!
 
 ### The quantum circuit representation
 
@@ -236,18 +243,17 @@ their graphical representation should be of no surprise to the reader:
    ordering in time.
 
 A simple circuit composed of two qubits and three gates $A$, $B$ and $C$ could
-for instance look like this 
+for instance look like this
 
 {{% figure src="svg/abccirc.svg" width="30%" nobg="true" %}}
 
-Just as the previous diagram, the computation in a circuit is read from left
-to right (you can think of each wire as an arrow pointing to the right).
-In this case, $A$ would be executed before $B$ and $C$; $A$ would act on both
-qubits, whereas $B$ and $C$ would only modify the first and second qubits,
-respectively. Note that there is no ordering specified between $B$ and $C$:
-because they act on disjoint sets of qubits, their relative ordering makes no
-difference. It is thus common to display them as acting at the same time. We
-could have equivalently chosen to draw them as:
+The previous diagram was in fact also a circuit, in which each arrow pointing to
+the right was a segment of a qubit line. In this case, $A$ would be executed
+before $B$ and $C$; $A$ would act on both qubits, whereas $B$ and $C$ would only
+modify the first and second qubits, respectively. Note that there is no ordering
+specified between $B$ and $C$: because they act on disjoint sets of qubits,
+their relative ordering makes no difference. It is thus common to display them
+as acting at the same time. We could have equivalently chosen to draw them as:
 
 {{% figure src="svg/abcoracb.svg" width="90%" nobg="true" %}}
 
@@ -263,13 +269,17 @@ execute the rotation.
 
 There are also commonly used multi-qubit gates. For these, it becomes slightly
 awkward to draw them as boxes, as they may act on qubits that are not drawn next
-to each other in the circuit[^drawit]. As a solution, common gates were given
-representations that do not spell out their name but mark which qubit they are
-acting on and in what order. Here are the representations of three of the most
-famous ones, in order: the CX (also known as CNOT) gate, the CZ and the Toffoli:
-[^drawit]: This becomes immediately apparent if you attempt to draw a gate that
-should act on the first and third qubit line of a circuit, but leave the second
-one untouched.
+to each other in the circuit[^drawit] or might be applied to qubits in a
+specified order. As a solution, common gates were given representations that do
+not spell out their name but mark which qubit they are acting on and in what
+order. Here are the representations of three of the most famous ones, in order:
+the $\mathit{CX}$ (also known as CNOT) gate, the $\mathit{CZ}$ and the
+$\mathit{CCX}$, or Toffoli:
+
+[^drawit]:
+    This becomes immediately apparent if you attempt to draw a gate that should
+    act on the first and third qubit line of a circuit, but leave the second one
+    untouched.
 
 <!-- prettier-ignore-start -->
 {{< qviz >}}
