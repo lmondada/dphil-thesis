@@ -28,11 +28,11 @@ We also use the endpoint partitions to define _linear paths_. Two values $v, v'$
 
 We impose a major restrictions on the general case of minIR graphs, namely that all types in the type system $\Sigma$ must be linear[^graphiso]. Using this assumption, every value has exactly one use and one define. As a result, the linear paths of a minIR graph form a partition of the values of the graph. They correspond to the paths that form the connected components of the graph obtained by splitting every operation. We call the number of linear paths (and the of connected components in the fully split graph) the graph _width_, written $width(G)$. We also use the linear path decomposition to define _graph depth_, written $depth(G)$, as the longest linear path in $G$.
 
-[^graphiso]: This restriction is necessary: without it, the pattern matching problem we are solving is a generalisation of the subgraph isomorphism problem, a well known NP-complete problem @Cook1971. The approach generalises to non-linear types, but the complexity analysis no longer holds (we pay a computational price for every non-linear value matched).
+[^graphiso]: This restriction is necessary: without it, the pattern-matching problem we are solving is a generalisation of the subgraph isomorphism problem, a well-known NP-complete problem @Cook1971. The approach generalises to non-linear types, but the complexity analysis no longer holds (we pay a computational price for every non-linear value matched).
 
-For a minIR equivalence class $\mathcal{E}$, finding a subgraph $S$ in $G$ such that $L \in \mathcal{E}$ is the equivalent outlined region of $S$ is equivalent to finding an embedding of $L' \hookrightarrow G$, i.e. a a subgraph $S \subseteq G$ that is isomorphic to $L' \simeq S$. $L'$ is the minIR graph obtained from the region $L$ by removing the region definition operation (and its defined region value), as well as its children input and output operations[^notvalid].
+For a minIR equivalence class $\mathcal{E}$, finding a subgraph $S$ in $G$ such that $L \in \mathcal{E}$ is the equivalent outlined region of $S$ is equivalent to finding an embedding of $L' \hookrightarrow G$, i.e. a subgraph $S \subseteq G$ that is isomorphic to $L' \simeq S$. $L'$ is the minIR graph obtained from the region $L$ by removing the region definition operation (and its defined region value), and its children input and output operations[^notvalid].
 
-[^notvalid]: Note that $L'$ is not a valid minIR graph as it violates the linearity of the values that were connected to the removed input and output operations.
+[^notvalid]: Note that $L'$ is not a valid minIR graph as it violates the linearity of the values connected to the removed input and output operations.
 
 #### Convexity
 
@@ -56,17 +56,17 @@ Suppose there is $H \subseteq G$ such that $\varphi(P) \subseteq H$ and $width(P
 
 In this chapter, whenever we define a subgraph $H \subseteq G$ of a graph $G$, we will assume that $H$ satisfies the above weakened convexity condition.
 
-The converse is however not true. This means that the pattern matching technique presented below will find a strict superset of convex embeddings. To restrict considerations to convex embeddings, it suffices to filter out the non-convex ones in a post-processing step.
+The converse is, however, not true. The pattern-matching technique presented below will find a strict superset of convex embeddings. To restrict considerations to convex embeddings, it suffices to filter out the non-convex ones in a post-processing step.
 
 #### Ignoring MinIR Hierarchy
 
-We have so far omitted discussing one particular part of the minIR structure: the nested hierarchy of operations. Syntactically, hierarchy relations (between region definitions and input/output operations) can be viewed as just another value type by adjusting these operations to define as output, respectively use as input, a region value. Because of the bijectivity requirement of $\varphi_O$ on children of Definition 3.2, these parent-child relations behave in fact like linear values---and hence satisfy the linearity assumption we have imposed.
+So far, we have omitted discussing one part of the minIR structure: the nested hierarchy of operations. Syntactically, hierarchy relations (between region definitions and input/output operations) can be viewed as just another value type by adjusting these operations to define output and use a region value as input. Because of the bijectivity requirement of $\varphi_O$ on children of Definition 3.2, these parent-child relations behave, in fact, like linear values---and hence satisfy the linearity assumption we have imposed.
 
-However, by treating them as such, we have further weakened the constraints on pattern embeddings as we do not enforce that boundary values must be in the same regions, nor that parent-child relations cannot be boundary values. Similarly to convexity, we defer checking these properties to a post-processing step.
+However, by treating them as such, we have further weakened the constraints on pattern embeddings. We do not enforce that boundary values must be in the same regions or that parent-child relations cannot be boundary values. Similarly to convexity, we defer checking these properties to a post-processing step.
 
 #### Further (harmless) assumptions
 
-We will further simplify the problem by making choices of presentation that do not imply any loss of generality. First of all, we assume that all patterns have the same width $w$ and depth $d$, are connected graphs and have at least 2 operations. These conditions can always be fulfilled by adding "dummy" operations if necessary. Embeddings of disconnected patterns can be computed one connected component at a time.
+We will further simplify the problem by making presentation choices that do not imply any loss of generality. First of all, we assume that all patterns have the same width $w$ and depth $d$, are connected graphs and have at least 2 operations. These conditions can always be fulfilled by adding "dummy" operations if necessary. Embeddings of disconnected patterns can be computed one connected component at a time.
 
 We will further assume that all operations are on at most two linear paths (and thus in particular, have at most 4 endpoints). Operations on $\Delta > 2$ linear paths can always be broken up into a composition of $\Delta-1$ operations, each on two linear paths as follows:
 
@@ -77,16 +77,16 @@ We will further assume that all operations are on at most two linear paths (and 
     caption="Expressing an operation on $\Delta = 3$ linear paths as a composition of two operations on 2 linear paths." width="70%">}}
 <!-- prettier-ignore-end -->
 
-This transformation leaves graph width unchanged but may multiply the graph depth by up to a factor $\Delta$. We furthermore assume that the set of endpoints $P_o$ for all operations $o \in O$ map injectively to some port labels $P_o \hookrightarrow \Pi$, for instance by introducing distinct sets of integer labels for $use(\cdot)$ and $def(\cdot)$ endpoints and mapping endpoints in $o$ to their position in the $use(o)$ or $def(o)$ string. We further endow the labels $\Pi$ with a total order (for instance basead on the integer values). The total order on $\Pi$ then induces a total order on the paths $v_1\cdots v_k \in V^\ast$ in $G$ that start in the same value $v_1$: the paths are equivalently described by a string in $\Pi^\ast$, the sequence of port labels of the operations traversed, which we order using the lexicographical ordering on strings. Given a root value $r$, for every value $v$ in $G$ there is thus a unique smallest path from $r$ to $v$ in $G$[^thisisdfs]. This path is invariant under isomoprhism of the underlying graph (i.e. relabelling of the values and operations, but preserving the port labels).
+This transformation leaves graph width unchanged but may multiply the graph depth by up to a factor $\Delta$. We furthermore assume that the set of endpoints $P_o$ for all operations $o \in O$ map injectively to some port labels $P_o \hookrightarrow \Pi$, for instance, by introducing distinct sets of integer labels for $use(\cdot)$ and $def(\cdot)$ endpoints and mapping endpoints in $o$ to their position in the $use(o)$ or $def(o)$ string. We further endow the labels $\Pi$ with a total order (for instance, based on the integer values). The total order on $\Pi$ then induces a total order on the paths $v_1\cdots v_k \in V^\ast$ in $G$ that start in the same value $v_1$: the paths are equivalently described by a string in $\Pi^\ast$, the sequence of port labels of the operations traversed, which we order using the lexicographical ordering on strings. Given a root value $r$, for every value $v$ in $G$ there is thus a unique smallest path from $r$ to $v$ in $G$[^thisisdfs]. This path is invariant under isomorphism of the underlying graph (i.e. relabelling of the values and operations but preserving the port labels).
 
 [^thisisdfs]: Remark that the ordering of the operations thus defined is a particular case of a depth-first search (DFS) ordering of the graph: given an operation $o$ that has been visited, all its descendants will be visited before proceeding to any other operation.
 
-Define an _open_ value as a value with a missing use or define operation (i.e. an open value can never be part of a valid minIR graph, but will be found in pattern graphs). Using these assumptions we can obtain the following notable bound on graph width.
+Define an _open_ value as a value with a missing use or define operation (i.e. an open value can never be part of a valid minIR graph but will be found in pattern graphs). We can obtain the following notable bound on graph width using these assumptions.
 
 <!-- prettier-ignore -->
 {{< proposition title="Bound on graph width" id="prop-widthbound" >}}
 
-Let $G$ be a graph with $n_\textrm{odd}$ operations of odd degree and $n_\omega$ open values. Then the graph width of $G$ is $width(G) = \lfloor(n_\textrm{odd} + n_\omega) / 2\rfloor$.
+Let $G$ be a graph with $n_\textrm{odd}$ operations of odd degrees and $n_\omega$ open values. Then, the graph width of $G$ is $width(G) = \lfloor(n_\textrm{odd} + n_\omega) / 2\rfloor$.
 
 <!-- prettier-ignore -->
 {{< /proposition >}}
@@ -94,13 +94,13 @@ Let $G$ be a graph with $n_\textrm{odd}$ operations of odd degree and $n_\omega$
 <!-- prettier-ignore -->
 {{% proof %}}
 
-For any linear path $P \subseteq V^\ast$ in $G$ consider its two ends $v_1$ and $v_2$, i.e. the two values in $P$ with only one neighbouring value in $P$ (linear paths must contain at least one value). In the fully split graph of $G$, these values are either open or they must be connected to two operations---one that defines them and one that uses them. If $v_1 = v_2$, then the value cannot be open, as the graph would have no operations. Thus there are two connected operations, and both must have $v_1 = v_2$ as their single endpoint. Otherwise, both $v_1$ and $v_2$ must either be open values or be connected to an operation with a single endpoint.
+For any linear path $P \subseteq V^\ast$ in $G$ consider its two ends $v_1$ and $v_2$, i.e. the two values in $P$ with only one neighbouring value in $P$ (linear paths must contain at least one value). In the fully split graph of $G$, these values are either open or must be connected to two operations---one that defines them and one that uses them. If $v_1 = v_2$, then the value cannot be open, as the graph would have no operations. Thus, there are two connected operations, and both must have $v_1 = v_2$ as their single endpoint. Otherwise, both $v_1$ and $v_2$ must either be open values or be connected to an operation with a single endpoint.
 
-In a fully split graph, operations with a single endpoint are the result of a split operation with an odd number of endpoints. We conclude that for every linear path, there are either two operations with an odd number of endpoints in $G$, or one such operation and one open value, or two open values. The result follows.
+In a fully split graph, operations with a single endpoint result from a split operation with an odd number of endpoints. We conclude that for every linear path, there are either two operations with an odd number of endpoints in $G$, or one such operation and one open value, or two open values. The result follows.
 
 <!-- prettier-ignore -->
 {{% /proof %}}
 
 ---
 
-In this chapter, we will throughout refer to MinIR graphs that satisfy the above assumptions and may possibly have open values as "graphs".
+In this chapter, we will refer to MinIR graphs that satisfy the above assumptions and may possibly have open values as "graphs".
