@@ -11,7 +11,7 @@ For every operation type $o \in \Gamma$ in the type system $\Sigma$ of the minIR
 
 $$P_o = \{p_1, p_1'\} \,\cup\, \{p_2, p_2'\} \,\cup\, \cdots,$$
 
-where the last set of the partition may be a singleton if $|P_o|$ is odd. For every $o$ we can then define $f = \lceil |P_o| / 2 \rceil$ _split operations_ $o_1, \dots, o_f$ such that the the $i$-th operation $o_i$ has endpoints $p_i$ and $p_i'$ in $P_o$. We will refer to the graph transformation that replaces an operation of type $o$ in a minIR graph with $f$ operations of types $o_1, \dots, o_f$ as _operation splitting_.
+where the last set of the partition may be a singleton if $|P_o|$ is odd. For every $o$ we can then define $f = \lceil |P_o| / 2 \rceil$ _split operations_ $o_1, \dots, o_f$ such that the $i$-th operation $o_i$ has endpoints $p_i$ and $p_i'$ in $P_o$. We will refer to the graph transformation that replaces an operation of type $o$ in a minIR graph with $f$ operations of types $o_1, \dots, o_f$ as _operation splitting_.
 
 <!-- prettier-ignore-start -->
 {{< figure
