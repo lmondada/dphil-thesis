@@ -63,7 +63,7 @@ For each pattern, we consider its canonical spanning tree reduction and construc
 
 Given a graph $G$, we can compute the spanning tree reduction $T_G$ of $G$ for anchors $X$ and map it to the corresponding prefix tree. This can be done in $O(|T_G|)$ time by using a search tree. We can restrict $T_G$ to a graph of size $O(w \cdot d)$ by truncating the linear paths to at most $2d$ length, as in the proof of {{% refproposition "prop-allanchors" %}}. Thus we can assume $|T_G| \in O(w \cdot d)$.
 
-The rest of the proof and the runtime follows from the multi-dimensional prefix tree construction detailed in appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
+The rest of the proof and the runtime follow from the multi-dimensional prefix tree construction detailed in Appendix [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 
 <!-- prettier-ignore -->
 {{% /proof %}}
