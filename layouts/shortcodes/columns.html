@@ -1,8 +1,12 @@
 {{- $ratio := (split (.Get "ratio") ":") -}}
 {{- $enlarge := .Get "enlarge" -}}
+{{- $footnoteAbove := .Get "footnote-above" -}}
 {{- $columnsClass := "book-columns flex flex-wrap" -}}
 {{- if $enlarge -}}
   {{- $columnsClass = printf "%s enlarge-%s" $columnsClass $enlarge -}}
+{{- end -}}
+{{- if $footnoteAbove -}}
+  {{- $columnsClass = printf "%s footnote-above" $columnsClass -}}
 {{- end -}}
 <div class="{{ $columnsClass }}{{ with .Get "class" }} {{ . }}{{ end }}">
 {{ range $index, $content := split .InnerDeindent "<--->" }}

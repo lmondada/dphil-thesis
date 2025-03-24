@@ -38,15 +38,17 @@ In SSA:
 In quantum computations, we must deal with values that are _linear_[^linear],
 reflecting the fact that they are the result of computations on quantum data,
 which must obey the no-cloning and no-deleting laws. This leads us to the
-constraint: [^linear]: The terminology comes from "linear" logic @Girard_1987. I
-apologise for slamming additional semantics on what I recognise is an already
-very overloaded term.
+constraint:
+
+[^linear]:
+    The terminology comes from "linear" logic @Girard_1987. I apologise for
+    slamming additional semantics on what I recognise is an already very
+    overloaded term.
 
 <!-- prettier-ignore-start -->
-
-{{% centered %}} _Every **linear** value must be used exactly once_.
+{{% centered %}}
+_Every **linear** value must be used exactly once_.
 {{% /centered %}}
-
 <!-- prettier-ignore-end -->
 
 Linear values change fundamentally how transformations of the computation graph

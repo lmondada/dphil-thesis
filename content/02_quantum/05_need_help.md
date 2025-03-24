@@ -114,11 +114,14 @@ storage in critical applications.
 For quantum hardware, no-one expects to be able to manipulate qubits without
 introducing errors for a very long time[^majorana], and so, error correction
 will be absolutely everywhere, as soon as our quantum computers will have
-managed to implement such protocols. [^majorana]: We should at this point---at
-the risk of stoking controversy--- acknowledge the commendable efforts of
-scientists chasing the Majorana particle @Sau_2010 @Haaf2024 @Mourik_2012. The
-topological quantum computers these would enable are to my knowledge the only
-quantum architecture proposed that would do away with error correction.
+managed to implement such protocols.
+
+[^majorana]:
+    We should at this point---at the risk of stoking controversy--- acknowledge
+    the commendable efforts of scientists chasing the Majorana particle
+    @Sau_2010 @Haaf2024 @Mourik_2012. The topological quantum computers these
+    would enable are to my knowledge the only quantum architecture proposed that
+    would do away with error correction.
 
 A sketch of quantum error correction goes roughly as follows: the data that
 would be stored on $k$ qubits is instead encoded in a redundant way on a larger

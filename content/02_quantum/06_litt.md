@@ -20,11 +20,14 @@ reference book for quantum information and quantum computing by Nielsen and
 Chuang @Nielsen2016. A fascinating alternative perspective on quantum theory has
 also been developed within the programme of categorical quantum mechanics, for
 which the illustrious "Dodo book" @Coecke2017 would be the go-to introductory
-material[^dodo]. [^dodo]: And while we're on the topic of my supervisor's
-brilliant work: there is also a very recent textbook, a sort of spiritual
-successor to @Coecke2017, particularly focused on quantum compilation
-@Kissinger2024. It is just as worth a read and might appeal more to the computer
-science-y compiler-y reader.
+material[^dodo].
+
+[^dodo]:
+    And while we're on the topic of my supervisor's brilliant work: there is
+    also a very recent textbook, a sort of spiritual successor to @Coecke2017,
+    particularly focused on quantum compilation @Kissinger2024. It is just as
+    worth a read and might appeal more to the computer science-y compiler-y
+    reader.
 
 At the risk of turning this thesis into absolutely shameless Oxford
 self-promotion: guess what else was a product of the _world-class_ research of
@@ -39,9 +42,12 @@ especially as the possibility of actually _performing_ these thought experiments
 on quantum hardware became more tangible. The result were software packages for
 quantum computing, designed for the automatic transformation and _optimisation_
 of quantum computations for execution on real hardware @JavadiAbhari2024
-@CirqDevelopers2024 @Steiger*2018 @Sivarajah2020---we called them quantum
-compilers. [^actuallyclassical]: That is, \_classical* software written to
-control and optimise quantum computations.
+@CirqDevelopers2024 @Steiger\*2018 @Sivarajah2020---we called them quantum
+compilers.
+
+[^actuallyclassical]:
+    That is, \_classical\* software written to control and optimise quantum
+    computations.
 
 A more recent development for quantum compilers is the focus on scalability and
 first class support for hybrid quantum-classical computations. Quantum circuits

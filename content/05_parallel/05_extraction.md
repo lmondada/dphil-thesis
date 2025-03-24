@@ -74,11 +74,14 @@ We now have to find the _optimal_ assignment among all satisfiable assignments
 for the SAT problem given above. In the most general case where the cost
 function $f$ to be minimised is given as a black box oracle on the graph $G'$,
 i.e. on the flattened history of the solution set $D \subseteq \mathcal{D}$,
-this optimisation problem is hard[^whynphard]. [^whynphard]: Hardness can be
-seen by considering the special case of the extraction problem in which all
-edits are compatible and no two edits have a parent-child relation: then there
-are no constraint on the solution space and the optimisation problem requires
-finding the minimum of an arbitrary oracle over $2^{|\mathcal{D}|}$ inputs.
+this optimisation problem is hard[^whynphard].
+
+[^whynphard]:
+    Hardness can be seen by considering the special case of the extraction
+    problem in which all edits are compatible and no two edits have a
+    parent-child relation: then there are no constraint on the solution space
+    and the optimisation problem requires finding the minimum of an arbitrary
+    oracle over $2^{|\mathcal{D}|}$ inputs.
 
 However, if $f$ can be expressed as a function of $x_\delta$ instead of the
 flattened history $G'$, then the 'hardness' can be encapsulated within an
@@ -117,9 +120,12 @@ write
 $$\begin{aligned}f(r(G)) &= \sum_{v \in r(V(G))} w(v)\\&= \sum_{v\in V(G)} w(v) - \underbrace{\sum_{v \in V^-} w(v) + \sum_{v \in V_R} w(v)}_{:= \Delta f_r}\\&= f(G) + \Delta f_r,\end{aligned}$$
 
 where $V^-$ and $V_R$ are the vertex deletion set and replacement graph of $r$
-respectively. [^alsoedgesifyouwant]: A similar argument also applies to cost
-functions that sum over graph _edges_, as would be the case in minIR, where
-operations are modelled as hyperedges.
+respectively.
+
+[^alsoedgesifyouwant]:
+    A similar argument also applies to cost functions that sum over graph
+    _edges_, as would be the case in minIR, where operations are modelled as
+    hyperedges.
 
 The vertex weight $w(v)$ can for example model the runtime of the operation that
 $v$ corresponds to, in cases where the total cost function is the runtime of all

@@ -47,8 +47,8 @@ faster for $\ell=10^5$. The results are summarised in this figure.
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/eccs-plot.svg"
-    width="95%"
-    enlarge="half"
+    width="80%"
+    enlarge="full"
     caption="Runtime of pattern matching for $\ell = 0\dots 10^4$ patterns on 2, 3 and 4 qubit quantum circuits from the Quartz ECC dataset, for our implementation (Portmatching) and the Quartz project. All $\ell = 1954$ two qubit circuits were used, whereas for 3 and 4 qubit circuits, $\ell = 10^4$ random samples were drawn."
 %}}
 <!-- prettier-ignore-end -->
@@ -71,7 +71,7 @@ existence of the $\ell$-independent upper bound predicted in
 {{% figure
     src="svg/random-plot.svg"
     caption="Runtime of our pattern matching for random quantum circuits with up to 10 qubits."
-    enlarge="half"
-    width="75%"
+    enlarge="full"
+    width="65%"
 %}}
 <!-- prettier-ignore-end -->

@@ -17,9 +17,11 @@ Lie groups[^lie]. A direct consequence of the mathematics of quantum
 computations is the flourishing of an entire field of research dedicated to
 quantum circuit optimisations @Karuppasamy2025. They leverage the unique
 structure and symmetries of quantum physics to achieve significant reductions in
-the noise and resource requirements of quantum computations. [^lie]: If you are
-intreagued have a look at this nice introduction @Kottmann2024 and references
-therein. It's not as scary as it sounds.
+the noise and resource requirements of quantum computations.
+
+[^lie]:
+    If you are intreagued have a look at this nice introduction @Kottmann2024
+    and references therein. It's not as scary as it sounds.
 
 In this section, we will pass in review the main optimisation techniques that
 established themselves within quantum compilers---with a particular focus on the
@@ -53,10 +55,12 @@ gate set is typically composed of one and two-qubit gate types, with error rates
 dominated by an order of magnitude by the latter @Steiger_2018 @Sivarajah2020.
 For near-term hardware, the number of two-qubit gates---typically the `CX` gate,
 though many other two-qubit gates could be used equivalently---has thus become a
-standard optimisation cost function [^otherhard]: Experimental realisations of
-many-qubit interactions have also been demonstrated @Erhard2019 @Bluvstein2022
-@Arrazola2021 @Evered2023 and are at the core of other proposed architectures
-@Bartolucci_2023 @Bourassa2021.
+standard optimisation cost function
+
+[^otherhard]:
+    Experimental realisations of many-qubit interactions have also been
+    demonstrated @Erhard2019 @Bluvstein2022 @Arrazola2021 @Evered2023 and are at
+    the core of other proposed architectures @Bartolucci_2023 @Bourassa2021.
 
 When considering error-corrected computations, on the other hand, what is an
 "expensive" computation is no longer dictated by hardware noise, but rather by
@@ -64,13 +68,15 @@ the affordances of the error correcting code: depending on how the quantum data
 is redundantly encoded in the code space, the fault tolerant execution of
 specific operations may be anywhere between very straight forward and
 nigh-impossible[^cliff]. Concretely, the bottleneck is widely expected to be the
-execution of a single-qubit (non-Clifford) gate, such as the `T` gate. [^cliff]:
-Indeed, much of quantum error correction theory is built on the Clifford group,
-a subset of quantum operations that preserve "Pauli errors"---and can thus be
-corrected easily. The flip side of this is that correcting any non-Clifford
-operation is very hard, something that is resolved by constructing "error-free"
-_magic_ states ahead of time. For more details, refer to a quantum error
-correction textbook such as @Gottesman2024.
+execution of a single-qubit (non-Clifford) gate, such as the `T` gate.
+
+[^cliff]:
+    Indeed, much of quantum error correction theory is built on the Clifford
+    group, a subset of quantum operations that preserve "Pauli errors"---and can
+    thus be corrected easily. The flip side of this is that correcting any
+    non-Clifford operation is very hard, something that is resolved by
+    constructing "error-free" _magic_ states ahead of time. For more details,
+    refer to a quantum error correction textbook such as @Gottesman2024.
 
 ### The best: unitary synthesis
 
@@ -176,10 +182,12 @@ exponential space to be described---the space of all $n$-qubit unitaries
 $SU(2^n)$ is after all exponentially large. Rather, the issue is that the set of
 unitaries implementable in practice will be restricted to quantum computations
 with a polynomial number of gates; these only form a tiny subset
-$poly \subseteq SU(2^n)$[^su2n]. [^su2n]: Polynomial sized quantum circuits
-constitute a polynomial-dimensional submanifold of the exponential-dimensional
-$SU(2^n)$ Lie group. They are hence a measure zero subset of $SU(2^n)$ with
-respect to the Haar measure.
+$poly \subseteq SU(2^n)$[^su2n].
+
+[^su2n]:
+    Polynomial sized quantum circuits constitute a polynomial-dimensional
+    submanifold of the exponential-dimensional $SU(2^n)$ Lie group. They are
+    hence a measure zero subset of $SU(2^n)$ with respect to the Haar measure.
 
 Another fruitful avenue of work for quantum optimisation has thus been the
 development of alternative representations for quantum computations that can
@@ -190,8 +198,11 @@ optimisations.
 
 A particularly convenient global representation of many quantum circuits is as
 products of Pauli exponentials, also known as Pauli "Gadgets" @Cowtan2019. These
-unitaries are of the form $$U = \prod_{s \in P} exp(i \alpha_s \cdot s)$$ where
-$\alpha_s \in \mathbb [0, 2\pi)$ are real coefficients and
+unitaries are of the form
+
+$$U = \prod_{s \in P} exp(i \alpha_s \cdot s)$$
+
+where $\alpha_s \in \mathbb [0, 2\pi)$ are real coefficients and
 $s \in \{I, X, Y, Z\}^n$ are strings of length $n$ of the four Pauli
 matrices---so called Pauli strings. In this formulation, $n$ fixes the number of
 qubits of the computation.
@@ -200,7 +211,11 @@ These exponentials are always valid $n$-qubit unitaries and can express
 entangling operations across any number of qubits: the qubits on which an
 operation $exp(i \alpha \cdot s)$ acts non-trivially are given by the indices of
 the characters in $s$ that are not the identity $I$. For instance, the
-exponential $$exp(i \frac\pi2 XIZ)$$ is a valid quantum computation on 3 qubits,
+exponential
+
+$$exp(i \frac\pi2 XIZ)$$
+
+is a valid quantum computation on 3 qubits,
 entangling the first and third qubits. Beyond useful abstractions for
 optimisation, such entangling operations appear naturally when simulating
 quantum systems, for example in quantum chemistry @McClean2016.
@@ -228,7 +243,9 @@ freedom during circuit synthesis.
 The action of phase polynomials on quantum states is actually quite easy to
 understand. Instead of the exponentials of $I$ and $Z$-based Pauli string, the
 computation can equivalently be given by its action on the basis states
+
 $$\ket{b_1 \cdots b_n} \mapsto \underbrace{\exp(i \cdot \sum_{s \in P} a_s \cdot (s_1 b_1 \oplus \cdots \oplus s_n b_n))}_{\in\,\mathbb{R}} \ket{b_1 \cdots b_n}$$
+
 where $b_1 \cdots b_n$ is a bitstring of booleans $b_i \in \{0, 1\}$,
 $s_i \in \{0, 1\}$ is also a boolean with value `1` if and only if the $i$-th
 character in $s$ is $Z$, and $\oplus$ denotes the boolean XOR operation.
@@ -326,7 +343,9 @@ optimisation techniques (e.g @Duncan2019 @Wetering2024), some of which we have
 already reviewed @Huang2024 @Gogioso2022 @Degriend2020 @Cowtan2019 @Cowtan2020.
 This selection of papers is not _quite_ exhaustive[^arb]---there are currently
 over 300 hundred papers on the topic as indexed by
-[zxcalculus.com](https://zxcalculus.com/). [^arb]: and totally arbitrary!
+[zxcalculus.com](https://zxcalculus.com/).
+
+[^arb]: and totally arbitrary!
 
 Aside from being an invaluable tool for research and compiler pass design, a
 major contribution of these diagrammatic representations is the introduction of

@@ -1,5 +1,6 @@
 {{- $title := .Get "title" | markdownify -}}
 {{- $id := .Get "id" -}}
+{{- $enlarge := .Get "enlarge" -}}
 
 {{ if not (.Page.Parent.Store.Get "proposition_counter") }}
     {{ .Page.Parent.Store.Set "proposition_counter" 0 }}
@@ -18,7 +19,12 @@
     {{ .Site.Store.SetInMap "proposition_map" $id $propositionNumber }}
 {{ end }}
 
-<div class="proposition-block enlarge-quarter"{{ if $id }} id="{{ $id }}"{{ end }}>
+{{- $blockClass := "proposition-block" -}}
+{{- if $enlarge -}}
+  {{- $blockClass = printf "%s enlarge-%s" $blockClass $enlarge -}}
+{{- end -}}
+
+<div class="{{ $blockClass }}"{{ if $id }} id="{{ $id }}"{{ end }}>
 <div class="proposition-header">
 <span class="proposition-label">Proposition {{ $propositionNumber }}</span>
 {{- if $title -}}<span class="proposition-title">{{ $title }}</span>{{- end -}}

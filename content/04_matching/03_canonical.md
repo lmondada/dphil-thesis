@@ -28,7 +28,6 @@ split, resulting in two operations on a single linear path. The following
 pseudocode implements this algorithm.
 
 <!-- prettier-ignore-start -->
-{{% enlarge "full" %}}
 ```python {linenos=inline}
 def CanonicalSpanningTree(G: Graph, root: Operation) -> Graph:
   new_G := G
@@ -52,7 +51,6 @@ def CanonicalSpanningTree(G: Graph, root: Operation) -> Graph:
         seen_paths = union(seen_paths, op_linear_paths)
   return new_G
 ```
-{{% /enlarge %}}
 <!-- prettier-ignore-end -->
 
 We used `Operations(G)` to retrieve all the operations on the graph `G`;
@@ -63,9 +61,11 @@ splitting `op` into two operations on a single linear path. Finally,
 `PathAsPortLabels(G, root, v)` returns the string of the port labels that encode
 the path from `root` to `v` in the graph `G`. The non-capitalized functions
 `set`, `union`, `sort`[^sortkey], `len` and `issubset` have their standard
-meanings. [^sortkey]: The `sort_key` parameter of the `sort` function defines
-the total order according to which the elements are sorted, from smallest to
-largest.
+meanings.
+
+[^sortkey]:
+    The `sort_key` parameter of the `sort` function defines the total order
+    according to which the elements are sorted, from smallest to largest.
 
 <!-- prettier-ignore -->
 {{% proposition title="Correctness of `CanonicalSpanningTree`" id="prop-canonical-correctness" %}}
@@ -190,6 +190,8 @@ introduce a new procedure `AllSpanningTrees` that will efficiently enumerate all
 possible spanning trees that are rooted in $r$ for subgraphs within $G$. In the
 process, we will also see that we can replace the tree equality check with a
 subtree check, further reducing the number of spanning trees that must be
-considered. [^overlapgraph]: Think for example of the same root operation $r$
-that is considered repeatedly for every overlapping subgraph of $G$ that
-contains $r$.
+considered.
+
+[^overlapgraph]:
+    Think for example of the same root operation $r$ that is considered
+    repeatedly for every overlapping subgraph of $G$ that contains $r$.

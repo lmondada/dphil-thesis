@@ -1,10 +1,11 @@
-{{ define "main" }} {{ $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 }}
+{{- define "main" -}}
+{{- $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 -}}
 
 <article class="markdown book-article">
     <p class="chapter-number">Chapter {{ $chapternb }}</p>
     <h1 class="chapter">{{ .Title }}</h1>
-
-    {{- .Content -}} {{ range $index, $page := .Pages }}
+    {{- .Content -}}
+    {{- range $index, $page := .Pages -}}
     <h2 id="{{ .Slug }}">
         {{ $chapternb }}.{{ add $index 1 }}.
         {{ if not (isset .Site.Params "pdfgen") }}
@@ -15,8 +16,8 @@
             </a>
         {{ end }}
     </h2>
-    <p>{{ .Content }}</p>
+    {{ .Content }}
     {{ end }}
 </article>
 
-{{ end }}
+{{- end -}}

@@ -251,8 +251,8 @@ illustrates some of these edges cases.
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/rewrite-minir.svg"
-    width="95%"
-    enlarge="quarter"
+    width="80%"
+    enlarge="full"
     caption="Rewriting operation $o$ in the graph $G$ (top left) into the operations $o_1$ and $o_2$ of the graph $G_R$ (bottom left). Coloured dots indicate the index maps $\rho_U$ and $\rho_D$ from inputs of $G_R$ to inputs of $o$, respectively from outputs of $o$ to outputs of $G_R$."
 %}}
 <!-- prettier-ignore-end -->
@@ -506,8 +506,8 @@ illustrates this transformation.
 
 <!-- prettier-ignore-start -->
 {{% figure src="/svg/rewrite.svg"
-           width="95%"
-           enlarge="half"
+           width="80%"
+           enlarge="full"
            caption="A minIR graph transformation for a non-convex pattern, using outlining and hoisting. We use (nested) boxes to represent operations and regions within them and coloured edges for (typed) values."
 %}}
 <!-- prettier-ignore-end -->

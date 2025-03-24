@@ -1,32 +1,31 @@
-{{ $bookSection := default "docs" .Site.Params.BookSection }} {{ if eq
-$bookSection "*" }} {{ $bookSection = "/" }} {{ end }} {{ with .Site.GetPage
-$bookSection }}
+{{- $bookSection := default "docs" .Site.Params.BookSection -}}
+{{- if eq $bookSection "*" -}} {{- $bookSection = "/" -}} {{- end -}}
+{{- with .Site.GetPage $bookSection -}}
 <div class="toc">
-    <h2>Table of Contents</h2>
+    <h2 class="toc-title">Table of Contents</h2>
     {{ template "toc-section-children" (dict "Section" . "CurrentPage" $
     "ChapterNum" 0) }}
 </div>
-{{ end }} {{ define "toc-section-children" }}
-<ul>
-    {{ $chapterNum := .ChapterNum }} {{ range (where .Section.Pages
-    "Params.bookHidden" "ne" true) }} {{ if .IsSection }} {{ $chapterNum = add
-    $chapterNum 1 }}
+{{- end -}}
+
+{{- define "toc-section-children" -}}
+<ul class="toc-list">
+    {{- $chapterNum := .ChapterNum -}}
+    {{- range (where .Section.Pages "Params.bookHidden" "ne" true) -}}
+    {{- if .IsSection -}} {{- $chapterNum = add $chapterNum 1 -}}
     <li class="toc-chapter">
-        <a href="{{ .RelPermalink }}"
-            >Chapter {{ $chapterNum }}. {{ partial "docs/title" . }}</a
-        >
-        {{ $sectionNum := 0 }} {{ range (where .Pages "Params.bookHidden" "ne"
-        true) }} {{ if .IsPage }} {{ $sectionNum = add $sectionNum 1 }}
-        <ul>
-            <li class="toc-section">
-                <a href="{{ .RelPermalink }}"
-                    >{{ $chapterNum }}.{{ $sectionNum }}. {{ partial
-                    "docs/title" . }}</a
-                >
-            </li>
-        </ul>
+        <p class="toc-chapter-number">Chapter {{ $chapterNum }}.</p>
+        <a href="{{ .RelPermalink }}">{{ partial "docs/title" . }}</a>
+        {{- $sectionNum := 0 -}}
+        {{- range (where .Pages "Params.bookHidden" "ne" true) -}} {{- if .IsPage -}}
+            {{- $sectionNum = add $sectionNum 1 -}}
+            <ul>
+                <li class="toc-section">
+                    <a href="{{ .RelPermalink }}">{{ $sectionNum }}. {{ partial "docs/title" . }}</a>
+                </li>
+            </ul>
         {{ end }} {{ end }}
     </li>
     {{ end }} {{ end }}
 </ul>
-{{ end }}
+{{- end -}}

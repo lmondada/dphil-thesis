@@ -13,13 +13,19 @@
   letter-spacing: 0.07em;
 }
 
+
 h1.chapter {
   margin-bottom: 1.5em;
   line-height: 1.3;
+  font-family: "Noto Serif", serif;
 }
 
 article.markdown h2 {
   line-height: 1.2;
+}
+
+.markdown blockquote {
+  margin-top: 0;
 }
 
 // .chapter-head::after {
@@ -41,6 +47,16 @@ pre {
 
 .markdown .book-columns>div {
     padding: 0 .5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.markdown .book-columns .highlight {
+  flex-grow: 1;
+
+  pre {
+    height: 100%;
+  }
 }
 
 article.markdown ul {
@@ -50,9 +66,10 @@ article.markdown ul {
   margin-block-start: 0em;
 
   li::before {
-    content: "—";
+    content: "–";
+    padding-left: 0.2em;
     display: inline-block;
-    width: 1.4em;
+    width: 1.2em;
     margin-left: -1.4em;
   }
 }

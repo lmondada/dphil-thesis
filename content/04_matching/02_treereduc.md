@@ -151,12 +151,20 @@ we conclude $k = width(G) - 1$.
 
 We conclude the construction presented in this section with the following
 result, expressing graph pattern matching in terms of tree equality:
+
+<!-- prettier-ignore -->
 {{% proposition title="Reduction to Tree Pattern matching" id="prop-tree-patternmatching" %}}
+
 Let $P$ be a pattern graph and $G$ a graph. Let $P_{CD}$ be the dual of a
 contracted spanning tree of $P$. There is an embedding $P \hookrightarrow G$ if
 and only if there is $S \subseteq G$ and a dual contracted spanning tree
 $S_{CD}$ of $S$ such that $P_{CD} = S_{CD}$ and the trees have equal weight maps
-$split$ and $contract$. {{% /proposition %}} The proof of this follows directly
+$split$ and $contract$.
+
+<!-- prettier-ignore -->
+{{% /proposition %}}
+
+The proof of this follows directly
 from our construction and the bijection between the graphs $P, S$ and their
 (dual) contracted spanning tree.
 
