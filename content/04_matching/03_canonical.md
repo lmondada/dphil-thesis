@@ -11,18 +11,18 @@ big step towards an algorithm for graph matching. However,
 _existence_ of spanning trees---it is as yet unclear how the trees can be
 constructed. This is the purpose of this section.
 
-We introduce for this puprose a canonical, that is, invariant under isomorphism,
+We introduce for this purpose a canonical, that is, invariant under isomorphism,
 tree reduction map $G \mapsto G_T \mapsto G_C$. The map from $G_T \to G_C$ is
 given by $\sigma_2^{-1}$ as defined in the previous section, so that there
 remains only to define a map $canonical: G \to G_T$.
 
-We proceed by using the total order that we have defined on port labels, and can
+We proceed by using the total order that we have defined on port labels and can
 be extended lexicographically to paths outgoing from a shared root operation
 (see {{< reflink "sec:simplifying-assumptions" >}} for more details). For a
 choice of root operation $r$, we can thus order the set of operations on two
 linear paths by the total order on the paths from $r$. We then consider them in
-order and only keep unchanged those operations that contain a linear path that
-was not seen before, updating the set of seen linear paths as we go. The other
+order and keep the operations that contain a linear path that was not seen
+before unchanged, updating the set of seen linear paths as we go. The other
 operations, i.e. those on two linear paths that have already been visited, are
 split, resulting in two operations on a single linear path. The following
 pseudocode implements this algorithm.
@@ -60,7 +60,7 @@ the graph size. `SplitOperation(G, op)` returns the graph resulting from
 splitting `op` into two operations on a single linear path. Finally,
 `PathAsPortLabels(G, root, v)` returns the string of the port labels that encode
 the path from `root` to `v` in the graph `G`. The non-capitalized functions
-`set`, `union`, `sort`[^sortkey], `len` and `issubset` have their standard
+`set`, `union`, `sort`[^sortkey], `len`, and `issubset` have their standard
 meanings.
 
 [^sortkey]:

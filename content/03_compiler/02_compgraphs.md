@@ -15,7 +15,7 @@ during translation.
 
 In classical computations, these graph representations of computations are
 essentially term graphs @Barendregt1987&#x200B;---tree representations of
-algebraic expressions with an important optimization: term sharing. When
+algebraic expressions with an important optimisation: term sharing. When
 identical subexpressions appear multiple times, they can be represented as one
 computation and referenced from multiple locations, creating a directed acyclic
 graph rather than a pure tree @Plump1999. This sharing enables a more efficient
@@ -27,9 +27,8 @@ to a forest of term trees.
 Each (sub)term in a computation graph defines a _value_: the immutable result of
 a computation at a specific point in time. These values flow along edges in the
 graph---hence "dataflow"---where they can only be consumed, never modified. In
-compiler speak, programs expressed using such immutable values are often
-referred to as single static assignment (SSA) programs @Cytron1991 @Rosen1988.
-In SSA:
+compiler speak, programs expressed using such immutable values are often called
+single static assignment (SSA) programs @Cytron1991 @Rosen1988. In SSA:
 
 1. Each value is defined exactly once (static single assignment),
 2. Dead values (unused values in the computation) are easily identifiable
@@ -63,8 +62,8 @@ must be specified. Where compilers on classical data can:
 quantum compilers must maintain strict conservation of linear resources
 throughout all transformations. For instance, the creation and deletion of
 values cannot be decoupled in the presence of linear values. Two (possibly
-equivalent) values that are obtained from the same linear inputs cannot be
-simultaneously defined in the program, or the IR is in an invalid state.
+equivalent) values obtained from the same linear inputs cannot be simultaneously
+defined in the program, or the IR is in an invalid state.
 
 As a result, whereas it is common in
 [IR modification APIs](https://mlir.llvm.org/docs/PatternRewriter/) within
@@ -73,5 +72,5 @@ of) existing values and adding new values and operations as required, without
 any explicit code deletion, computation graphs with linear values must adopt
 _proper_ graph transformation semantics. Restricting IR transformations to valid
 graph transformations will guarantee that obsolete values and operations are
-always _explicitly_ deleted, making it in turn possible to check and enforce
+always _explicitly_ deleted, making it, in turn, possible to check and enforce
 linearity constraints at every transformation.

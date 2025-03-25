@@ -6,13 +6,13 @@ slug = "sec:extraction"
 +++
 
 In this chapter, we have proposed a persistent data structure for graph
-rewriting; using its confluence properites, we have then shown that the search
+rewriting; using its confluence properties, we have then shown that the search
 space that must be traversed in this new proposal for graph rewriting is
 super-exponentially smaller. However, unlike when exploring the "naive" search
 space, the optimal solution within the factorised search space stored in the
-persistent data structure $\mathcal{D}$ cannot simply be _read out_. We must
-instead solve an extraction problem that is very similar to the second phase of
-equality saturation for term rewriting.
+persistent data structure $\mathcal{D}$ cannot simply be _read out_. Instead, we
+must solve an extraction problem similar to the second phase of equality
+saturation for term rewriting.
 
 As we saw in {{% reflink "sec:persistent-ds" %}}, finding a graph $G'$ that is
 the result of a sequence of rewrites on an input graph $G$ is equivalent to
@@ -79,7 +79,7 @@ this optimisation problem is hard[^whynphard].
 [^whynphard]:
     Hardness can be seen by considering the special case of the extraction
     problem in which all edits are compatible and no two edits have a
-    parent-child relation: then there are no constraint on the solution space
+    parent-child relation: then there are no constraints on the solution space
     and the optimisation problem requires finding the minimum of an arbitrary
     oracle over $2^{|\mathcal{D}|}$ inputs.
 

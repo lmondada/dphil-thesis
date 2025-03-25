@@ -6,22 +6,22 @@ slug = "sec:factor-gts"
 +++
 
 Equality saturation introduces a persistent data structure that encodes not only
-a single computation (term), but all equivalent computations that can be
-obtained from sequences of rewrites applied to it. The result of this compact
+a single computation (term) but all equivalent computations that can be obtained
+from sequences of rewrites applied to it. The result of this compact
 representation is a _factorisation_ of the term rewriting search space: the same
 solution space (in fact, a strictly greater one) can be covered by a much
 smaller search space.
 
-The precise data structure of equality saturation may not be directly applicable
-to computation graphs with linear resources; however, a comparable factorization
-of the search space can be achieved for GTS search space exploration. Throughout
+The precise data structure of equality saturation may not directly apply to
+computation graphs with linear resources; however, a comparable factorisation of
+the search space can be achieved for GTS search space exploration. Throughout
 this section, we consider a GTS and will aim to bound the size of the space of
 possible sequences of rewrites starting from an input graph $G$ using the GTS.
 
 #### A lower bound for the naive search tree
 
 Consider an input graph $G$. The graphs $G'$ that can be obtained from $G$ by
-applying a sequence of rewrites from the GTS form the nodes of a (possibly
+applying a sequence of rewrites from the GTS from the nodes of a (possibly
 infinite) tree $T$, with edges between graphs given by the rewrites. The path
 from the root $G$ to $G'$ is the sequence of rewrites that produces $G'$. We
 call $T$ the naive search tree of $G$.
@@ -39,11 +39,11 @@ $$V^-(r_2) \cap V_R(r_1) \neq \varnothing.$$
 For a depth $\Delta \geqslant 0$, we say a graph $G'$ is reachable from $G$
 within depth $\Delta$ in the GTS if there is a sequence of rewrites in the GTS
 from $G$ to $G'$ such that all subsequences formed of overlapping rewrites have
-length at most $\Delta$. We fix $\Delta$ and from now on consider naive search
+length at most $\Delta$. We fix $\Delta$ and from now on, consider naive search
 trees truncated to the set of graphs reachable from $G$ within depth $\Delta$.
 
 We wish to derive a lower bound on the size of $T$ for a fixed GTS, fixed $G$
-and fixed $\Delta$. We consider for this a partition of $G$ into subgraphs
+and fixed $\Delta$. We consider a partition of $G$ into subgraphs
 $\Pi_1, \ldots, \Pi_n$ such that on each subgraph $\Pi_i$, there are at least
 two applicable rewrites in the GTS. We can then consider the subtree of the
 naive search tree $T$ that only contains the graphs obtained by applying one of
@@ -66,7 +66,7 @@ Notice that if a graph $G'$ is obtained from $G$ by a rewrite $r \in E(T)$ that
 is fully contained within one of the partition subgraphs $\Pi_i$, then the
 partition of $G$ also defines a partition of $G'$ by assigning all vertices of
 $G'$ that are also in $G$ to the same subgraph $\Pi_i$ and the new vertices
-introduced by the right hand side of $r$ to the same subgraph as all the
+introduced by the right-hand side of $r$ to the same subgraph as all the
 vertices matched by $r$ in $G$. Define the subtree $T'$ of $T$ recursively as
 follows:
 
@@ -153,7 +153,7 @@ $r_1$ and $r_2$.
 The persistent data structure $\mathcal{D}$ described in
 {{% reflink "sec:persistent-ds" %}} uses this symmetry explicitly when exploring
 the set of reachable graphs. We show that this drastically reduces the size of
-the search space. We consider the directed acylic graph $F$ given by all edits
+the search space. We consider the directed acyclic graph $F$ given by all edits
 in $\mathcal{D}$ along with the parent-child relations between edits. In other
 words, $F$ is given by the transitive reduction of $\leqslant$ on the set of all
 rewrites $E(T)$. We call $F$ the factorised search space and we wish to estimate

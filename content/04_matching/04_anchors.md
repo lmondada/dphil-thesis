@@ -13,10 +13,10 @@ finding a spanning tree reduction of $G$ to the problem of finding a set of
 anchor operations $X$.
 
 Instead of the `CanonicalSpanningTree` procedure, we can equivalently consider a
-`CanonicalAnchors` procedure, that performs the same computation but returns the
-set of anchor operations $X$. We express this computation below, using recursion
-instead of a `for` loop. This form generalises better to the `AllAnchors`
-procedure that we will introduce next to define `AllSpanningTrees`.
+`CanonicalAnchors` procedure, which performs the same computation but returns
+the set of anchor operations $X$. We express this computation below, using
+recursion instead of a `for` loop. This form generalises better to the
+`AllAnchors` procedure that we will introduce next to define `AllSpanningTrees`.
 
 <!-- prettier-ignore-start -->
 ```python {linenos=inline}
@@ -60,7 +60,7 @@ from the observation made in {{< reflink "sec:simplifying-assumptions" >}} that
 ordering operations in lexicographic order of the port labels is equivalent to a
 depth-first traversal of the graph. `CanonicalAnchors` implements a recursive
 depth-first traversal (DFS), with the twist that the recursion is explicit only
-on the anchor nodes, and otherwise relying on the lexicographic ordering just
+on the anchor nodes and otherwise relying on the lexicographic ordering just
 like in `CanonicalSpanningTree`: lines 5--15 of `CanonicalAnchors` correspond to
 the iterations of the `for` loop (line 11--20) of `CanonicalSpanningTree` until
 an anchor operation is found (i.e. the `else` branch on lines 18--20 is
@@ -75,7 +75,7 @@ called on disconnected graphs, which explains the additional call to
 <!-- prettier-ignore -->
 {{% proposition title="Equivalence of `CanonicalSpanningTree` and `CanonicalAnchors`" id="prop-tree-equiv" %}}
 
-Let $G$ be a connected graph and let $X$ be the anchors of its canonical
+Let $G$ be a connected graph, and let $X$ be the anchors of its canonical
 spanning tree reduction `CanonicalSpanningTree(G)`. Then
 `CanonicalAnchors(G, root, seen_paths={})` returns $X$, the set of all paths in
 $G$ and the empty graph.
@@ -95,10 +95,10 @@ as a rooted tree $T_G$ by taking the dual of $G_T$ and picking a root operation
 $r$ in $G_T$. Furthermore, children of nodes in a tree are ordered by the port
 label ordering.
 
-For the following proposition we introduce a $\subseteq$ relation on dual trees
+For the following proposition, we introduce a $\subseteq$ relation on dual trees
 of spanning tree reductions: $T_H \subseteq T_G$ if the trees share the same
 root operation $r$, $T_H$ is a subtree of $T_G$ up to isomorphism, and their
-types as well as the $split$ map coincide on the common subtree.
+types, as well as the $split$ map coincide on the common subtree.
 {{% proposition title="Maximal spanning tree reductions" id="prop-maxspanningtree" %}}
 Let $G$ be a connected graph, $X$ a set of operations in $G$ and $r \in X$ a
 root operation. Let
@@ -280,7 +280,7 @@ $\in$ `AllAnchors(G, r, w, {})`.
 The proof is by induction over the width $w$ of the subgraph $H$. The idea is to
 map every recursive call in `CanonicalAnchors` to one of the calls to
 `AllAnchors` on lines 29, 31 or 33. All recursive results are concatenated on
-line 36, and thus the value returned by `CanonicalAnchors` will be one of the
+line 36, and thus, the value returned by `CanonicalAnchors` will be one of the
 anchor sets in the list returned by `AllAnchors`.
 
 <!-- prettier-ignore -->
@@ -294,13 +294,12 @@ then there is a graph $G'$ such that $H' \subseteq G' \subseteq G$ such that
 $(X, S', G') \in$ `AllAnchors`$(G, r, w, S)$
 
 for all valid root operations $r$ of $H$ and all subsets of the linear paths of
-$H$ `seen_paths`. The statement in the proposition follows from this claim
-directly.
+$H$ `seen_paths`. The statement in the proposition directly follows this claim.
 
 For the base case $w = 1$, `CanonicalAnchors` will return the anchors
-`anchors = [op]` as defined on line 19: there is only one linear path and it is
+`anchors = [op]` as defined on line 19: there is only one linear path, and it is
 already in `seen_paths`, thus for every recursive call to `CanonicalAnchors`,
-the `while` condition on line 12 will always be satisfied, until all operations
+the `while` condition on line 12 will always be satisfied until all operations
 have been exhausted and empty sets are returned. In `AllAnchors`, on the other
 hand, The only values of `w1`, `w2` and `w3` that satisfy the loop condition on
 line 27 for $w = 1$ are `w1` $=$ `w2` $=$ `w3` $= 0$. As a result, given the `w`
@@ -310,7 +309,7 @@ definition in `CanonicalAnchors`.
 
 We now prove the claim for $w > 1$ by induction. As documented in `AllAnchors`,
 we can assume that every operation has at most 3 children. This simplifies the
-loop on lines 21--25 of `CanonicalAnchors` to at most three calls to
+loop on lines 21--25 of `CanonicalAnchors` to, at most, three calls to
 `CanonicalAnchors`.
 
 Consider a call to `CanonicalAnchors` for a graph $H \subseteq G$, a root
@@ -328,31 +327,31 @@ $G_a$ and the updated $H$ be $H_a$, with $H_a \subseteq G_a$.
 
 As every anchor operation reduces the number of unseen linear paths by exactly
 one (using the simplifying assumptions), it must hold that
-$w_a + w_b + w_c + 1 = w$. Thus for a call to `AllAnchors` with the arguments
+$w_a + w_b + w_c + 1 = w$. Thus, for a call to `AllAnchors` with the arguments
 $G$, $r$, $w$ and $S$, there is an iteration of the `for` loop on line 27 of
 `AllAnchors` such that `w1` $= w_a$, `w2` $= w_b$ and `w3` $= w_c$. It follows
 that on line 29 of `AllAnchors`, the procedure is called recursively with
-arguments $(G_a, c_a, w_a, S_a)$. From the induction hypothesis we obtain that
+arguments $(G_a, c_a, w_a, S_a)$. From the induction hypothesis, we obtain that
 there is an iteration of the `for` loop on line 29 in which the values of
 `anchors1` and `seen1` coincide with the values of the `new_anchors` and
 `seen_paths` variables after the first iteration of the `for` loop on line 21 of
 `CanonicalAnchors`. Call the value of `seen1` (and `seen_paths`) $S_b$.
 Similarly, call the updated value of `G` in `AllAnchors` $G_b$ and the updated
-value of `G` in `CanonicalAnchors` $H_b$. We have by the induction hypothesis
+value of `G` in `CanonicalAnchors` $H_b$. We have, by the induction hypothesis,
 that $H_b \subseteq G_b$.
 
 Repeating the argument, we obtain that there are iterations of the `for` loops
 on lines 30 and 32 of `AllAnchors` that correspond to the second and third
 recursive calls to `CanonicalAnchors` on line 22 of the procedure. Finally, the
 concatenation of anchor lists on line 36 of `AllAnchors` is equivalent to the
-repeated concatenations on line 25 of `CanonicalAnchors` and so we conclude that
-the induction hypothesis holds for $w$.
+repeated concatenations on line 25 of `CanonicalAnchors`, and so we conclude
+that the induction hypothesis holds for $w$.
 
 <!-- prettier-ignore -->
 {{% /proof %}}
 
 We will see that the overall runtime complexity of `AllAnchors` can be easily
-derived from a bound on the size of the returned list. For this we use the
+derived from a bound on the size of the returned list. For this, we use the
 following result:
 
 <!-- prettier-ignore -->

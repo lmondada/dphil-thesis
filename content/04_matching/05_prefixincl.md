@@ -5,10 +5,10 @@ weight = 5
 slug = "sec:automaton"
 +++
 
-We have shown in the previous sections how we can reduce the pattern matching
-problem to a problem on trees, and how we can efficiently enumerate all subtrees
-of a given pattern width $w$. To complete the pattern matching algorithm, we
-need to provide a fast way to evaluate the subtree relation, for many trees
+We have shown in the previous sections how we can reduce the pattern-matching
+problem to a problem on trees and how we can efficiently enumerate all subtrees
+of a given pattern width $w$. To complete the pattern-matching algorithm, we
+must provide a fast way to evaluate the subtree relation for many trees
 representing the set of all patterns we wish to match. More precisely, for
 patterns $P_1, \dots, P_\ell$ with width $w$, fix a root operation $r_i$ in
 $P_i$ for each $1 \leqslant i \leqslant \ell$ and consider the tree dual of the
@@ -139,8 +139,8 @@ $O(w \cdot d)$ by truncating the linear paths to at most $2d$ length, as in the
 proof of {{% refproposition "prop-allanchors" %}}. Thus we can assume
 $|T_G| \in O(w \cdot d)$.
 
-The rest of the proof and the runtime follows from the multi-dimensional prefix
-tree construction detailed in appendix
+The rest of the proof and the runtime follow from the multi-dimensional prefix
+tree construction detailed in Appendix
 [A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
 
 <!-- prettier-ignore -->

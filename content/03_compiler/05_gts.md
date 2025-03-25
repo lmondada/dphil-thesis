@@ -5,17 +5,17 @@ layout = "section"
 slug = "sec-gts-def"
 +++
 
-We conclude this chapter by presenting two ways in which the valid
-transformations of minIR GTSs can be specified. The first and simplest are graph
-transformation rules, ubiquitous in graph transformation theories; the second
-generalises transformation rules in the case that they express graph
-equivalences by storing sets of $n$ equivalent graphs to represent the
-$\Theta(n^2)$ transformation rules between all pairs of equivalent graphs.
-Unlike transformation rules, a GTS based on equivalence classes cannot encode
-any transformation _directedness_ in a rule set[^allandtheirinverse].
+We conclude this chapter by presenting two ways to specify the valid
+transformations of minIR GTSs. The first and simplest are graph transformation
+rules, ubiquitous in graph transformation theories; the second generalises
+transformation rules in the case that they express graph equivalences by storing
+sets of $n$ equivalent graphs to represent the $\Theta(n^2)$ transformation
+rules between all pairs of equivalent graphs. Unlike transformation rules, a GTS
+based on equivalence classes cannot encode any transformation _directedness_ in
+a rule set[^allandtheirinverse].
 
 [^allandtheirinverse]:
-    Meaning that for every rule in the system there is another rule that is its
+    Meaning that for every rule in the system, there is another rule that is its
     inverse.
 
 ### Graph transformation rules
@@ -75,7 +75,7 @@ interface morphism
 such that the image $H = \varphi(G_L)$ of $G_L$ is a valid minIR subgraph of $G$
 that implements an interface $I_H$.
 
-Then we have that the interface $I_R \triangleright I_H$.
+Then, we have that the interface $I_R \triangleright I_H$.
 
 _Corollary:_ Let $B$ be the boundary values of $\varphi(G_L)$ and let
 $$O_B = \{o \in \varphi(O_L) \mid v \in B\textrm{ for all }v \in \mathit{def}\,(o) \cup use(o)\}.$$
@@ -136,11 +136,11 @@ we conclude that $I_R \triangleright I_H$.
 <!-- prettier-ignore -->
 {{% /proof %}}
 
-The definitions of rewrites and transformation rules we have presented in these
+The definitions of rewrites and transformation rules presented in these
 paragraphs and in the last section overlap with the graph transformations
-defined for arbitrary graphs that result from the double pushout construction,
-as presented in @Koenig2018. The definitions are equivalent _most of the time_,
-but it is interesting to identify some of the edge cases where DPO and our minIR
+defined for arbitrary graphs resulting from the double pushout construction, as
+presented in @Koenig2018. The definitions are equivalent _most of the time_, but
+it is interesting to identify some of the edge cases where DPO and our minIR
 rewriting formalism differ:
 
 **Implicit edge removal.**&emsp; A DPO transformation is not defined when there
@@ -154,8 +154,7 @@ this corresponds to the case of a boundary value $v \in B \subseteq G$ such that
 
 $$v \not\in \varphi(use(o_{L, out}) \cup \textit{def}\,(o_{L, in})).$$
 
-The case
-$v \in B_U$ is impossible because in a valid minIR there is a unique
+The case $v \in B_U$ is impossible because in a valid minIR there is a unique
 $o_L \in O_L$ such that $v \in \varphi(\textit{def}\,(o_L))$---thus either
 $v \in \textit{def}\,(\varphi(o_L))$ and it cannot be in $B_U$, or
 $o_L = o_{L,in}\}$. The same argument holds for $v \in B_D$ when $v$ is linear.
