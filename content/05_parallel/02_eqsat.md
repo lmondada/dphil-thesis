@@ -132,7 +132,7 @@ growing list of applications. Unfortunately for us[^thesis], adapting these
 ideas to quantum computation (and graph rewriting more generally) presents
 several unsolved challenges.
 
-[^thesis]: but fortunately, for this thesis
+[^thesis]: but fortunately for this thesis
 
 The root of the problem lies in the program representation. The minIR
 representation we presented in {{< reflink "sec:graph-defs" >}}---but also the

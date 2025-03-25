@@ -177,7 +177,7 @@ these assumptions.
 <!-- prettier-ignore -->
 {{< proposition title="Bound on graph width" id="prop-widthbound" >}}
 
-Let $G$ be a graph with $n_\textrm{odd}$ operations of odd degrees and
+Let $G$ be a graph with $n_\textrm{odd}$ operations of odd degree and
 $n_\omega$ open values. Then, the graph width of $G$ is
 $width(G) = \lfloor(n_\textrm{odd} + n_\omega) / 2\rfloor$.
 

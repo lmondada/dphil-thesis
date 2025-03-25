@@ -193,7 +193,7 @@ with multiple definitions for the same value.
 
 An alternative definition of graph transformations in GTSs is using partitions
 of graphs into equivalence classes. This is particularly useful in applications
-where transformation rules encode graph equivalences (rather than graph
+where transformation rules encode graph equivalences (rather than, say, graph
 evolution) and there is no obvious way to fix the direction in which
 transformations should be applied. Such systems are good candidates for equality
 saturation-like approaches as discussed in {{% reflink "chap:parallel" %}}.

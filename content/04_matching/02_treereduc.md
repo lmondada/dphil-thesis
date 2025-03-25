@@ -5,8 +5,8 @@ weight = 2
 slug = "sec:treereduc"
 +++
 
-We reduce the problem of graph pattern matching to matching on rooted trees,
-which is much simpler.
+We reduce the problem of graph pattern matching to matching on rooted trees---a
+much simpler problem to solve.
 
 #### Spanning tree
 

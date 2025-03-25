@@ -5,8 +5,8 @@ weight = 3
 slug = "sec:canonical"
 +++
 
-Reducing graph matching to ternary trees from the previous section is a big step
-towards an algorithm for graph matching. However,
+The reduction of graph matching to ternary trees from the previous section is a
+big step towards an algorithm for graph matching. However,
 {{% refproposition "prop-tree-patternmatching" %}} is expressed in terms of
 _existence_ of spanning trees---it is as yet unclear how the trees can be
 constructed. This is the purpose of this section.
