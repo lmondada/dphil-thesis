@@ -36,7 +36,7 @@ article {
   hyphens: auto;
 }
 
-p {
+p, ol {
   margin-block-start: 0em;
 }
 
@@ -62,7 +62,6 @@ pre {
 article.markdown ul {
   list-style-type: none;
   padding-left: 1.6em;
-  line-height: 2em;
   margin-block-start: 0em;
 
   li::before {
@@ -71,6 +70,10 @@ article.markdown ul {
     display: inline-block;
     width: 1.2em;
     margin-left: -1.4em;
+  }
+
+  li {
+    margin-bottom: 0.5em;
   }
 }
 
