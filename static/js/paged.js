@@ -4,33 +4,41 @@ class MyHandler extends Paged.Handler {
   }
 
   afterPageLayout(pageFragment, page, breakToken) {
+    // Identify pages with a chapter heading
+    const chapterNumber = pageFragment.querySelector("p.chapter-number");
+    if (chapterNumber) {
+      // Add chapter-head class to the root element of the page
+      pageFragment.classList.add("chapter-head");
+      console.log(pageFragment);
+    }
+
     // Get all footnote references on this page
     const footnoteRefs = Array.from(pageFragment.querySelectorAll("sup"));
-    
+
     // If no footnotes on this page, return
     if (footnoteRefs.length === 0) {
       return;
     }
-    
+
     // Create footnote container
     const footnoteDiv = document.createElement("div");
     footnoteDiv.classList.add("footnotes", "paged-footnotes");
-    
+
     // Get start index for footnote numbering
     const startIndex = getSupStartIndex(pageFragment);
-    
+
     // Create ordered list for footnotes
     const footnoteList = document.createElement("ol");
     footnoteList.setAttribute("start", startIndex);
     footnoteDiv.appendChild(footnoteList);
-    
+
     // Map footnote references to their ids
     const footnoteToRef = footnoteRefs.reduce((acc, el) => {
       const id = el.id.replace("fnref", "fn");
       acc[id] = el;
       return acc;
     }, {});
-    
+
     // Add footnotes to the list
     Object.keys(footnoteToRef).forEach((id) => {
       const footnote = this.footnoteMap[id];
@@ -38,13 +46,13 @@ class MyHandler extends Paged.Handler {
         footnoteList.appendChild(footnote.cloneNode(true));
       }
     });
-    
+
     // Add footnote div to the article element (it will be positioned by CSS grid)
     const article = pageFragment.querySelector("article.markdown");
     if (article) {
       article.appendChild(footnoteDiv);
     }
-    
+
     // Position footnotes vertically aligned with their references
     let lastOffset = null;
     footnoteList.querySelectorAll("li").forEach((li) => {
@@ -52,13 +60,13 @@ class MyHandler extends Paged.Handler {
       if (ref) {
         // Find the first <p> ancestor of the footnote reference
         let refParagraph = ref.closest("p") || ref;
-        
+
         // First try with top alignment (default behavior)
         let offset = computeOffsetForAlignment(li, refParagraph, false);
         if (lastOffset !== null) {
           offset = Math.max(offset, lastOffset);
         }
-        
+
         // Check if this would cause overlap with .footnote-above
         if (overlapsWithFootnoteAbove(li, offset, pageFragment)) {
           // If overlap detected, align to bottom instead
@@ -67,7 +75,7 @@ class MyHandler extends Paged.Handler {
             offset = Math.max(offset, lastOffset);
           }
         }
-        
+
         li.style.top = `${offset}px`;
         lastOffset = offset + li.offsetHeight;
       }
@@ -105,21 +113,21 @@ function getSupStartIndex(pageFragment) {
 
 function removeFootnotes(footnotes) {
   const footnoteMap = {};
-  
+
   // Process each footnote section
   footnotes.forEach((f) => {
     // Extract all footnote list items
     const listItems = f.querySelectorAll("ol > li");
-    
+
     // Add each footnote to our map, but create a deep clone to preserve for later use
     listItems.forEach((li) => {
       footnoteMap[li.id] = li.cloneNode(true);
     });
-    
+
     // Remove the original footnote section as we'll recreate it in the grid
     f.remove();
   });
-  
+
   return footnoteMap;
 }
 
@@ -175,11 +183,20 @@ toggleFloatingFootnotes();
 
 // Computes an offset such that setting `top` on `footnote` will put it
 // in vertical alignment with targetAlignment.
-function computeOffsetForAlignment(footnote, targetAlignment, alignToBottom = false) {
+function computeOffsetForAlignment(
+  footnote,
+  targetAlignment,
+  alignToBottom = false
+) {
   const offsetParentTop = footnote.offsetParent.getBoundingClientRect().top;
   if (alignToBottom) {
     // Distance that puts the bottom of the footnote aligned with the bottom of the target
-    return targetAlignment.getBoundingClientRect().bottom - offsetParentTop - footnote.offsetHeight;
+    return (
+      targetAlignment.getBoundingClientRect().bottom -
+      offsetParentTop -
+      footnote.offsetHeight +
+      10
+    );
   } else {
     // Distance between the top of the offset parent and the top of the
     // target alignment
@@ -192,22 +209,30 @@ function overlapsWithFootnoteAbove(footnote, offset, container) {
   const footnoteRect = footnote.getBoundingClientRect();
   const potentialPosition = {
     top: offset + footnote.offsetParent.getBoundingClientRect().top,
-    bottom: offset + footnote.offsetParent.getBoundingClientRect().top + footnoteRect.height,
+    bottom:
+      offset +
+      footnote.offsetParent.getBoundingClientRect().top +
+      footnoteRect.height,
     left: footnoteRect.left,
-    right: footnoteRect.right
+    right: footnoteRect.right,
   };
-  
-  const footnoteAboveElements = container.querySelectorAll('.footnote-above');
+
+  const footnoteAboveElements = container.querySelectorAll(
+    ".footnote-above, .pagedjs_margin-bottom-right, .pagedjs_margin-bottom-left"
+  );
   for (const element of footnoteAboveElements) {
     const elementRect = element.getBoundingClientRect();
     // Check if there's overlap
-    if (!(potentialPosition.right < elementRect.left || 
-          potentialPosition.left > elementRect.right || 
-          potentialPosition.bottom < elementRect.top || 
-          potentialPosition.top > elementRect.bottom)) {
-        return true;
+    if (
+      !(
+        potentialPosition.right < elementRect.left ||
+        potentialPosition.left > elementRect.right ||
+        potentialPosition.bottom < elementRect.top ||
+        potentialPosition.top > elementRect.bottom
+      )
+    ) {
+      return true;
     }
   }
   return false;
 }
-
