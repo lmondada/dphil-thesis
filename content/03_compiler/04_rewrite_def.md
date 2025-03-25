@@ -75,7 +75,7 @@ Then, we can define
   to, for all $v \in V_1 \cup V_2$.
 
 <!-- prettier-ignore -->
-{{% definition title="Graph gluing" id="def-graphgluings" %}}
+{{% definition title="Graph glueing" id="def-graphglueings" %}}
 The glueing of $G_1$ and $G_2$ according to the glueing relation $\mu$ is
 given by the vertices $V = (V_1 \cup V_2)/\sim_\mu$ and the edges
 
@@ -328,7 +328,7 @@ It follows directly from our construction of $\sim_R$ and $\mu_o'$ that the
 equivalence classes of (the smallest equivalence relation closure of)
 $\mu_o' \circ \alpha$ is equal to the equivalence classes of (the smallest
 equivalence relation closure of) $\mu_o$. The claim follows by
-{{% refdefinition "def-graphgluings" %}} and the definition of $r_o$.
+{{% refdefinition "def-graphglueings" %}} and the definition of $r_o$.
 
 And finally, _Claim 4:_ $r_o(G)$ is a valid minIR graph.
 

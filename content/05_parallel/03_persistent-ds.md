@@ -46,7 +46,7 @@ $$children(\delta) = \left\{\delta_c \in \mathcal{D} \mid \delta \in parents(\de
 #### Merges, confluent persistence and edit creation
 
 As noted above, edits $\delta$ in $\mathcal{D}$ are not defined with respect to
-a single graph $G$: the vertex deletion set $V^-$ as well as the gluing relation
+a single graph $G$: the vertex deletion set $V^-$ as well as the glueing relation
 $\mu$ act on $V(\mathcal{D})$, hence different vertices might belong to
 different edits in $\mathcal{D}$.
 
@@ -70,12 +70,12 @@ def add_edit(
     edits: Set[Edit],
     replacement_graph: Graph
     deletion_set: Set[V],
-    gluing_relation: EquivalenceRelation[V]
+    glueing_relation: EquivalenceRelation[V]
 ) -> Set[Edit]:
     new_edit = (
         replacement_graph,
         deletion_set,
-        gluing_relation
+        glueing_relation
     )
     parents = parents(new_edit)
     assert(issubset(parents, edits))
@@ -174,7 +174,7 @@ on $G_{i-1}$ and $G_i = r_i(G_{i-1})$.
 {{% proof %}}
 
 Define the empty graph $G_0 = \varnothing$. The edit $\delta_1$ has no parent
-and thus must have an emtpy vertex deletion set and gluing relation. It is thus
+and thus must have an emtpy vertex deletion set and glueing relation. It is thus
 a valid rewrite $r_1$ on $G_0$.
 
 We can repeat this construction inductively for graphs $G_2, \ldots, G_k$ if we
@@ -229,7 +229,7 @@ def flatten_history(edits: Set[Edit]) -> Graph:
     graph = Graph()
     for a in toposort(all_ancestors):
         add_graph(graph, replacement_graph(a))
-        for (del_v, repl_v) in gluing_relation(a):
+        for (del_v, repl_v) in glueing_relation(a):
             move_edges(graph, repl_v, del_v)
         for v in deletion_set(a):
             remove_vertex(graph, v)
@@ -266,7 +266,7 @@ applying the same rewrites in the reverse order on $G_{pre}$.
 The vertex sets $V^-_1$ and $V^-_2$ of $\delta_1$ and $\delta_2$ must be
 disjoint because $\delta_1, \delta_2 \in A$ and hence are compatible.
 Furthermore, the replacement graphs (by definition of the rewrites) and the
-gluing relations of $\delta_1$ and $\delta_2$ (by rewrite compatibility) cannot
+glueing relations of $\delta_1$ and $\delta_2$ (by rewrite compatibility) cannot
 contain vertices in $V^-_1 \cup V^-_2$. It follows that the order in which
 vertices of $V^-_1 \cup V^-_2$ are removed from $G_{pre}$ does not affect the
 graph $G_{post}$. Furthermore, vertex merging is a commutative operation, and so
@@ -339,7 +339,7 @@ def create_from_graph(G: Graph) -> D:
     d = add_edit(d,
         replacement_graph = G,
         deletion_set = set(),
-        gluing_relation = {}
+        glueing_relation = {}
     )
     return d
 ```
@@ -378,7 +378,7 @@ follows:
 
 $$\begin{aligned}\mu^{-1}(v) = \{&w \in V(\mathcal{D})\mid\\&  \text{there exist } \delta \in \mathcal{D}, v \in V^-(\delta): \mu(w) = v\},\end{aligned}$$
 
-where $\mu$ refers to the gluing relation of the edit $\delta$. This can be used
+where $\mu$ refers to the glueing relation of the edit $\delta$. This can be used
 to define the procedure `equivalent_vertices`: given a vertex $v$ and a set of
 edits $D \subseteq \mathcal{D}$, it applies $\mu^{-1}(v)$ recursively and
 filters it to only include vertices whose owner is compatible with $D$. The set

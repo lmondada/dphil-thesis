@@ -56,7 +56,7 @@ We will write $Dom(\mu)$ and $Im(\mu)$ for the domain and image of $\mu$,
 respectively.
 
 Define the graph $G_L = (V_L, E_L)$ given by
-$V_L = V \setminus V^- \cup Dom(\mu)$ and $E_L = E \cap V_L^2$. The gluing
+$V_L = V \setminus V^- \cup Dom(\mu)$ and $E_L = E \cap V_L^2$. The glueing
 relation $\mu$ defines an equivalence relation
 
 $$\sim \ \subseteq (V_L \cup V_R)^2$$
