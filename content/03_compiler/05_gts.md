@@ -5,6 +5,12 @@ layout = "section"
 slug = "sec-gts-def"
 +++
 
+In the second part, we will review two approaches to defining minIR graph
+transformation semantics, one based on the DPO construction and the other a
+generalisation of it that formalises the "equivalence classes of circuits"
+proposed in @Jia2019.
+
+
 We conclude this chapter by presenting two ways to specify the valid
 transformations of minIR GTSs. The first and simplest are graph transformation
 rules, ubiquitous in graph transformation theories; the second generalises

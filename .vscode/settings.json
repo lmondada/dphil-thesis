@@ -3,5 +3,6 @@
   "prettier.proseWrap": "always",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnPaste": false,
-  "editor.formatOnSave": false
+  "editor.formatOnSave": false,
+  "cmake.sourceDirectory": "/Users/luca/Documents/phd/thesis/scripts-datagen/toric32_decoder_timings/build/_deps/mqt-core-src"
 }

@@ -87,6 +87,10 @@ class MyHandler extends Paged.Handler {
 
     const footnotes = content.querySelectorAll("div.footnotes");
     this.footnoteMap = removeFootnotes(footnotes);
+
+    // Remove all empty paragraphs
+    const emptyParagraphs = content.querySelectorAll("p:empty");
+    emptyParagraphs.forEach(p => p.remove());
   }
 }
 Paged.registerHandlers(MyHandler);

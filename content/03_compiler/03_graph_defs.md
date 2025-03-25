@@ -77,7 +77,7 @@ The right harpoon arrow $f: A \rightharpoonup B$ denotes a partial function from
 $A$ to $B$, i.e. with a domain of definition $dom(f) \subseteq A$.
 
 <!-- prettier-ignore -->
-{{% definition title="MinIR Graph" id="minirdef" %}}
+{{% definition title="MinIR graph" id="minirdef" %}}
 A minIR graph $(V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$
 is given by a set of values $V$, a subset of which are linear $V_L \subseteq V$, and a set of operations $O$,
 along with the (partial) functions

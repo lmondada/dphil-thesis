@@ -158,7 +158,17 @@ understanding of classical hardware and battle-tested implementations for every
 optimisation pass under the sun---in short, the full thrust of a modern
 state-of-the-art compiler such as `clang` or `gcc`.
 
-These observations will hopefully leave the reader convinced that in order to
+To make matters worse, such classical computations are bound to move to dedicated
+accelerators that require specialised compilation,
+such as GPUs and FPGAs, for the most time-critical subroutines:
+  quantum error decoding
+  using GPUs is already well-developed @Bausch2024 @Cao2023 and more esoteric
+  platforms FPGAs @Overwater2022 @Meinerz2022, superconducting circuits
+  @Ueno2021 and compute-in-memory architectures @Wang2024 are being actively
+  studied.
+
+
+These observations should leave the reader convinced that in order to
 compile and realise the kind of hybrid quantum-classical programs that we expect
 will become the norm in the field, quantum compilers will need to embrace and
 encompass the full breadth and depth of classical compilers. This leaves us with
