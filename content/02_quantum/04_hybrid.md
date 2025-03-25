@@ -395,7 +395,7 @@ while True:
    ancilla_q = create_qubit()
    obtain measurement m from:
 
-   <img src="/rus.svg" style="width: 70%; margin-left: 5em;"/>
+   <img src="/rus.svg" style="width: 65%; margin-left: 5em;"/>
 
     if m == 0:
         break  # success! we can exit loop and proceed
@@ -425,17 +425,17 @@ size becomes hugely bloated, and beyond slowing down the compiler, it will also
 cause a host of issues on the control hardware in real-time, such as long load
 times, inefficient execution, and low cache efficiency.
 
-Even more worryingly, when picking `max_iter`, we face an impossible tradeoff:
-if `max_iter` is small, then the probability of failure will remain
-non-negligible. As we scale this value up, however, we are introducing more and
-more gates into the program to cover the odd case of multiple successive
-repeated failures. We do not intend to execute these gates on most computation
-runs. They come at a significant cost to the runtime. For each gate listed in
-the circuit, the condition for the gate's execution must be checked, whether or
-not the gate ends up being executed. Furthermore, hardware schedulers might be
-forced to be pessimistic and schedule a time window for all conditional
-operations ahead of time. This will significantly delay any operation to be
-performed after the loop.
+Even more worryingly, when picking the maximum number of iterations, we face an
+impossible tradeoff: if the number of iterations is small, then the probability
+of failure will remain non-negligible. As we scale this value up, however, we
+are introducing more and more gates into the program to cover the odd case of
+multiple successive repeated failures. We do not intend to execute these gates
+on most computation runs. They come at a significant cost to the runtime. For
+each gate listed in the circuit, the condition for the gate's execution must be
+checked, whether or not the gate ends up being executed. Furthermore, hardware
+schedulers might be forced to be pessimistic and schedule a time window for all
+conditional operations ahead of time. This will significantly delay any
+operation to be performed after the loop.
 
 We, therefore, argue that the quantum circuit model is ill-suited as the
 representation for quantum programs that combine classical and quantum data.
