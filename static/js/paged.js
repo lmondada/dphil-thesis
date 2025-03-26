@@ -9,7 +9,6 @@ class MyHandler extends Paged.Handler {
     if (chapterNumber) {
       // Add chapter-head class to the root element of the page
       pageFragment.classList.add("chapter-head");
-      console.log(pageFragment);
     }
 
     // Get all footnote references on this page
@@ -89,8 +88,10 @@ class MyHandler extends Paged.Handler {
     this.footnoteMap = removeFootnotes(footnotes);
 
     // Remove all empty paragraphs
-    const emptyParagraphs = content.querySelectorAll("p:empty");
-    emptyParagraphs.forEach(p => p.remove());
+    const emptyParagraphs = content.querySelectorAll("p:empty, input");
+    emptyParagraphs.forEach((p) => p.remove());
+
+    console.log(content);
   }
 }
 Paged.registerHandlers(MyHandler);
@@ -190,7 +191,7 @@ toggleFloatingFootnotes();
 function computeOffsetForAlignment(
   footnote,
   targetAlignment,
-  alignToBottom = false
+  alignToBottom = false,
 ) {
   const offsetParentTop = footnote.offsetParent.getBoundingClientRect().top;
   if (alignToBottom) {
@@ -222,7 +223,7 @@ function overlapsWithFootnoteAbove(footnote, offset, container) {
   };
 
   const footnoteAboveElements = container.querySelectorAll(
-    ".footnote-above, .pagedjs_margin-bottom-right, .pagedjs_margin-bottom-left"
+    ".footnote-above, .pagedjs_margin-bottom-right, .pagedjs_margin-bottom-left",
   );
   for (const element of footnoteAboveElements) {
     const elementRect = element.getBoundingClientRect();

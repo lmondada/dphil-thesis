@@ -5,14 +5,11 @@ layout = "section"
 slug = "sec:graph-defs"
 +++
 
-Describing the specifics of any particular quantum programming language or
-compiler IR is beyond our scope. It would force us to restrict our
-considerations to a narrow subset of the options that are still being actively
-explored and developed. For this thesis, we instead introduce a simplified
-graph-based IR for quantum computations that we will call `minIR`. It captures
-all the expressiveness that we require for hybrid programs whilst remaining
-sufficiently abstract to be applicable to a variety of IRs and, by extension,
-programming languages.
+For the purposes of this thesis, we introduce a simplified graph-based IR for
+quantum computations that we will call minIR. It captures all the expressiveness
+that we require for hybrid programs whilst remaining sufficiently abstract to be
+applicable to a variety of IRs and, by extension, quantum programming languages
+and compiler frameworks.
 
 MinIR can be thought of as being built from statements of the form
 
@@ -58,29 +55,34 @@ equivalence relation $u \sim v$ of connected vertices, i.e. either
 $u \leadsto v$, $v \leadsto u$, or there exists $w$ with $u \sim w$ and
 $w \sim v$.
 
-In minIR, the hypergraph vertices are SSA values, and edges are the operations.
-We will call the source of a value its definition and the target its uses---and
-hence rename the $\mathit{src}$ and $\mathit{tgt}$ functions to $\mathit{def}$
-and $\mathit{use}$ respectively. Furthermore, we introduce additional
-constraints for a hypergraph to be a valid minIR graph:
+In minIR, the hypergraph vertices are the values of the computation, while the
+hyperedges define the operations. We call values that are target endpoints of an
+operation $o$ the _definitions_ of $o$, and those that are source endpoints its
+_uses_---and hence rename the adjacency functions $\mathit{src}$ and
+$\mathit{tgt}$ to $\mathit{use}$ and $\mathit{def}$ respectively. For a
+hypergraph to be a valid minIR graph, some constraints must further be
+satisfied:
 
-- we impose that a minIR program is in SSA form, i.e. all values in minIR must
-  have a unique definition;
-- values may also be linear, in which case they must also have a unique use;
-- the graph must be acyclic, i.e. no value is defined in terms of itself.
+- all values in minIR must have a unique operation that _defines_ them;
+- values that are _linear_ must also have a unique operation that _uses_ them;
+- the graph must be acyclic, meaning that no value can be defined in terms of
+  itself.
 
-Finally, minIR graphs have a concept of _regions_ encoded by a $parent$ partial
-function. It creates a hierarchy on the set of operations that we will use below
-to structure the program.
+These requirements result in the first three conditions of
+{{% refdefinition "minirdef" %}}. Finally, minIR graphs have a concept of
+_regions_ that create a hierarchy on the set of operations that captures the
+structure the program.
 
-The right harpoon arrow $f: A \rightharpoonup B$ denotes a partial function from
-$A$ to $B$, i.e. with a domain of definition $dom(f) \subseteq A$.
+Regions are defined by a partial function $parent$. Partial functions
+$f: A \rightharpoonup B$ are functions that may only be defined on a subset of
+$A$, i.e. with a domain of definition $dom(f) \subseteq A$.
 
 <!-- prettier-ignore -->
 {{% definition title="MinIR graph" id="minirdef" %}}
-A minIR graph $(V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$
-is given by a set of values $V$, a subset of which are linear $V_L \subseteq V$, and a set of operations $O$,
-along with the (partial) functions
+
+A minIR graph $(V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$ is
+given by a set of values $V$, a subset of which $V_L \subseteq V$ are linear
+values, and a set of operations $O$, along with the (partial) functions
 $$\begin{aligned}\mathit{def}: O \rightarrow V^\ast && \mathit{use}: O \rightarrow V^\ast && \mathit{parent}: O \rightharpoonup O, \end{aligned}$$
 satisfying the constraints
 
@@ -98,9 +100,16 @@ satisfying the constraints
   {{% /definition %}}
 
 In the context of minIR, $\leadsto$ relations encode the data flow of values
-across the computation. The $\sim$ equivalence relation, which we will call the
-_usedef_ relation, groups values that are connected by chains of $\mathit{use}$s
-and $\mathit{def}$s.
+across the computation. The _regions_ of the graph are then given by the sets
+
+$$R_p = \{ o \in O \mid \textrm{there exists } o' \sim o \textrm{ with }parent(o') = p \}$$
+
+for all $p \in im(parent)$ in the image of $parent$. We also define the _root_
+region $R_{root}$, containing all operations not in any other region. Regions
+form a tree hierarchy: any non-root region $R_p$ has a _parent_ region, given by
+the region $p$ belongs to. If $R_{p_1}$ is an ancestor of $R_{p_2}$, we say that
+$R_{p_2}$ is nested within $R_{p_1}$. At times, it will be more convenient to
+view regions equivalently as partitions of the _values_ of a minIR graph.
 
 The lack of explicit operation ordering differentiates minIR (and HUGR) from
 most classical IRs, which, unless specified otherwise, typically assume that
@@ -108,31 +117,20 @@ instructions may have side effects and thus cannot be reordered. All quantum
 operations (and the classical operations we are interested in) are side-effect
 free, which significantly simplifies our IR.
 
-### Regions and Structured Control Flow
+### Structured control flow
 
 The operations and values of a minIR graph define the data flow of a program.
 However, a program must also be able to control and change the data flow at run
 time in order to express loops, conditionals, function calls etc. This is the
 program _control flow_, which minIR expresses using regions and so-called
-**structured control flow**.
-
-We can define for all operations $o \in O$
-$$region(o) = \begin{cases}r & \textrm{if there exists } o' \in dom(parent) \\& \textrm{ with }o \sim o' \textrm{ and }parent(o') = r,\\ \mathit{root} & \textrm{otherwise,}\end{cases}$$
-
-where $root$ is a new symbol disjoint from $O$. The $region$ function is
-well-defined by the fourth constraint in {{% refdefinition "minirdef" %}}. We
-call $region(o)$ the parent of $o$. With the acyclicity constraint of minIR
-graphs, this defines a tree structure rooted in $root$ on the set
-$O \cup \{root\}$ and a hierarchy of regions. If a region $r$ is a parent of
-another region $r'$, we say that $r'$ is nested in $r$.
+_structured control flow_.
 
 Using regions, any non-trivial control flow (function calls, conditionals, loops
-etc.) is abstracted away by a high-level "black box" operation that can be
-inserted within the data flow of the program. One or several nested regions then
-define the implementation of the black box, such as the branches of the control
-flow. A simple function call, that unconditionally redirects the control flow to
-the operations within a nested region, could for example be represented as
-follows[^figureconventions]:
+etc.) is captured by "black box" operation within the data flow of the program.
+One or several nested regions then define the implementation of the black box,
+such as the branches of the control flow. A simple function call, that
+unconditionally redirects the control flow to the operations within a nested
+region, could for example be represented as follows[^figureconventions]:
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -147,18 +145,15 @@ follows[^figureconventions]:
     between them and labelled with operations. Hyperedges attached to the white
     half of circles are value definitions, while hyperedges attached to the
     black half of circles are value uses. Dashed arrows indicate hierarchical
-    dependencies; the dashed rectangles are the equivalence classes of $\sim$,
-    i.e. the regions.
+    dependencies; the dashed rectangles mark the regions of the graph.
 
-Importantly, the outer "black box" `call` operation must specify a list of input
-and output values, which must match the inputs and outputs that the nested
-region expects. Passing function arguments and retrieving returned values in
-this fashion will be very familiar to anyone who has ever called a function in
-their programming language. Unlike most programming languages, this is also how
-in minIR values are passed to and from _any_ control flow constructs we would
-wish to model. In fact, the constraints we have imposed on minIR graphs restrict
-every value to only be available within its defining region. An if-else
-statement might then look as follows:
+Importantly, the outer "black box" `call` operation is connected to _use_ and
+_def_ values which must match the inputs and outputs that the nested region
+expects. Passing function arguments and retrieving returned values in this
+fashion will be very familiar to any computer scientist. Unlike most programming
+languages, this is also how in minIR values are passed to and from _any_ control
+flow constructs we would wish to model. An if-else statement might then look as
+follows:
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -168,21 +163,25 @@ statement might then look as follows:
 %}}
 <!-- prettier-ignore-end -->
 
-The `if` and `else` blocks must expect the same input and output values! This is
+The `if` and `else` blocks must expect the same input and output values. This is
 key to respecting any linearity constraints that values passed to `ifelse` might
-be subject to. Note as an aside that by introducing multiple code blocks within
-a single region, we created the possibility for invalid graphs that might use
-values of the `if` block in the `else` block. We present a better approach that
-forbids this in the expanded example below.
+be subject to. By definition, all operations that use or define a value $v$ will
+be in the same region---in other words, values are only available within their
+defining region. This in effect implements "variable scoping", though note that
+in the `ifelse` example above, by introducing multiple code blocks within the
+child region of `ifelse`, we have created the possibility of invalid
+computations: a graph that uses the values of the `if` block in the `else` block
+would be a valid minIR graph. A better approach that scopes different code
+blocks and forbids this is proposed in the expanded example below.
 
-With some imagination, one can also model arbitrary loops! Consider, for
-instance, the following `dowhile` construction. tbd
+With some imagination, this construction can easily be adapted to model loops,
+complex control flow graphs, or any other control flow structures.
 
 #### Why not plain branch statements?
 
 There is a simpler---and at least as popular---way of expressing control flow in
-IRs _without_ regions, using branch statements[^goto]. For instance, LLVM IR
-provides a conditional branch statement
+IRs without necessiting regions and operation hierarchies, using _branch_
+statements[^goto]. For instance, LLVM IR provides a conditional branch statement
 
 ```llvm
 br i1 %cond, label %iftrue, label %iffalse
@@ -198,13 +197,13 @@ to the `iffalse` label otherwise.
 
 This is a simple and versatile approach to control flow that can be used to
 express any higher-level language constructs. Unfortunately, conditional
-branching combined with linear values is a toxic combination.
+branching does not mix well with linear values.
 
-While linearity, as defined in {{% refdefinition "minirdef" %}}, is a simple
-constraint to impose on our IR in the absence of conditional branching, the
-constraint would have to be relaxed to allow for single use _in each mutually
-exclusive branch_ of control flow. For instance, the following two uses of `b`
-should be allowed (in pseudo-IR):
+Linearity, as defined in {{% refdefinition "minirdef" %}}, is a simple
+constraint to impose on minIR graphs. In the presence of conditional branching,
+however, the constraint would have to be relaxed to allow for single use _in
+each mutually exclusive branch_ of control flow. For instance, the following two
+uses of `b` should be allowed (in pseudo-IR):
 
 ```python
 b := h(a)
@@ -231,20 +230,22 @@ and gives the linearity constraint a much simpler form.
 
 Taking a step back, let us make the introduced ideas more concrete through an
 example. Instead of defining nested regions on each control flow construct, let
-us simplify our syntax and define all regions using a single operation
-`regiondef`: it takes no input and returns a single output value. This also
-removes the possibility of invalid graphs mentioned in the `ifelse` example
-above, where operations of distinct code blocks, e.g. `if` and `else` blocks,
-use values that are invalid in their branch of control flow.
+us simplify our syntax by dedicating the definition of nested region to a single
+operation `regiondef`: it takes no input and returns a single output value---a
+handle to the defined region. This also removes the possibility of invalid
+graphs mentioned in the `ifelse` example above, where operations of distinct
+code blocks, e.g. `if` and `else` blocks, use values that are invalid in their
+branch of control flow.
 
 The value returned by `regiondef` can then be passed as inputs to other control
 flow operations, effectively defining the same data without nested regions on
 the control flow operation[^llvmblock].
 
 [^llvmblock]:
-    This is like the label of a code block in LLVM IR. You can also view the
-    value as asking a function pointer, though, as defined, the pointer would
-    always be a known constant at compile time.
+    This is similar to a label of a code block in LLVM IR. You can also view the
+    handle as akin to a function pointer, though, as defined, the pointer would
+    always reference a fixed block of code, i.e. it would be a known constant at
+    compile time.
 
 As in our previous examples, the region nested within a `regiondef` always has a
 unique `in` and `out` operation corresponding to the input and output values of
@@ -281,22 +282,21 @@ It corresponds to the following minIR graph:
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/minir-graph-2.svg"
-    width="70%"
-    enlarge="half"
-    caption="An example minIR graph. Coloured (half) circles are SSA values, with hyperedges spanning between them and labelled with operations. Hyperedges attached to lighter half circles are value definitions, while hyperedges attached to the darker half circles are value uses. Dashed arrows indicate hierarchical dependencies; the dashed rectangles are the equivalence classes of $\sim$, i.e. the regions. The value colours refer to their types. See below."
+    width="60%"
+    enlarge="full"
+    caption="An example minIR graph. Coloured (half) circles are values, with hyperedges spanning between them and labelled with operations. Hyperedges attached to lighter half circles are value definitions, while hyperedges attached to the darker half circles are value uses. Dashed arrows indicate hierarchical dependencies; the dashed rectangles mark the regions of the graph. The value colours refer to their types. See below."
 %}}
 <!-- prettier-ignore-end -->
 
-The wiggly hyperedges stretching between SSA values look unusual, especially
-when you are used to computation graphs. If we opt to draw the same graph with
-boxes for hyperedges and wires for values, we obtain a more familiar
-representation:
+The wiggly hyperedges stretching between values look unusual, especially when
+you are used to computation graphs. If we opt to draw the same graph with boxes
+for hyperedges and wires for values, we obtain a more familiar representation:
 
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/minir-graph.svg"
-    width="70%"
-    enlarge="half"
+    width="60%"
+    enlarge="full"
     caption="An equivalent representation of the computation above, now representing operations as boxes and values as wires. The arrow direction indicates the flow from value definition to value use(s). Dashed arrows have been changed to point to regions instead of individual operations."
 %}}
 <!-- prettier-ignore-end -->
@@ -304,22 +304,22 @@ representation:
 The two representations are equivalent, but the rewriting semantics are clearest
 when viewing values as vertices.
 
-### Type Graph
+### Type graph
 
-As we start using minIR graphs to model operations with _actual_ semantics, we
-must ensure additional constraints on the graph for the resulting computation to
-be well-defined: in the example above, each operation must have a fixed number
-of inputs and outputs, `regiondef` operations must have a nested region with
+We have started to see operations (`cx`, `ifelse`, `regiondef` etc.) that carry
+semantics, and thus come with additional constraints on the graph in order to be
+well-defined. In the example above, each operation must have a fixed number of
+inputs and outputs, `regiondef` operations must have a nested region with
 exactly one `in` and one `out` operation, etc. This is best captured by a _type
-system_---last missing part in our graph formalism. Graph-based modelling
+system_---the last missing part in our graph formalism. Graph-based modelling
 frameworks admit an elegant approach to typing, which is given by graph
 morphisms and type graphs.
 
-Graph morphisms on hypergraphs are maps of vertices and edges that preserve the
-structure of the graph, i.e. the endpoints of mapped edges must be the mapped
-endpoints of the original edges. We extend this definition to the case of minIR
-graphs by also imposing the preservation of the $parent$ relation. The map
-$\mathit{children}: O \to \mathcal{P}(O)$ refers to all children
+Graph morphisms on hypergraphs are maps of vertices and hyperedges that preserve
+the structure of the graph, i.e. the endpoints of mapped hyperedges must be the
+mapped endpoints of the original hyperedges. We extend this definition to the
+case of minIR graphs by also imposing the preservation of the $parent$ relation.
+The map $\mathit{children}: O \to \mathcal{P}(O)$ refers to all children
 $$\{o' \in O \mid parent(o') = o\}$$
 
 of an operation $o \in O$.
@@ -330,7 +330,7 @@ Given two minIR graphs
 
 $$\begin{aligned}G_1 &= (V_1, V_{L,1}, O_1, \mathit{def}_1, \mathit{use}_1, \mathit{parent}_1)\\G_2 &= (V_2, V_{L,2}, O_2, \mathit{def}_2, \mathit{use}_2, \mathit{parent}_2).\end{aligned}$$
 
-A graph morphism $\varphi: G_1 \to G_2$ is given by maps
+A minIR morphism $\varphi: G_1 \to G_2$ is given by maps
 
 $$\begin{aligned}\varphi_V: V_1 \to V_2 \quad&& \varphi_O: O_1 \to O_2,\end{aligned}$$
 
@@ -360,11 +360,11 @@ will thus be able to make it a property of the type system (e.g. a `regiondef`
 operation _must have a unique_ nested region, with a unique `in` and unique
 `out` operation).
 
-A type system for a minIR graph $G$ is then given by a minIR graph $\Sigma$ and
-a graph morphism $\mathit{type}: G \to \Sigma$[^slicecat]. The set of values of
-$\Sigma$ are called the (data) types $T$ of $G$ and the set of operations of
-$\Sigma$, the operation types $\Gamma$, or optypes. A valid type system for our
-example minIR graph above is the following.
+A _type system_ for a minIR graph $G$ is then given by a minIR graph $\Sigma$
+with values $T$ and operations $\Gamma$ along with a graph morphism
+$\mathit{type}: G \to \Sigma$[^slicecat]. The set of values $T$ are called the
+(data) types of $G$ and the set of operations $\Gamma$ the operation types, or
+optypes. A valid type system for our example minIR graph above is the following.
 
 [^slicecat]: A construction known in category theory as the slice category.
 
@@ -396,7 +396,7 @@ $G$ and $\Gamma$ the optypes of $G$.
 
 From here onwards, we always consider minIR graphs that are $\Sigma$-typed.
 
-### Differences to the Quantum Circuit model
+### Differences to the quantum circuit model
 
 We conclude this presentation of minIR by highlighting the differences between
 this IR-based representation and the quantum circuit model that most quantum
@@ -415,11 +415,11 @@ instance, by referring to a qubit index. This qubit reference exists for the
 entire computation duration, and the quantum data it refers to will change over
 time as operations are applied to that qubit.
 
-In the value semantics of SSA, on the other hand, qubits only exist in the form
-of the data they encode. When applying an operation, the (quantum) data is
-consumed by the operation and new data is returned. Given that the input data no
-longer exists, linearity conditions are required to ensure that no other
-operation can be fed the same value.
+In the value semantics of computation graphs and SSA, on the other hand, qubits
+only exist in the form of the data they encode. When applying an operation, the
+(quantum) data is consumed by the operation and new data is returned. Given that
+the input data no longer exists, linearity conditions are required to ensure
+that no other operation can be fed the same value.
 
 To make the difference clear, compare the program representations of the
 following computation:
@@ -455,31 +455,31 @@ drastically simpler picture from the point of view of the compiler and the
 optimiser---hence its popularity in classical compilers. When operations are
 defined based on qubit references, the compiler must carefully track the
 ordering of these operations: operations on the same qubit must always be
-applied in order. Through multi-qubit gates, this also imposes a (partial)
-ordering on operations across different qubits.
+applied in order. Through multi-qubit gates, this also imposes a partial
+ordering on operations across different qubits that must be respected.
 
 SSA values remove this dependency tracking altogether: the notion of physical
 qubit disappears, and the ordering of statements becomes irrelevant. All that
-matters is connecting each use of a value (i.e. occurrence as an input on the
-right-hand side of an IR statement) with its _unique_ definition on the
-left-hand side of another statement.
+matters is connecting each _use_ of a value (i.e. an input to an operation) with
+its _unique_ definition, the output of a previous operation.
 
 ---
 
 All the concepts of minIR embed themselves very easily within the MLIR-based
-quantum IRs and the Hugr IR @Hugr. In this sense, our toy IR serves as the
+quantum IRs and the HUGR IR @Hugr. In this sense, our toy IR serves as the
 minimum denominator across IRs and compiler technologies so that proposals and
 contributions we are about to make can be applied regardless of the underlying
 technical details.
 
 By waiving goodbye to the circuit model, we have been able to integrate much of
-the theory of traditional compiler design, bringing us much closer to
-traditional compiler research and the large-scale software infrastructure that
-is already available. This gives us access to all the classical optimisation and
-program transformation techniques developed over decades. Using structured
-control flow, we were also able to model linear resources such as qubits
-well---by using value semantics and SSA, checking that no-cloning is not
-violated is as simple as checking that each linear value is used exactly once.
+the theory of traditional compiler design, bringing us in the process much
+closer to traditional compiler research and the large-scale software
+infrastructure that is already available. This gives us access to all the
+classical optimisation and program transformation techniques developed over
+decades. Using structured control flow, we were also able to model linear
+resources such as qubits well---by using value semantics and SSA, checking that
+no-cloning is not violated is as simple as checking that each linear value is
+used exactly once.
 
 Finally, this new design is also extremely extensible. Not only does it support
 arbitrary operations, but the type system is also very flexible. There is

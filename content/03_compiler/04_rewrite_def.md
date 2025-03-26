@@ -7,12 +7,12 @@ slug = "sec:rewrite-def"
 
 As discussed in {{% reflink "sec-compgraphs" %}}, computation graphs with linear
 values, such as minIR, must adopt strict graph transformation semantics to
-ensure that linear constraints are satisfied at all times. The definitions we
-propose use graph glueings to define graph rewriting semantics that are similar
-to the double pushout (DPO) construction for graph transformations rules
-@Ehrig1976, as presented e.g. in @Bonchi2017.
+ensure that linear constraints are satisfied at all times. In this section, we
+use graph glueings to define graph rewriting semantics that are similar to the
+double pushout (DPO) construction for graph transformations rules @Ehrig1976, as
+presented e.g. in @Bonchi2017.
 
-DPO transformations can be formulated categorically in any adhesive category
+DPO transformations can be formulated categorically in adhesive categories
 @Lack2005. However, minIR rewriting requires additional bijectivity conditions
 to guarantee that linear types are handled correctly and no cyclic dependencies
 are created. On the other hand, minIR transformations should allow the implicit
@@ -43,8 +43,8 @@ All graph transformations that we consider operate through local graph rewrites,
 which we define in terms of graph glueings. Consider first the case of two
 arbitrary graphs $G_1 = (V_1, E_2)$ and $G_2 = (V_2, E_2)$, along with a
 relation $\mu\ \subseteq V_1 \times V_2$. Let
-$\sim_\mu \ \subseteq (V_1 \sqcup V_2)^2$ be the equivalence relation _induced_
-by $\mu$, i.e. the smallest relation on $V_1 \sqcup V_2$ that is reflexive,
+$\sim_\mu \ \subseteq (V_1 \sqcup V_2)^2$ be the equivalence relation induced by
+$\mu$, i.e. the smallest relation on $V_1 \sqcup V_2$ that is reflexive,
 symmetric and transitive, and satisifes for all $v_1 \in V_1$ and $v_2 \in V_2$,
 
 $$(v_1, v_2) \in \mu \Rightarrow v_1 \sim_\mu v_2.$$
@@ -53,8 +53,8 @@ Then, we can define
 
 - $V = (V_1 \sqcup V_2)/\sim_\mu$ is the set of all equivalences classes of
   $\sim_\mu$, and
-- $\alpha_\mu(v) \in V$ is the equivalence class of $\sim_\mu$ that $v$ belongs
-  to, for all $v \in V_1 \sqcup V_2$.
+- for $v \in V_1 \sqcup V_2$, $\alpha_\mu(v) \in V$ is the equivalence class of
+  $\sim_\mu$ that $v$ belongs to.
 
 <!-- prettier-ignore -->
 {{% definition title="Graph glueing" id="def-graphglueings" %}}
@@ -92,17 +92,19 @@ The domain of definition $dom(\mu)$ is known as the boundary values of $r$.
 
 Define the subgraph $G_L = (V_L, E_L)$ of $G$ given by
 
+{{% centered numbered="rewrite-result" %}}
 $$\begin{aligned}V_L &= (V \smallsetminus V^-) \ \cup\ dom(\mu)\\E_L &= (E \smallsetminus E^-)\ \cap\ V_L^2.\end{aligned}$$
+{{% /centered %}}
 
 The partial function $\mu$ is a special case of a glueing relation
 $\mu \subseteq V_L \times V_R$, and thus defines a glueing of $G_L$ with $G_R$.
 The rewritten graph resulting from applying $r$ to $G$ is
 $$r(G) = (G_L \sqcup G_R) / \sim_\mu.$$
 
-An example of a graph rewrite is given in the following figure:
+An example of a graph rewrite is given in the next figure.
 
 {{% figure src="/svg/graph-rewrite.svg" width="90%" enlarge="full"
-    caption="Application of a graph rewrite. On the left, the original graph $G$ along with the replacement graph $G_R$  (grey box). On the right, the rewritten graph $r(G)$. The domain of definition of $\mu$ is in orange and the (singleton) edge deletion set is red. The blue edge connects a vertex of $V \smallsetminus V^-$ to a boundary vertex, and is thus also present on the right-hand side. The purple edge, on the other hand, connects a vertex of $V \smallsetminus V^-$ to a non-boundary vertex of $V^-$, and is thus deleted." %}}
+    caption="Application of a graph rewrite. On the left, the original graph $G$ along with the replacement graph $G_R$  (grey box). On the right, the rewritten graph $r(G)$. Only the vertex $g$ has been deleted, as other vertices in $V^-$ are in the boundary $dom(\mu)$ (in orange). The (singleton) edge deletion set is red. The blue edge connects a vertex of $V \smallsetminus V^-$ to a boundary vertex, and is thus also present on the right-hand side. The purple edge, on the other hand, connects a vertex of $V \smallsetminus V^-$ to a non-boundary vertex of $V^-$, and is thus deleted." %}}
 
 When there are no edges between $V \smallsetminus V^-$ and
 $V^- \smallsetminus dom(\mu)$ (purple in the example above), this definition
@@ -130,7 +132,7 @@ construction of @Bonchi2017 or the supermaps of quantum causality @Hefford2024.
 We eschew the presentation of holes as a slice category in favour of a
 definition that fits naturally within minIR and is sufficient for our purposes.
 
-Let $G$ be $\Sigma$-typed minIR graph with data types $T$ and linear types
+Let $G$ be a $\Sigma$-typed minIR graph with data types $T$ and linear types
 $T_L \subseteq T$. Consider type strings $S, S' \in T^\ast$. We define the index
 sets
 
@@ -141,7 +143,7 @@ indices of linear types. For any $i \in \mathrm{Idx}(S)$, we denote by $S_i$ the
 type at position i in $S$.
 
 We define a partial order $\preccurlyeq$[^uptoisopreorder] on $T^\ast$ where
-$S \preccurlyeq S'$ if there exists a index map
+$S \preccurlyeq S'$ if there exists an _index map_
 $\rho: \mathrm{Idx}(S) \to \mathrm{Idx}(S')$ such that
 
 - types are preserved: $S_i = S'_{\rho(i)}$, and
@@ -155,8 +157,9 @@ $\rho: \mathrm{Idx}(S) \to \mathrm{Idx}(S')$ such that
 
 <!-- prettier-ignore -->
 {{% definition title="Interface" id="def-interface" %}}
-Let $G$ be $\Sigma$-typed minIR graph with data types $T$.
-An interface $I = (U, D)$ for $G$ is a pair of type strings $U, D \in T^\ast$.
+
+Let $T$ be a set of data types. An interface $I = (U, D)$ is a pair of type
+strings $U, D \in T^\ast$.
 
 We say that an interface $I' = (U', D')$ _generalises_ an interface
 $I = (U, D)$, written $I' \triangleright I$, if $U' \preccurlyeq U$ and
@@ -177,27 +180,27 @@ Similarly, we can assign interfaces to _subgraphs_ of minIR graphs:
 
 <!-- prettier-ignore -->
 {{% definition title="MinIR subgraph" id="def-subgraph" %}}
-Consider a subset of values and
-operations $V_H \subseteq V$ and $O_H \subseteq O$.
-Define the define and use boundary sets
+
+Consider a subset of values and operations $V_H \subseteq V$ and
+$O_H \subseteq O$. Define the _use_ and _define_ boundary sets
 
 {{% centered numbered="bdef" %}}
 $$\begin{aligned} B_U &= \{v \in V_H \mid v \in \mathit{def}\,(o)\textrm{ for some }o \in O \smallsetminus O_H \},\\B_D &= \{v \in V_H \mid v \in use(o)\textrm{ for some }o \in O \smallsetminus O_H \}.\end{aligned}$$
 {{% /centered %}}
 
-The tuple $H = (V_H, O_H)$ of $G$ is called a minIR subgraph of $G$ if all
-boundary values of $H$ are in the same region, i.e. for all
-$v_1, v_2 \in B_U \cup B_D$
+The tuple $H = (V_H, O_H)$ of $G$ is called a _minIR subgraph_ of $G$ if there
+exists a region $R$ of $G$ such that all boundary values of $H$ are in $R$:
 
-$$region(v_1) = region(v_2).$$
+$$ B= B_U \cup B_D \subseteq R.$$
 
 We write $H \subseteq G$ to indicate that $H$ is a minIR subgraph of $G$.
 
 <!-- prettier-ignore -->
 {{% /definition %}}
 
-Notice that we have lifted the $\in$ notation to ordered list types $V^\ast$: we
-write $v \in S$ if there is $i \in \mathrm{Idx}(S)$ such that $v = S_i$.
+Notice that in {{% refcentered "bdef" %}}, we lifted the $\in$ notation to
+ordered list types $V^\ast$: we write $v \in S$ if there is
+$i \in \mathrm{Idx}(S)$ such that $v = S_i$.
 
 Unlike interfaces, subgraph boundary values are not ordered. An _ordering_ of
 $B \subseteq V$ is a string $S \in V^\ast$ along with a bijective map
@@ -207,7 +210,7 @@ $$\mathrm{ord}: B \to \mathrm{Idx}(S) \quad\textrm{such that}\quad v = S_{\mathr
 If there are strings $S_U, S_D \in V^\ast$ and orderings of $B_U$ and $B_D$
 
 {{% centered numbered="ord" %}}
-$$\begin{aligned}\textrm{ord}_U:\ &B_U \to \mathrm{Idx}(S_U),\\\textrm{ord}_D:\ &B_D \to \mathrm{Idx}(S_D),\end{aligned}$$
+$$\begin{aligned}\textrm{ord}_U:\ &B_U \to \mathrm{Idx}(S_U)&\quad\textrm{ord}_D:\ &B_D \to \mathrm{Idx}(S_D),\end{aligned}$$
 {{% /centered %}}
 
 then we can set $\textit{use}\,(H) = S_U$ and $\textit{def}\,(H) = S_D$ in
@@ -223,30 +226,26 @@ and $\textrm{ord}_D$.
 Importantly, a minIR subgraph $H$ is a graph but is in general _not_ a valid
 minIR graph. A non-empty $B_U$ use-boundary corresponds to values $v\in B_U$
 without definitions in $H$, and a non-empty $B_D \cap T_L$ set corresponds to
-linear values in $H$ without uses.
+linear values in $H$ without uses. We can however always construct a valid minIR
+graph from $H$ by adding two operations $o_{in}$ and $o_{out}$ in the root
+region, defined by
 
-We can however always construct a valid minIR graph from $H$ by adding two
-operations $o_{in}$ and $o_{out}$ to $O_H$, defined by
-
-$$\begin{aligned}\textit{def}\,(o_{in}) &= use(H),\quad&\quad use(o_{out}) &= \textit{def}\,(H),\\use(o_{in}) &= \varepsilon,\quad&\quad\textit{def}\,(o_{out}) &= \varepsilon,\\\textit{parent}\,(o_{in}) &= \bot,\quad&\quad\textit{parent}\,(o_{out}) &= \bot.\end{aligned}$$
+$$\begin{aligned}\textit{def}\,(o_{in}) &= use(H),\quad&\quad use(o_{out}) &= \textit{def}\,(H),\\use(o_{in}) &= \varepsilon,\quad&\quad\textit{def}\,(o_{out}) &= \varepsilon.\end{aligned}$$
 
 where $\varepsilon$ denotes the empty string in $V^\ast$. We call the resulting
 graph $\bar{H}$ an _interface graph_. It _implements_ the interface $I_H$ if $H$
-implements $I_H$.
-
-In other words, $\bar{H}$ looks like one of the nested regions within
-`regiondef` operations that we were considering in the example of the previous
-section.
+implements $I_H$. Calling to mind the illustrations of
+{{% reflink "sec:graph-defs" %}}, $\bar{H}$ looks like one of the nested regions
+within `regiondef` operations that we were considering.
 
 #### MinIR operation rewrite
 
 Consider
 
-- an operation $o$ in a minIR graph $G$ with values $V,$ and
-- an interface graph $\bar{H}$ with values $V_H$ and subgraph
-  $H \subseteq \bar{H}$, obtained by removing the operations $o_{in}$ and
-  $o_{out}$ from $\bar{H}$, such that $H$ implements an interface
-  $$I_H = (type(\textit{use}\,(H)), type(\textit{def}\,(H)) \triangleright I(o).$$
+- an operation $o$ in a minIR graph $G$ with values $V,$
+- an interface graph $\bar{H}$ with values $V_H$ and its associated subgraph
+  $H \subseteq \bar{H}$, such that $H$ implements an interface
+  $$I_H = (type(\textit{use}\,(H)), type(\textit{def}\,(H)) \triangleright I(o),$$
 - the index maps $\rho: \mathrm{Idx}(use(H)) \to \mathrm{Idx}(use(o))$ and
   $\sigma: \mathrm{Idx}(\textit{def}\,(o)) \to \mathrm{Idx}(\textit{def}\,(H))$
   that define the generalisation $I_H \triangleright I(o)$ (per
@@ -285,7 +284,8 @@ There is a graph $G_R$ with values $V_R$ and a partial function
 $\mu_o': V \rightharpoonup V_R$ such that the graph
 {{% refcentered "oprewrite" %}} is the graph $r_o(G)$, obtained from the rewrite
 
-$$r_o = (G_R, dom(\mu_o), \{o\}, \mu_o').$$
+{{% centered numbered="def-ro" %}} $$r_o = (G_R, dom(\mu_o), \{o\}, \mu_o').$$
+{{% /centered %}}
 
 We call $r_o$ the rewrite of $o$ into $H$.
 
@@ -317,33 +317,31 @@ $\rho$ or $\sigma$ (purple dot) are discarded. This case is also excluded for
 linear values by requiring surjectivity.
 
 <!-- prettier-ignore -->
-{{% enlarge "full" %}} {{% proof collapse="true" %}}
+{{% proof collapse="true" %}}
 
 We start this proof with the explicit construction of $G_R$ and $\mu_o'$. Define
 $\sim_R \subseteq (V_H)^2$ as the smallest equivalence relation such that
 
 $$use(o)_{\rho(i)} = use(o)_{\rho(j)} \Rightarrow \textit{def}\,(o_{in})_i \sim_R \textit{def}\,(o_{in})_j.$$
 
-Then we define $\overline{G}_R = \bar{H} / \sim_R$, the graph obtained by
+Then we define $\bar{G}_R = \bar{H} / \sim_R$, the graph obtained by
 glueing together values within the same equivalence class of $\sim_R$.
 
-_Claim 1:_ $\overline{G}_R$ is a valid minIR graph.
+_Claim 1:_ $\bar{G}_R$ is a valid minIR graph.
 
 Claim 1 follows from the observation that only values of non-linear types are
 glued together. If $v \sim_R v'$, then either $v = v'$ or there exist $i \neq j$
 such that
-
 $$\textit{def}\,(o_{in})_i \sim_R \textit{def}\,(o_{in})_j.$$
-
 If $\rho(i) = \rho(j)$, then $\rho$ is not injective on $i$ and $j$, and by the
 definition of $\rho$, $type(v)\notin T_L$ and $type(v') \notin T_L$. Otherwise,
 there are $i' = \rho(i) \neq use(o)_{\rho(j)} = j'$ such that
 $use(o)_{i'} = use(o)_{j'}$. The same value is used twice, which is only a valid
 minIR graph if $v$ and $v'$ are not linear, thus proving Claim 1.
 
-Define $G_R$ as the subgraph obtained from $\overline{G}_R$ by removing the
+Define $G_R$ as the subgraph obtained from $\bar{G}_R$ by removing the
 operations $\{o_{in}, o_{out}\}$. Let $V_R = V_H / \sim_R$ be the set of values
-of $G_R$ (and of $\overline{G}_R$). Writing $\alpha_R(v) \in V_R$ for the
+of $G_R$ (and of $\bar{G}_R$). Writing $\alpha_R(v) \in V_R$ for the
 equivalence class of $\sim_R$ that $v \in V_H$ belongs to, we can define
 $\mu_o' \in V \times V_R$ as:
 
@@ -399,7 +397,7 @@ _(i)_, but relying on injectivity of $\rho$ on linear values to establish
 uniqueness.
 
 <!-- prettier-ignore -->
-{{% /proof %}}{{% /enlarge %}}
+{{% /proof %}}
 
 #### Arbitrary minIR rewrites
 
@@ -410,7 +408,7 @@ minIR subgraphs satisfy some constraints.
 As usual, let us consider a minIR graph
 $G = (V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent}),$ along with a
 subgraph of $G$ that we will now call $P = (V_P, O_P) \subseteq G$, to
-distinguish it from $H$.
+distinguish from $H$.
 
 <!-- prettier-ignore -->
 {{% definition title="Convex minIR subgraph" id="def-convexsubgraph" %}}
@@ -424,8 +422,8 @@ A minIR subgraph $P \subseteq G$ is _convex_ if the following conditions hold:
 <!-- prettier-ignore -->
 {{% /definition %}}
 
-Define the sets of boundary values $B_U$ and $B_D$ as in
-{{% refcentered "bdef" %}} and fix the orderings $use(P)$ and
+Define the sets of boundary values $B_U, B_D$ and $B = B_U \cup B_D$, as in
+{{% refcentered "bdef" %}}; then fix the boundary orderings $use(P)$ and
 $\textit{def}\,(P)$ as in {{% refcentered "ord" %}}. The subgraph $P$ implements
 the interface
 
@@ -444,10 +442,9 @@ $$\begin{aligned}\mu =\ & \{ \left((use(P))_{\rho(i)}, use\,(H)_{i}\right) \mid 
 <!-- prettier-ignore -->
 {{% /centered %}}
 
-With the set of all boundary values $B = B_D \cup B_U \subseteq V_P$ and the
-_boundary operations_[^understood]
+With the set of _boundary operations_ defined as[^understood]
 
-$$O_B = \left\{o \in O_H \mid \left(\mathit{def}\,(o) \cup use(o)\right) \subseteq B\right\},$$
+$$O_B = \left\{o \in O_P \mid \left(\mathit{def}\,(o) \cup use(o)\right) \subseteq B\right\},$$
 
 [^understood]:
     The set operations $\subseteq$ and $\cup$ are again understood to apply to
@@ -467,7 +464,7 @@ $$\big((G \sqcup H) / \sim_{\mu}\!\big) \smallsetminus (V_P \smallsetminus B, O_
 {{% /centered %}}
 
 i.e. the graph obtained by removing the values $V_P \smallsetminus B$ and
-operations $O_P$ from the glueing of $G$ and $H$ along $\mu$, is a valid minIR
+operations $O_B$ from the glueing of $G$ and $H$ along $\mu$, is a valid minIR
 graph.
 
 There is a graph $G_R$ with values $V_R$ and a partial function
@@ -484,24 +481,49 @@ We call $r_P$ the rewrite of $P$ into $H$.
 
 <!-- prettier-ignore -->
 {{% proof %}}
-Let $G_o$ be the unique minIR graph given by three operations $o_{in}$, $o_{out}$
-and an operation $o$ such that $G_o$ implements $I_H$
-and let $\tilde \mu$ be the glueing relation given by {{% refcentered "mu1" %}}
-for $G_R = G_o$.
+Consider an operation $o$ that implements $I_P = (U_P, D_P)$. We can define the interface
+graph $\bar{H}_o$ given by three operations $o_{in}$, $o_{out}$ and $o$.
+Its associated subgraph $H_o \subseteq \bar{H}_o$ only includes $o$.
+Let $\tilde \mu$ be the glueing relation
 
-Because of {{% refproposition "prop-oprewrite" %}}, it is sufficient to show
-that there is a rewrite $r$ that replaces $H$ with $G_o$ such that
+$$\begin{aligned}\tilde \mu =\ &\{ (use(P)_i, use(o)_i) \mid i \in \mathrm{Idx}(U_P) \}\ \cup \\& \{ (\textit{def}\,(P)_i, \textit{def}\,(o)_i) \mid i \in \mathrm{Idx}(D_P) \}.\end{aligned}$$
 
-- $r(G)$ is a valid minIR graph, and
-- $r(G)$ is equivalent to the graph obtained by removing the values
-  $V_H \smallsetminus B$ and operations $O_H \cup \{o_{in}, o_{out}\}$ from
+Consider the rewrite $r = (H_o, V_P \smallsetminus B, O_B, \tilde\mu)$. If we
+write $G' = (V', O')$ for the subgraph of $G$ given by
+$$\begin{aligned}V' &= (V \smallsetminus (V_P \smallsetminus B)) \\O' &= (O \smallsetminus O_B) \cap (V')^\ast,\end{aligned}$$
+then according to {{% refcentered "rewrite-result" %}}, the graph resulting from
+applying $r$ to $G$ can be expressed as the glueing
 
-$$(G \cup G_o) / \sim_{\tilde\mu}.$$
+$$G_o = r(G) = (G' \sqcup H_o) / \sim_{\tilde \mu}.$$
 
-The rewrite $r_H$ is then the composition of $r$ and $r_o$ (it is easy to see
-that the composition of two rewrites is again a rewrite).
+Our claim is that $G_o$ is a valid minIR graph.
 
-to be continued...
+The graph {{% refcentered "fullrewrite" %}} is then obtained by applying the
+rewrite $r_o$ as given by {{% refcentered "def-ro" %}} to $G_o$. Defining the
+rewrite $r_P$ as the composition of $r$ followed by $r_o$, the result follows
+from our claim and {{% refproposition "prop-oprewrite" %}}.
+
+We now prove the claim, by showing the four properties of minIR graphs as per
+{{% refdefinition "minirdef" %}}. Property _i)_ requires showing that every
+value is defined exactly once. As $G'$ is obtained by removing values and
+operations from a valid minIR graph $G$, no value in $V'$ can be defined more
+than once. A value $v \in V'$ that is not defined in $G'$ must be in the
+boundary $v \in B$ of $P$. By the boundary definitions of
+{{% refcentered "bdef" %}}, $v$ cannot be in $B_U$ and thus must be in $B_D$. It
+follows by the definition of the glueing $\tilde \mu$ that in $G_o$, $v$ will be
+in the definitions of $o$: $v \in \textit{def}\,(o)$. The glueing $\tilde \mu$
+is bijective between the values of $P$ and $o$ and thus we can conclude that $v$
+has a unique definition in $G_o$.
+
+The same argument applies to property _ii)_.
+Property _iii)_ follows from the convexity requirement of $P$.
+Finally, property _iv)_ (every region has at most one parent) follows from two
+observations. First, by convexity of $P$, no deleted value or operation could be
+the parent of any value not in $P$, and thus the $parent$ relation is
+well-defined on $G'$: $im(parent) \subseteq O'$.
+Secondly, all new values and operations added to the boundary region of $G'$
+are from the root region of $H$, and thus do not have a parent, ensuring
+that parent uniqueness is preserved.
 
 <!-- prettier-ignore -->
 {{% /proof %}}
@@ -555,6 +577,6 @@ illustrates this transformation.
 {{% figure src="/svg/rewrite.svg"
            width="80%"
            enlarge="full"
-           caption="A minIR graph transformation for a non-convex pattern, using outlining and hoisting. We use (nested) boxes to represent operations and regions within them and coloured edges for (typed) values."
+           caption="A non-convex minIR graph rewrite, decomposed into elementary rewrites using outlining and hoisting. For simplicity, `regiondef` operations were removed in favour of nested boxes, representing operations and regions within them. Edge colours correspond to value types. Step 1 _outlines_ the `...` operations into a dedicated region, which step 2 _hoists_ outside of the region being rewritten. Step 3 and 4 together correspond to a minIR sugraph rewrite. They have been split into two steps following the proof strategy. Step 4 is an instance of a minIR operation rewrite."
 %}}
 <!-- prettier-ignore-end -->

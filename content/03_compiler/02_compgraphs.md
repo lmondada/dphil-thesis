@@ -16,7 +16,7 @@ essentially _term graphs_ @Barendregt1987&#x200B;---sets of algebraic
 expressions that are stored as trees, combined with an important optimisation
 known as _term sharing_. When identical subexpressions appear multiple times,
 they can be represented as one computation and referenced from multiple
-locations, creating a directed acyclic graph rather than a pure tree @Plump1999.
+locations, creating a directed acyclic graph rather than a term tree @Plump1999.
 This sharing enables a more efficient representation. It can also be used as a
 compiler optimisation to identify subexpressions that can be cached and shared
 across expression evaluations for a more efficient execution---a technique known
@@ -33,11 +33,12 @@ programs @Cytron1991 @Rosen1988. In SSA:
 1. Every value is defined exactly once,
 2. Every value may be used any number of times (including zero).
 
-Quantum computing throws SSA into the bin. Values in quantum computations are
-the result of computations on quantum data, and as such must obey the no-cloning
-and no-deleting theorems ({{% reflink "sec:basics" %}}). We call values subject
-to these restrictions _linear_[^linear]. They introduce the following constraint
-on valid computation graphs:
+Quantum computing throws this second pillar of SSA into the bin. Values in
+quantum computations are the result of computations on quantum data, and as such
+must obey the no-cloning and no-deleting theorems
+({{% reflink "sec:basics" %}}). We call values subject to these restrictions
+_linear_[^linear]. They introduce the following constraint on valid computation
+graphs:
 
 <!-- prettier-ignore-start -->
 {{% centered %}}
@@ -59,16 +60,14 @@ must be specified. Where compilers on classical data can:
   passes (e.g., dead code elimination @Cytron1991 @Briggs1994),
 
 quantum compilers must enforce much stricter invariants on IR
-transformations---or risk producing invalid programs. Two equivalent values
-obtained from the same linear inputs can for instance never be simultaneously
-defined in a program.
+transformations---or risk producing invalid programs.
 
 In classical compilers, IR modification APIs (such as MLIR’s
 [PatternRewriter](https://mlir.llvm.org/docs/PatternRewriter/)) decouple program
 transformation from code deletion. Program transformations are specified by
 copying existing values and introducing new values and operations as needed,
-while the actual deletion of unused code is deferred to specialized dead code
-elimination passes. This approach is no longer feasible in the presence of
+while the actual deletion of unused code is deferred to specialized _dead code
+elimination_ passes. This approach is no longer feasible in the presence of
 linear values. Computation graphs for quantum computations must adopt _proper_
 graph rewriting semantics, in which the explicit deletion of obsolete values and
 operations is just as much a part of the rewriting data as the new code

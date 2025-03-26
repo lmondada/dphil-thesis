@@ -1,183 +1,189 @@
 html {
-  font-size: 12px !important;
+    font-size: 12px !important;
 }
 
 nav,
 aside,
 header {
-  display: none !important;
+    display: none !important;
+}
+
+p.pagedjs_hyphen {
+    // absolutely a hack: somehow the text would not fit and get cropped!
+    margin-right: -1mm;
 }
 
 div.book-page {
-  padding: 0 !important;
+    padding: 0 !important;
 }
 
 $footnote-margin-width: 55mm;
 
 div.footnotes {
-  font-size: 0.9rem;
-  width: 100%;
+    font-size: 0.9rem;
+    width: 100%;
 
-  pagedjs_margin-left-top {
-    height: 0;
-  }
-
-  ol {
-    padding: 0;
-    margin: 0;
-    list-style-position: inside;
-  }
-
-  ol li {
-    position: absolute;
-    width: calc(#{$footnote-margin-width} - 15px);
-    margin: 0;
-
-    p {
-      margin-top: -1.25rem;
-      padding-left: 1.5em;
+    pagedjs_margin-left-top {
+        height: 0;
     }
-  }
 
-  hr {
-    display: none;
-  }
+    ol {
+        padding: 0;
+        margin: 0;
+        list-style-position: inside;
+    }
+
+    ol li {
+        position: absolute;
+        width: calc(#{$footnote-margin-width} - 15px);
+        margin: 0;
+
+        p {
+            margin-top: -1.25rem;
+            padding-left: 1.5em;
+        }
+    }
+
+    hr {
+        display: none;
+    }
 }
 
 .book-columns pre {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .pagedjs_blank_page .pagedjs_margin-content,
 .chapter-head .pagedjs_margin-top-center {
-  display: none;
+    display: none;
 }
 
 .pagedjs_margin {
-  font-size: 0.9rem;
-  font-weight: 300;
+    font-size: 0.9rem;
+    font-weight: 300;
 }
 
 @media print {
-  /* Use A4 paper in landscape orientation */
-  @page {
-    size: A4;
-    margin-top: 30mm;
-    margin-bottom: 30mm;
-    margin-left: 15mm;
-    margin-right: 15mm;
-  }
-
-  @page: left {
-    @bottom-left {
-      content: counter(page);
+    /* Use A4 paper in landscape orientation */
+    @page {
+        size: A4;
+        margin-top: 30mm;
+        margin-bottom: 30mm;
+        margin-left: 15mm;
+        margin-right: 15mm;
     }
 
-    @top-center {
-      content: string(title);
-      text-transform: uppercase;
-      font-size: 9px;
-    }
-  }
+    @page: left {
+        @bottom-left {
+            content: counter(page);
+        }
 
-  @page: right {
-    @bottom-right {
-      content: counter(page);
+        @top-center {
+            content: string(title);
+            text-transform: uppercase;
+            font-size: 9px;
+        }
     }
 
-    @top-center {
-      content: string(subtitle);
-      text-transform: uppercase;
-      font-size: 9px;
-    }
-  }
+    @page: right {
+        @bottom-right {
+            content: counter(page);
+        }
 
-  /* Grid layout for article.markdown */
-  article.markdown {
-    line-height: 1.4;
-    display: grid;
+        @top-center {
+            content: string(subtitle);
+            text-transform: uppercase;
+            font-size: 9px;
+        }
+    }
+
+    /* Grid layout for article.markdown */
+    article.markdown {
+        line-height: 1.4;
+        display: grid;
+
+        .chapter-number {
+            break-before: right;
+        }
+
+        // h2 {
+        //     break-before: page;
+        // }
+
+        /* Default grid for all pages */
+        grid-template-columns: 1rem 1fr 1rem;
+
+        > * {
+            grid-column: 2;
+        }
+
+        > .paged-footnotes {
+            grid-row: 1;
+        }
+
+        /* Right pages (odd) - footnotes on the right */
+        .pagedjs_right_page & {
+            grid-template-columns: 1rem 1fr $footnote-margin-width;
+
+            > .paged-footnotes {
+                grid-column: 3;
+                padding-left: 15px;
+            }
+
+            > .enlarge-quarter,
+            > .enlarge-half {
+                margin-right: calc(#{$footnote-margin-width} / 2);
+            }
+        }
+
+        /* Left pages (even) - footnotes on the left */
+        .pagedjs_left_page & {
+            grid-template-columns: $footnote-margin-width 1fr 1rem;
+
+            > .paged-footnotes {
+                grid-column: 1;
+                padding-right: 15px;
+            }
+
+            > .enlarge-quarter,
+            > .enlarge-half {
+                margin-left: calc(#{$footnote-margin-width} / 2);
+            }
+        }
+
+        > .enlarge-full,
+        > .enlarge-half,
+        > .enlarge-quarter {
+            grid-column: 1 / 4;
+        }
+    }
+
+    h2 .section-name {
+        string-set: subtitle content(text);
+    }
 
     .chapter-number {
-      break-before: right;
+        margin-bottom: 0;
+        margin-top: 4em !important;
+        font-size: 2em;
     }
 
-    // h2 {
-    //     break-before: page;
-    // }
-
-    /* Default grid for all pages */
-    grid-template-columns: 1rem 1fr 1rem;
-
-    > * {
-      grid-column: 2;
+    h1.chapter {
+        margin-bottom: 2em;
+        string-set: title content(text);
+        grid-column: 2 / 4 !important;
+        font-size: 3em;
     }
-
-    > .paged-footnotes {
-      grid-row: 1;
-    }
-
-    /* Right pages (odd) - footnotes on the right */
-    .pagedjs_right_page & {
-      grid-template-columns: 1rem 1fr $footnote-margin-width;
-
-      > .paged-footnotes {
-        grid-column: 3;
-        padding-left: 15px;
-      }
-
-      > .enlarge-quarter,
-      > .enlarge-half {
-        margin-right: calc(#{$footnote-margin-width} / 2);
-      }
-    }
-
-    /* Left pages (even) - footnotes on the left */
-    .pagedjs_left_page & {
-      grid-template-columns: $footnote-margin-width 1fr 1rem;
-
-      > .paged-footnotes {
-        grid-column: 1;
-        padding-right: 15px;
-      }
-
-      > .enlarge-quarter,
-      > .enlarge-half {
-        margin-left: calc(#{$footnote-margin-width} / 2);
-      }
-    }
-
-    > .enlarge-full,
-    > .enlarge-half,
-    > .enlarge-quarter {
-      grid-column: 1 / 4;
-    }
-  }
-
-  h2 .section-name {
-    string-set: subtitle content(text);
-  }
-
-  .chapter-number {
-    margin-bottom: 0;
-    margin-top: 4em !important;
-    font-size: 2em;
-  }
-
-  h1.chapter {
-    margin-bottom: 2em;
-    string-set: title content(text);
-    grid-column: 2 / 4 !important;
-    font-size: 3em;
-  }
 }
 
 //// Fixing page breaks
 div.proposition-header,
 h2,
+h3,
 h4 {
-  break-after: avoid;
+    break-after: avoid;
 }
 
 .toc {
-  break-before: right;
+    break-before: right;
 }
