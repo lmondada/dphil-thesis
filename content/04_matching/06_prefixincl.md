@@ -1,7 +1,7 @@
 +++
 title = "An automaton for multi-pattern matching"
 layout = "section"
-weight = 5
+weight = 6
 slug = "sec:automaton"
 +++
 

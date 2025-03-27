@@ -40,7 +40,7 @@ $E \to V^\ast$. We opt for this latter formalism, as it allows us to distinguish
 between two types of edge endpoints: edge _sources_ and _targets_.
 
 <!-- prettier-ignore -->
-{{% definition title="Hypergraph" %}}
+{{% definition title="Hypergraph" id="def-hypergraph" %}}
 A hypergraph is a tuple $G = (V, E, \mathit{src}, \mathit{tgt})$
 where $V$ is a set of vertices, $E$ is a set of edges and $\mathit{src}$ and $\mathit{tgt}$
 are functions that map edges to lists of sources and target vertices, respectively:
