@@ -392,7 +392,7 @@ fact that $o_{in}$ and $o_{out}$ are in the root region of $\bar{H}$, by
 definition of interface implementation. _(i):_ removing $o$ from $G$ removes the
 unique definitions of all values in $\mathit{def}\,(o)$. Each such value $v$ is
 glued to a unique value $\mathit{use}\,(o_{out})_i$ in $H$---the new and unique
-definition of $v$ in $r_o(G)$. _(ii)_ follows from the same argument as in
+definition of $v$ in $r_o(G).$ _(ii)_ follows from the same argument as in
 _(i)_, but relying on injectivity of $\rho$ on linear values to establish
 uniqueness.
 
