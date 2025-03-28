@@ -1,58 +1,65 @@
 +++
 title = "The extraction problem"
 layout = "section"
-weight = 5
+weight = 4
 slug = "sec:extraction"
 +++
 
-In this chapter, we have proposed a persistent data structure for graph
-rewriting; using its confluence properties, we have then shown that the search
-space that must be traversed in this new proposal for graph rewriting is
-super-exponentially smaller. However, unlike when exploring the "naive" search
-space, the optimal solution within the factorised search space stored in the
-persistent data structure $\mathcal{D}$ cannot simply be _read out_. Instead, we
-must solve an extraction problem similar to the second phase of equality
-saturation for term rewriting.
+In the previous section, we proposed a persistent data structure $\mathcal{D}$
+that can be used to explore the space of all possible transformations of a graph
+transformation system (GTS). We are now interest in extracting the _optimal_
+graph from $\mathcal{D}$, according to some cost function of interest. Unlike
+when exploring the "naive" search space of all graphs reachable in the GTS, the
+optimal solution within the persistent data structure $\mathcal{D}$ cannot
+simply be _read out_. Instead, we must solve an extraction problem similar to
+the second phase of equality saturation for term rewriting.
 
-As we saw in {{% reflink "sec:persistent-ds" %}}, finding a graph $G'$ that is
-the result of a sequence of rewrites on an input graph $G$ is equivalent to
-finding a set of compatible edits $D \subseteq \mathcal{D}$---the graph $G'$ is
-then given by the flattened history of $D$.
+We showed in {{% reflink "sec:persistent-ds" %}} that finding an optimal graph
+$G'$ that is the result of a sequence of rewrites on an input graph $G$ is
+equivalent to finding an optimal set of compatible edits
+$D \in \Gamma(\mathcal{D}) \subseteq \mathcal{P}(\mathcal{D})$---the optimal
+graph $G'$ is then recoved by taking $G' = flat(D)$.
 
 There are $2^{|\mathcal{D}|}$ elements in $\mathcal{P}(\mathcal{D})$, which we
 encode as a boolean assignment problem by introducing a boolean variable
-$x_\delta$ for all edits $\delta \in \mathcal{D}$. We can constraint the space
-of valid solutions with a boolean formular
+$x_\delta$ for all edits $\delta \in \mathcal{D}$. The set of edits $D$ is then
+given by
 
-$$\neg (x_\delta \land x_{\delta'})$$
+$$D = \{\delta \in \mathcal{D} \mid x_\delta\} \in \mathcal{P}(\mathcal{D}).$$
+
+We can constrain the boolean assignments to compatible sets $D$ by introducing a
+boolean formula
+
+{{% centered numbered="edit-compatibility-constraint" %}}
+$$\neg (x_\delta \land x_{\delta'})$$ {{% /centered %}}
 
 for all $\delta,\delta' \in \mathcal{D}$ such that their vertex deletion sets
-intersect $V^-(\delta) \cap V^-(\delta') \neq \varnothing$. This ensures that
-any assignment of $\{x_\delta \mid \delta \in \mathcal{D}\}$ that satisfies all
-constraints of this format defines a compatible set of edits
+intersect $V^-(\delta) \cap V^-(\delta') \neq \varnothing$. Any assignment of
+$\{x_\delta \mid \delta \in \mathcal{D}\}$ that satisfies all constraints of
+this format defines a compatible set of edits.
 
-$$D = \{\delta \in \mathcal{D} \mid x_\delta\} \subseteq \mathcal{D}.$$
+How many such pairs of edits $(\delta,\delta'$) are there? By definition of
+parents, two edits $\delta$ and $\delta'$ can only have overlapping vertex
+deletion sets if they share a parent. Assuming all edits have at most $s$
+children, ensuring $D$ is a set of compatible edits requires at most
+$O(s^2 \cdot |\mathcal{D}|)$ constraints.
 
-By definition of $parents$, two edits $\delta$ and $\delta'$ can only have
-overlapping vertex deletion sets if they share a parent. Assuming all edits have
-a t most $s$ children, ensuring $D$ is a set of compatible edits requires at
-most $O(s^2 \cdot |\mathcal{D}|)$ constraints.
-
-Remark further from the definition of flattened histories in
-{{% reflink "sec:persistent-ds" %}}: that any two sets
-$D, D' \subseteq \mathcal{D}$ with identical sets of ancestors define the same
-flattened history $G'$. We can therefore restrict our considerations to boolean
-assignments that correspond to sets $A = D$ that contain all ancestors: if
-$\delta \in A$, then $parents(\delta) \subseteq A$. We impose for this up to
+To further restrict to $D \in \Gamma(\mathcal{D})$, i.e. to sets of compatible
+edits $D = A(D)$ that contain all ancestors, we can add the further constraints:
+$\delta \in D$ implies $P(\delta) \subseteq D$. This introduces up to
 $s \cdot |\mathcal{D}|$ implication constraints
 
-$$x_\delta \lor (\neg x_{\delta'}),$$
+{{% centered numbered="parent-child-constraint" %}}
+$$x_\delta \lor (\neg x_{\delta'}),$$ {{% /centered %}}
 
 for all $\delta,\delta' \in \mathcal{D}$ such that
-$\delta' \in children(\delta)$. For any set of edits $\mathcal{D}$, the
-conjuction of all edit compatibility and parent-child relation constraints
-defines a boolean satisfiability problem (SAT) with variables $x_\delta$. We
-have shown:
+$\delta' \in children(\delta)$.
+
+For any set of edits $\mathcal{D}$, the conjuction of all constraints presented
+above, i.e. the edit compatibility constraints
+{{% refcentered "edit-compatibility-constraint" %}} and the parent-child
+relation constraints {{% refcentered "parent-child-constraint" %}}, defines a
+boolean satisfiability problem (SAT) with variables $x_\delta$. We have shown:
 
 <!-- prettier-ignore -->
 {{< proposition number="5.5" >}}
@@ -84,15 +91,15 @@ this optimisation problem is hard[^whynphard].
     oracle over $2^{|\mathcal{D}|}$ inputs.
 
 However, if $f$ can be expressed as a function of $x_\delta$ instead of the
-flattened history $G'$, then the 'hardness' can be encapsulated within an
-instance of a SMT problem (satisfiability modulo theories @Nieuwenhuis2006
+flattened history $G' = flat(D)$, then the 'hardness' can be encapsulated within
+an instance of a SMT problem (satisfiability modulo theories @Nieuwenhuis2006
 @Barrett2018), a well-studied generalisation of SAT problems for which highly
 optimised solvers exist @Moura2008 @Sebastiani2015. A class of cost functions
 for which the SMT encoding of the optimisation problem becomes particuarly
 simple are _local_ cost functions:
 
 <!-- prettier-ignore -->
-{{< definition number="5.6" title="Local cost function" >}}
+{{% definition number="5.6" title="Local cost function" %}}
 
 A cost function $f$ on graphs is _local_ if for all rewrites $r$ there is a cost
 $\Delta f_r$ such that for all graphs $G$ that $r$ applies to
@@ -100,14 +107,14 @@ $\Delta f_r$ such that for all graphs $G$ that $r$ applies to
 $$f(r(G)) = f(G) + \Delta f_r.$$
 
 <!-- prettier-ignore -->
-{{< /definition >}}
+{{% /definition %}}
 
-$\Delta f_r$ must be independent of the graph $G$ it applies to, and as such we
-can also associate a cost $\Delta f_\delta$ with each edit
-$\delta \in \mathcal{D}$, given by the cost of any of the rewrites that $\delta$
-defines.
+The cost $\Delta f_r$ of a rewrite $r$ also immediately defines a cost to the
+edit that $r$ defines $\delta = r$. We can thus associate a cost
+$\Delta f_\delta$ with each edit $\delta \in \mathcal{D}$, given by the cost of
+any of the rewrites that $\delta$ defines.
 
-Abn instance of such a local cost function often used in the context of the
+An instance of such a local cost function often used in the context of the
 optimisation of computation graphs are functions of the type
 
 $$f(G) = \sum_{v \in V(G)} w(v)$$
@@ -127,32 +134,30 @@ respectively.
     _edges_, as would be the case in minIR, where operations are modelled as
     hyperedges.
 
-The vertex weight $w(v)$ can for example model the runtime of the operation that
-$v$ corresponds to, in cases where the total cost function is the runtime of all
-operations in the computation graph run sequentially. In quantum computing in
-particular, many of the most widely used cost functions are local, as the cost
-of a quantum computation is often estimated by the required number of instances
-of the most expensive gate type (such as CX gates on noisy devices, or T gates
-for hardware with built-in fault tolerance protocols).
+As discussed in {{% reflink "sec:quantum-sota" %}}, many of the most widely used
+cost functions in quantum compilation are local, as the cost of a quantum
+computation is often estimated by the required number of instances of the most
+expensive gate type (such as \texttt{CX} gates on noisy devices, or \texttt{T}
+gates for hardware with built-in fault tolerance protocols).
 
 In these cases, the cost function is integer valued and the extraction problem
 is indeed often _sparse_:
 
 <!-- prettier-ignore -->
-{{< definition number="5.7" title="Sparse cost function" >}}
+{{% definition number="5.7" title="Sparse cost function" %}}
 
 The local cost function $f$ is said to be sparse on $\mathcal{D}$ if for most
 edits $\delta \in \mathcal{D}$, $\Delta f_\delta = 0$.
 
 <!-- prettier-ignore -->
-{{< /definition >}}
+{{% /definition %}}
 
 In case of sparse local cost functions, the SAT problem on $\mathcal{D}$ can be
 simplified to only include
 $$\mathcal{D}_{\neq 0} = \{\delta \in \mathcal{D} \mid \Delta f_\delta \neq 0\}$$
 
 by repeatedly applying the following constraint simplification rules on any
-$\delta_0 \in \mathcal{D}$ such that $\Delta f_\delta_0 = 0$:
+$\delta_0 \in \mathcal{D}$ such that $\Delta f_{\delta_0} = 0$:
 
 - for every parent $\delta_p \in parents(\delta_0)$ and child
   $\delta_c \in children(\delta_0)$, remove the parent-child constraints between
@@ -164,5 +169,7 @@ $\delta_0 \in \mathcal{D}$ such that $\Delta f_\delta_0 = 0$:
   compatibility constraint between $\delta_s$ and $\delta_c$ for all
   $\delta_c \in children(\delta_s)$.
 
-This reduces the SAT problem to a problem with $|D_{\neq 0}|$ variables and at
-most $O(min(|\mathcal{D}|, |\mathcal{D}_{\neq 0}|^2)$ constraints.
+This reduces the SAT or SMT problem to a problem with $|D_{\neq 0}|$ variables
+and at most $O(min(|\mathcal{D}|, |\mathcal{D}_{\neq 0}|^2)$ constraints, making
+it potentially tractable in quantum computing applications with thousands of
+operations or more @Zulkoski2018.

@@ -36,15 +36,7 @@ implementation against a leading C++ implementation of pattern matching for
 quantum circuits from the Quartz superoptimiser project @Xu2022. Using a
 real-world dataset of patterns obtained by the Quartz equivalence classes of
 circuits (ECC) generator, we measured the pattern-matching runtime on a random
-subset of up to 10'000 patterns. We considered circuits on the $T, H, CX$ gate
-set with up to 6 gates and 2, 3 or 4 qubits. Thus, for our patterns, we have the
-bound $d \leq 6$ for the maximum depth and width $w = 2,3,4$. In all
-experiments, the graph $G$ subject to pattern matching was `barenco_tof_10`
-input, i.e. a 19-qubit circuit input with 674 gates obtained by decomposing a
-10-qubit Toffoli gate using the Barenco decomposition @Barenco_1995. For
-$\ell = 200$ patterns, our proposed algorithm is $3\times$ faster than Quartz,
-scaling up to $20\times$ faster for $\ell=10^5$. The results are summarised in
-this figure.
+subset of up to 10'000 patterns.
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -52,8 +44,18 @@ this figure.
     width="80%"
     enlarge="full"
     caption="Runtime of pattern matching for $\ell = 0\dots 10^4$ patterns on 2, 3 and 4 qubit quantum circuits from the Quartz ECC dataset, for our implementation (Portmatching) and the Quartz project. All $\ell = 1954$ two-qubit circuits were used, whereas for 3 and 4 qubit circuits, $\ell = 10^4$ random samples were drawn."
+    class="break-after"
 %}}
 <!-- prettier-ignore-end -->
+
+We considered circuits on the $T, H, CX$ gate set with up to 6 gates and 2, 3 or
+4 qubits. Thus, for our patterns, we have the bound $d \leq 6$ for the maximum
+depth and width $w = 2,3,4$. In all experiments, the graph $G$ subject to
+pattern matching was `barenco_tof_10` input, i.e. a 19-qubit circuit input with
+674 gates obtained by decomposing a 10-qubit Toffoli gate using the Barenco
+decomposition @Barenco_1995. For $\ell = 200$ patterns, our proposed algorithm
+is $3\times$ faster than Quartz, scaling up to $20\times$ faster for
+$\ell=10^5$. The results are summarised in the figure above.
 
 We also provide a more detailed scaling analysis of our implementation by
 generating random sets of 10'000 quantum circuits with 15 gates for qubit

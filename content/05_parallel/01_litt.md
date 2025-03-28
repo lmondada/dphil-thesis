@@ -48,12 +48,13 @@ and quantum circuit optimisation @Fagan2018 @Duncan2020.
 
 However, such properties of the transition system---or successful heuristic
 approximations for it---cannot always be derived. In these cases, the space of
-graphs reachable from an input graph within the GTS must be explored
-non-deterministically. In the absence of a control program, GROOVE will fall
-back to an exhaustive exploration of the search space---for an exploration up to
-depth $\Delta$, the result is a search tree of size $\mathcal O(\gamma^\Delta)$,
-where $\gamma$ is the number of possible rewrites at every graph in the search
-space (assuming $\gamma$ is constant for every reachable graph).
+graphs reachable from an input graph within the transition system must be
+explored non-deterministically. In the absence of a control program, GROOVE will
+fall back to an exhaustive exploration of the search space---for an exploration
+up to depth $\Delta$, the result is a search tree of size
+$\mathcal O(\gamma^\Delta)$, where $\gamma$ is the number of possible rewrites
+at every graph in the search space (assuming $\gamma$ is constant for every
+reachable graph).
 
 Exhaustive exploration is used extensively in model checking, typically to
 verify properties that must hold for all reachable graphs @Rensink2004a. It has
@@ -66,19 +67,19 @@ Jia et al. showed in @Jia2019 that computation graph optimisation using graph
 transformations was achievable without predefined rewriting strategies. They
 discovered new state-of-the-art implementations for computation graphs of
 interest to the deep learning community using a simple exhaustive search of the
-GTS space with backtracking. This approach was then adapted to quantum circuit
-optimisation in @Xu2022 and @Xu2023.
+space of possible rewrites with backtracking. This approach was then adapted to
+quantum circuit optimisation in @Xu2022 and @Xu2023.
 
 These recent results fit within a long line of compiler research called
 _superoptimisation_ @Fraser1979 @Massalin1987 @Sands2011 @Bansal2006
-@Sasnauskas2017. On top of excellent optimisation performance, this GTS approach
-to compiler optimisation is exceptionally flexible, as rewrite rules can be
-generated and tailored on demand to the constraints and instruction set of the
-target hardware. For any supplied cost function, the compiler can explore all
-valid program transformations to find the rewrites sequence that minimises cost.
-This keeps the cost function-specific logic separate from the transformation
-semantics of the program, making it straightforward to replace or update the
-optimisation objective.
+@Sasnauskas2017. On top of excellent optimisation performance, this approach to
+compiler optimisation using graph transformation systems (GTS) is exceptionally
+flexible, as rewrite rules can be generated and tailored on demand to the
+constraints and instruction set of the target hardware. For any supplied cost
+function, the compiler can explore all valid program transformations to find the
+rewrites sequence that minimises cost. This keeps the cost function-specific
+logic separate from the transformation semantics of the program, making it
+straightforward to replace or update the optimisation objective.
 
 The adaptation of superoptimisation to quantum optimisation of @Xu2022 and
 @Xu2023 is, however, showing scaling difficulties: unlike classical

@@ -127,16 +127,16 @@ instances @Biere2021.
 
 #### Equality saturation on graphs?
 
-Equality saturation is a fast-developing subfield of compilation sciences with a
-growing list of applications. Unfortunately for us[^thesis], adapting these
-ideas to quantum computation (and graph rewriting more generally) presents
-several unsolved challenges.
+Equality saturation is a fast-developing subfield of compilation with a growing
+list of applications. Unfortunately for us[^thesis], adapting these ideas to
+quantum computation (and graph rewriting more generally) presents several
+unsolved challenges.
 
 [^thesis]: but fortunately for this thesis
 
 The root of the problem lies in the program representation. The minIR
 representation we presented in {{< reflink "sec:graph-defs" >}}---but also the
-quantum circuit representation---capture quantum computations, not as a term,
+quantum circuit representation---captures quantum computations, not as a term,
 but in a directed acyclic graph (DAG) structure.
 
 A generalisation of equality saturation to computational DAGs was studied in
@@ -164,11 +164,14 @@ This duplicating and merging of data is fundamentally at odds with the
 constraints we must enforce on linear data, such as quantum resources. Each
 operation (or data) of a DAG that is split into multiple terms introduces a new
 constraint that must be imposed on the extraction algorithm: a computational DAG
-will only satisfy _no-discard_ for linear values if, for each split operation it
-contains, it either contains all or none of its split components.
+will only satisfy the _no-discarding_ theorem ({{% reflink "sec:basics" %}}) for
+linear values if, for each split operation it contains, it either contains all
+or none of its split components.
 
 To illustrate this point, consider the following simple rewrite on quantum
 circuits that pushes X gates ($\oplus$) from the right of a CX gate to the left:
+
+{{% hint "danger" %}} TODO {{% /hint %}}
 
 <!-- prettier-ignore-start -->
 <div class="book-columns flex" style="align-items: center;">
@@ -245,12 +248,12 @@ or $CX1$ on their own. We would thus have to enforce at extraction time that for
 every application of this pair of rewrite rules, either both or none of the
 rewrites are applied.
 
-Conversely, satisfying the _no-cloning_ principle requires verification that
+Conversely, satisfying the _no-cloning_ theorem requires verification that
 during extraction, terms that share a subterm but correspond to distinct graph
 rewrites are never selected simultaneously---otherwise, the linear value
 corresponding to the shared subterm would require cloning to be used twice.
 
-The no-discard and no-cloning restrictions result in a complex web of `AND`
+The no-discarding and no-cloning restrictions result in a complex web of `AND`
 respectively `XOR` relationships between individual terms in the term graph.
 These constraints _could_ be ignored during the exploration phase and then be
 modelled in the extraction phase by an integer linear programming (ILP) problem.
@@ -259,79 +262,47 @@ solution space that grows super-exponentially with rewrite depth (see Fig. 7 in
 @Yang2021), rendering the ILP extraction problem computationally intractable
 beyond 3 subsequent rewrites.
 
-In contrast, without clonable values, we claim that the solution space can only
-grow exponentially with rewrite depth[^superexpsmaller]. In other words:
+#### Linearity-preserving rewrites are an exponentially small subset
+
+A simple calculation shows that in the case that all values in the computation
+graph are linear and only graphs up to a maximal size are considered, the number
+of possible rewrites only grows exponentially in the rewrite depth. In other
+words, for optimisation of quantum computations, the solution space of valid
+computations is _much_ smaller[^superexpsmaller] than the space explored by the
+equality saturation approach of @Yang2021.
 
 [^superexpsmaller]:
     Exponential is super-exponentially smaller than super-exponential! Or put
     mathematically $e^{o(n)}/e^{\Theta(n)} = e^{o(n) - \Theta(n)} = e^{o(n)}$.
 
-<!-- prettier-ignore -->
-{{< proposition number="5.1" >}}
+Indeed suppose there is a maximal graph size $|V(G)| \leqslant \Theta$ and
+suppose that all rewrite patterns, i.e. the subgraph induced by the vertex
+deletion set $V^-$ of a rewrite, are connected. This is an assumption that was
+also made in {{% reflink "chap:matching" %}}, see
+{{% reflink "sec:simplifying-assumptions" %}} for a discussion.
 
-Consider a term graph and for each term $t$ in the term graph define $P(t)$, the
-set of all uses of $t$, i.e. all terms $t'$ such that $t$ is one of the children
-of the root of $t'$. Suppose there are sets
-$A_{t,1}, \dots A_{t,n_t} \subseteq P(t)$ defined for each term $t$.
+In a computation graph of linear values $G$, every vertex (value in the
+computation) $v \in V(G)$ has a _unique_ incoming and outgoing edge. This means
+that any pattern embedding $\varphi: P \hookrightarrow G$ is uniquely defined by
+the image $\varphi(v_P)$ of a single vertex $v_P \in V(P)$. Thus for a GTS with
+$m$ transformation rules, there can be at most a constant number
 
-Say a set of terms $S$ is _linear_ if for every term $t$, either
-$S \cap P(t) = A_{t,i}$ for some $i$ or $S \cap P(t) = \emptyset$ and say a
-rewrite is linear if it applies on a linear set of terms.
+$$m \cdot |V(G)| \leqslant m \cdot \Theta =: \alpha$$
 
-After $d$ linear rewrites, there will be at most $O(e^{\alpha \cdot d})$
-applicable linear rewrites.
+of possible rewrites that can be applied to any graph $G$. Let $\mathcal{G}_d$
+be the set of all graphs that can be reached in the GTS in at most $d$ rewrites
+from some input graph $G_0$. $\mathcal{G}_{d+1}$ is the set of all graphs
+obtained by applying a rewrite to a graph $G \in \mathcal{G}_d$. Thus we have
+the relation:
 
-TODO: $A$ etc would depend on $d$...
+$$|\mathcal{G}_{d+1}| \leqslant \alpha \cdot |\mathcal{G}_d|,$$
 
-<!-- prettier-ignore -->
-{{< /proposition >}}
+The total number of rewrites $R_d$ that can be applied on any graph in
+$\mathcal{G}_d$ is thus
 
-Note that this definition of linear rewrite corresponds exactly to the rewrites
-that are valid if terms represent linear values. The sets $A_{t,i}$ are the sets
-of terms resulting from a single graph rewrite, split into several term
-rewrites. The condition on sets $S$ then enforces that for all terms $t$, if $t$
-is used in the rewrite, then all term rewrites of exactly one graph rewrite must
-be applied.
+$$R_d \leqslant \alpha \cdot |\mathcal{G}_d| = O(e^{\alpha \cdot d}).$$
 
-<!-- prettier-ignore -->
-{{% proof %}}
-
-<!-- Let $\mathcal{G}_d$ be the set of all computational DAGs that can be reached from $G$ in the
-GTS after $d$ rewrites. -->
-
-For all $d \geqslant 0$, we consider the set $Val_d$ of all terms contained in
-the term graph after $d$ linear rewrites.
-
-<!-- and define
-$$n_v = \left|\left\{G' \in \mathcal{G}_d \mid v \in G'\right\}\right|$$
-if $v \in Val_d$ and $n_v = 0$ otherwise. -->
-
-It is sufficient to count the number of valid linear sets of terms
-$S_d \subseteq Val_d$; the total number of linear rewrites will then be in
-$O(|S_d|)$, given that the total number of rewrite rules is a constant. From the
-definition of linear in the proposition, we can derive that
-
-$$|S_d| = \prod_{t \in Val_d} n_t + 1,$$
-
-obtained by observing that for every value $v$, one of $n_t$ sets of parents can
-be chosen, or none at all.
-
-Applying a linear graph rewrite will introduce at most $p$ new parent sets
-$A_{t_1, i_1}, \dots, A_{t_p, i_p}$, where $p$ is the maximum number of inputs
-in any of the rewrite rules. Writing $n_t'$ for the updated number of parent
-sets for each $t \in Val_{d+1}$ and $X = \{t_1, \dots, t_p\}$, we have
-$n_t' = n_t + 1$ if $v \in X$, and $n_t' = n_t$ otherwise (we introduce for
-convenience $n_t = 0$ if $t \in Val_{d+1} \smallsetminus Val_d$). By defining
-
-$$\alpha = 2^p \geqslant \prod_{t \in X} \frac{n_t + 1}{n_t},$$
-
-we obtain the new bound after rewrite application
-$|S_{d+1}| < \alpha \cdot |S_d|$. Finally, for $d=0$, we can bound
-$|S_0| \leq 2^|G|$, where $|G|$ is the number of vertices in the input graph.
-The result follows.
-
-<!-- prettier-ignore -->
-{{% /proof %}}
+---
 
 In summary, equality saturation is a specialisation of persistent data
 structures uniquely suited to the problem of term rewriting. It succinctly
@@ -343,181 +314,14 @@ However, equality saturation cannot model rewrites that require deleting parts
 of the data. This is not a problem for terms representing classical operations,
 as data can always be implicitly copied during exploration and discarded during
 extraction as required. This is not the case for quantum computations---and for
-graph rewriting in general, where explicit vertex and edge deletions are an
+graph rewriting in general, where explicit vertex (and edge) deletions are an
 integral part of graph transformation semantics.
 
 As a result, numerous constraints would have to be imposed to restrict the
 solution space encoded by term graphs to valid outcomes of graph rewriting
 procedures. This would make extraction algorithms complex and cumbersome. More
-importantly, we showed that it also makes the solution space explored by
-equality saturation _super-exponentially larger_ than the true solution space,
-rendering the extraction algorithm and meaningful exploration of the relevant
-rewriting space computationally intractable.
-
-<!-- We can thus define $n_v$ as the number of graph rewrites that
-use the value $v$ in the term graph. Each such rewrite corresponds to a set of terms in the term graph
-that include $v$.
-
-can only be used in the graph that results
-from one graph rewrite (which may correspond to a set of terms).
-For each value $v$ in the term graph, we can thus define $n_v$ as the number of
-graphs in the term graph that
-
-
-
-
-
-
-
-They propose decomposing computation DAGs into a tuple of (overlapping) terms,
-one for each output of the computation.
-In theory, this should allow for the full use of the equality saturation
-workhorse with very minimal adjustments.
-In their application, however, they found exponential size increases in the term data
-structure used as a result of the
-cartesian product between the decomposed terms of DAG rewrite rules and had
-to limit the number of applications of multi-term rewrite rules to 2 for
-performance reasons.
-
-DAG rewriting also introduces new issues in the extraction phase of equality
-saturation.
-The authors of @Yang2021 show that multi-term rewrites can introduce
-cycles in the term data
-structure, which are expensive to detect and account for in the extraction algorithm.
-Finally, such rewrites result in large overlaps between terms. This means that
-greedy divide-and-conquer extraction heuristics that do not model cost
-savings from subexpression sharing perform poorly, necessitating the use of
-more compute intensive SMT techniques for competitive results.
-
-To make matters worse, there are also quantum-specific difficulties in using
-equality saturation.
-Term sharing and the hash-based uniqueness invariant enforced by the term data
-structure is fundamentally at odds with the linearity of quantum resources.
-At extraction time, all linear resources would have to be carefully tracked.
-Additional constraints would have to be added to ensure that expressions that
-depend on the same linear resources are mutually exclusive. Conversely, we would have
-to guarantee that for all terms that make up a multi-term rewrite, the linear
-resources used on their overlaps coincide.
-
-This problem is further compounded by quantum entanglement.
-Indeed, consider the rewrite rule above applied to the second and third gates
-of the following circuit:
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1 }],
-    "operations": [
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "targets": [{ "qId": 0 }]
-         }
-    ]
-}
-{{< /qviz >}}
-With some creative drawing, we can represent the resulting equality saturation
-data structure containing both the circuit before and after the rewrite as
-follows.
-{{< figure
-  src="svg/superposed.svg"
-  alt="A superposed circuit"
-  caption="A sketch of an equality saturation data structure containing two versions of a circuit, before and after a rewrite. The two alternatives are represented by \"splitting\" each qubit wire. The top-most split wires correspond to the original circuit, the bottom-most split wires correspond to the circuit after the rewrite."
-  width="70%"
->}}
-Now, suppose the existence of another rewrite rule, given by
-<div class="book-columns flex" style="align-items: center;">
-  <div class="flex-even markdown-inner">
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
-    "operations": [
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 2 }]
-         },
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "targets": [{ "qId": 0 }]
-         },
-         {
-            "gate": "X",
-            "targets": [{ "qId": 2 }]
-         }
-    ]
-}
-{{< /qviz >}}
-  </div>
-  <div style="min-width: 16px; margin-left: -40px; margin-right: -20px;">
-    <svg width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 2L6 4L4 6" stroke="#666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="flex-even markdown-inner">
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1 }, { "id": 2 }],
-    "operations": [
-         {
-            "gate": "X",
-            "targets": [{ "qId": 0 }]
-         },
-         {
-            "gate": "X",
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 2 }],
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 2 }]
-         },
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 2 }],
-            "targets": [{ "qId": 1 }]
-         }
-    ]
-}
-{{< /qviz >}}
-  </div>
-</div>
-
-If, during rewriting, we ignore the linearity constraint that we mentioned above
-in the context of the extraction procedure, the part of the diagram highlighted
-in red would be a valid match of the left-hand side.
-Applying the rewrite to this match is not only unphysical, it is plain nonsensical:
-{{< figure
-  src="svg/superposed-rewritten.svg"
-  alt="A superposed circuit"
-  caption="The same equality saturation data structure after a second rewrite. For simplicity, we are not overlaying the circuit between the first and second rewrite in the illustration."
-  width="70%"
->}}
-This applies entangling gates between different versions of the same qubit!
-In other words, linearity constraints would not only have to be taken into account
-during extraction but also to restrict pattern matching and rewriting during
-exploration. -->
+importantly, we showed that in the case of computation graphs on linear values,
+such as quantum computations, the solution space explored by equality saturation
+is _super-exponentially larger_ than the space of valid computations, rendering
+the extraction algorithm and meaningful exploration of the relevant rewriting
+space computationally intractable.

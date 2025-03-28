@@ -1,7 +1,7 @@
 +++
 title = "Factorising the GTS search space"
 layout = "section"
-weight = 4
+weight = 5
 slug = "sec:factor-gts"
 +++
 
