@@ -1,7 +1,7 @@
 +++
 title = "A Platform for Scalable Graph Rewriting"
 sort_by = "weight"
-weight = 2
+weight = 3
 layout = "section"
 slug = "chap:rewriting"
 +++

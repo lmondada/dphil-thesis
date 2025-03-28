@@ -25,10 +25,11 @@ Our results below give empirical evidence that a significant performance
 advantage can be obtained regardless.
 
 **Implementation.**&emsp; We provide an open source implementation in Rust of
-pattern independent matching using the results of \cref{sec:toy}, described in
-more detail in \cref{app:portmatching}. The implementation works for weighted or
-unweighted port graphs---of which typed minIR graphs are a special case---and
-makes none of the simplifying assumptions employed in the theoretical analysis.
+pattern independent matching using the results of this chapter, described in
+more detail in appendix [B]({{< relref "/99_appendix#app:portmatching" >}}). The
+implementation works for weighted or unweighted port graphs---of which typed
+minIR graphs are a special case---and makes none of the simplifying assumptions
+employed in the theoretical analysis.
 
 **Benchmarks.**&emsp; To assess practical use, we have benchmarked our
 implementation against a leading C++ implementation of pattern matching for
