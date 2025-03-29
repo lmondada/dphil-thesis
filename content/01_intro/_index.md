@@ -13,7 +13,6 @@ elsewhere.
 I suggest you move directly to {{% reflink "chap:basics" %}}.
 {{% /hint %}}
 
-<!-- 
 This thesis is, first and foremost, a story about compilers.
 It is interesting to note that whereas the term *quantum compilation* has been in use for the longest part
 of the existence of quantum computing as a field,
@@ -211,4 +210,28 @@ the _concurrent_ exploration of the state space of GTSs.
 As the name implies, this will allow for a parallelised exploration of the state
 space; but more importantly, we will see that it significantly reduces the
 size of the total search space, whilst keeping the solution space
-unchanged. -->
+unchanged.
+
+
+
+Our proposal draws much from the design and techniques of classical compilers
+(c.f. {{< reflink "sec:graph-defs" "sec:eqsat" >}}). Quantum, however,
+distinguishes itself in two ways, forming the cornerstones of our design. The
+focus on small, local graph transformations for quantum optimisation is
+justified by the groundbreaking work by Clément et al @Clement2023 @Clement2024.
+They showed that the rich algebraic structure of quantum circuits can be fully
+captured and expressed using local rewrite rules[^eqcomp]. Our compiler can
+therefore restrict program manipulation to local transformations without losing
+expressiveness. This design choice in turn opens the door for large scale
+optimisation and compilation on parallel or even distributed hardware.
+
+Equally important, the linear types of quantum computing (cf.
+{{< reflink "sec:graph-defs" >}}) significantly constrain the space of possible
+program transformations. Our contributions in this thesis highlight how these
+restrictions can be leveraged to create quantum-specific variants of classical
+compilation techniques that scale much more favourably. This makes approaches
+that are too expensive for classical compilers (c.f.
+{{< reflink "sec:eqsat" >}}) perfectly feasible[^unfeasible] in the context of
+quantum compilation. [^eqcomp]: More precisely, they show that any two
+equivalent quantum circuits can be transformed into each other using a finite
+number of local rewriting rules. [^unfeasible]: Or at least, less unfeasible.

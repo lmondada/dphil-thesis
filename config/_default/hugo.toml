@@ -1,6 +1,6 @@
 baseURL = 'http://localhost:1313'
 languageCode = 'en-gb'
-title = "Luca Mondada's DPhil Thesis"
+title = "Scaling Quantum Compilation with Graph Rewriting"
 theme = "hugo-book"
 timeout = "60s"
 
@@ -9,18 +9,18 @@ BookSection = '*'
 BookToC = false
 
 [markup.goldmark]
-  [markup.goldmark.renderer]
-    unsafe = true
-  [markup.goldmark.extensions.typographer]
-    emDash = '&nbsp;&ndash;&nbsp;'
+[markup.goldmark.renderer]
+unsafe = true
+[markup.goldmark.extensions.typographer]
+emDash = '&nbsp;&ndash;&nbsp;'
 
-  [markup.goldmark.extensions]
-    katex = true
-    [markup.goldmark.extensions.bibtex]
-      enable = true
-      bibtexPath = "thesis.bib"
-  [markup.goldmark.parser.attribute]
-    block = true
-    title = true
-  [markup.goldmark.renderHooks.image]
-    enableDefault = true
+[markup.goldmark.extensions]
+katex = true
+[markup.goldmark.extensions.bibtex]
+enable = true
+bibtexPath = "thesis.bib"
+[markup.goldmark.parser.attribute]
+block = true
+title = true
+[markup.goldmark.renderHooks.image]
+enableDefault = true
