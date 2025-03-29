@@ -519,10 +519,9 @@ compilation was presented in {{% reflink "chap:matching" %}}.
 
 The runtime of step 4 and the number of overall iterations of steps 2--4
 required for pattern matching will depend on the number of edits in
-$\mathcal{D}$ (`EquivalentVertices` depends on `AreCompatible`, which runs in
-runtime linear in the number of ancestors), the number of equivalent vertices
-that successive rounds of step 4 will return and the types of patterns and
-pattern matching strategies.
+$\mathcal{D}$ (`AreCompatible` runs in runtime linear in the number of
+ancestors), the number of equivalent vertices that successive rounds of step 4
+will return and the types of patterns and pattern matching strategies.
 
 Rather than providing very loose worst-case asymptotic bounds or making
 stringent assumptions on properties of the GTS and of the pattern-matching

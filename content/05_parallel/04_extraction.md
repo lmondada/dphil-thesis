@@ -5,14 +5,15 @@ weight = 4
 slug = "sec:extraction"
 +++
 
-In the previous section, we proposed a persistent data structure $\mathcal{D}$
-that can be used to explore the space of all possible transformations of a graph
-transformation system (GTS). We are now interest in extracting the _optimal_
-graph from $\mathcal{D}$, according to some cost function of interest. Unlike
-when exploring the "naive" search space of all graphs reachable in the GTS, the
-optimal solution within the persistent data structure $\mathcal{D}$ cannot
-simply be _read out_. Instead, we must solve an extraction problem similar to
-the second phase of equality saturation for term rewriting.
+In the previous section, we proposed a data structure $\mathcal{D}$ that is
+confluently persistent and can be used to explore the space of all possible
+transformations of a graph transformation system (GTS). We are now interest in
+extracting the _optimal_ graph from $\mathcal{D}$, according to some cost
+function of interest. Unlike when exploring the "naive" search space of all
+graphs reachable in the GTS, the optimal solution within the persistent data
+structure $\mathcal{D}$ cannot simply be _read out_. Instead, we must solve an
+extraction problem similar to the second phase of equality saturation for term
+rewriting.
 
 We showed in {{% reflink "sec:persistent-ds" %}} that finding an optimal graph
 $G'$ that is the result of a sequence of rewrites on an input graph $G$ is
@@ -62,7 +63,7 @@ relation constraints {{% refcentered "parent-child-constraint" %}}, defines a
 boolean satisfiability problem (SAT) with variables $x_\delta$. We have shown:
 
 <!-- prettier-ignore -->
-{{< proposition number="5.5" >}}
+{{< proposition title="Extraction as SAT problem" >}}
 
 Consider a GTS with a constant upper bound $s$ on the number of rewrites that
 may overlap any previous rewrite.
@@ -170,6 +171,21 @@ $\delta_0 \in \mathcal{D}$ such that $\Delta f_{\delta_0} = 0$:
   $\delta_c \in children(\delta_s)$.
 
 This reduces the SAT or SMT problem to a problem with $|D_{\neq 0}|$ variables
-and at most $O(min(|\mathcal{D}|, |\mathcal{D}_{\neq 0}|^2)$ constraints, making
-it potentially tractable in quantum computing applications with thousands of
-operations or more @Zulkoski2018.
+and at most $O(min(|\mathcal{D}|, |\mathcal{D}_{\neq 0}|^2)$ constraints.
+
+With the completion of this section, we have described an equivalent computation
+on $\mathcal{D}$ for every step of a GTS-based optimisation problem:
+
+1. a rewrite that can be applied on a graph $G$ can be added as an edit to
+   $\mathcal{D}$,
+2. a graph $G'$ that results from a sequence of rewrites can be recovered from
+   $\mathcal{D}$ using `FlattenHistory`,
+3. the set of all graphs reachable from edits in $\mathcal{D}$ can be expressed
+   as a SAT problem; depending on the cost function, the optimisation over that
+   space can then take the form of an SMT problem.
+
+In essence, using the confluently persistent data structure $\mathcal{D}$ we
+replace a naive, exhaustive search over the space $\mathcal{G}$ of all graphs
+reachable in the GTS with a SAT (or SMT) problem---solvable using highly
+optimised dedicated solvers that could in principle handle search spaces with up
+to millions of possible rewrites @Zulkoski2018.

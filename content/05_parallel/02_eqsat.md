@@ -171,59 +171,7 @@ or none of its split components.
 To illustrate this point, consider the following simple rewrite on quantum
 circuits that pushes X gates ($\oplus$) from the right of a CX gate to the left:
 
-{{% hint "danger" %}} TODO {{% /hint %}}
-
-<!-- prettier-ignore-start -->
-<div class="book-columns flex" style="align-items: center;">
-  <div class="flex-even markdown-inner">
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1 }],
-    "operations": [
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "targets": [{ "qId": 0 }]
-         }
-    ]
-}
-{{< /qviz >}}
-  </div>
-  <div style="min-width: 16px; margin: 0 -40px;">
-    <svg width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 2L6 4L4 6" stroke="#666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  <div class="flex-even markdown-inner">
-{{< qviz >}}
-{
-    "qubits": [{ "id": 0 }, { "id": 1 }],
-    "operations": [
-         {
-            "gate": "X",
-            "targets": [{ "qId": 0 }]
-         },
-         {
-            "gate": "X",
-            "targets": [{ "qId": 1 }]
-         },
-         {
-            "gate": "X",
-            "isControlled": true,
-            "controls": [{ "qId": 0 }],
-            "targets": [{ "qId": 1 }]
-         }
-    ]
-}
-{{< /qviz >}}
-  </div>
-</div>
-<!-- prettier-ignore-end -->
+{{% figure src="/svg/simple-cx-rule.svg" nobg="true" width="50%" %}}
 
 Both the left and right hand sides would be decomposed into two terms, one for
 each output qubit. The left terms could be written as

@@ -90,8 +90,6 @@ class MyHandler extends Paged.Handler {
     // Remove all empty paragraphs
     const emptyParagraphs = content.querySelectorAll("p:empty, input");
     emptyParagraphs.forEach((p) => p.remove());
-
-    console.log(content);
   }
 }
 Paged.registerHandlers(MyHandler);
