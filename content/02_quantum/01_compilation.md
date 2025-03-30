@@ -117,15 +117,15 @@ require any operations to be applied in parallel to large groups of qubits
 individual platforms will introduce to reduce error rates at the hardware level
 will introduce further constraints and new instruction sets yet again.
 
-It is worthwhile to note that current trends in the classical world are also
-pushing compilers towards more heterogenous architectures that may include GPUs,
-FPGAs and other accelerators. This has led to significant changes in the design
-of current compilers, which we will touch upon later. Nonetheless, this shift
-has, so far, mostly "limited" itself to new forms of parallelism and the
-introduction of more specialised instruction sets rather than a fundamental
-redesign of existing tools and computing paradigms. The breadth of technologies
-and trade-offs that quantum compilers must face have no equivalent in the
-classical world---at least for the time being.
+It is noteworthy that current trends in the classical world are also pushing
+compilers towards more heterogenous architectures that may include GPUs, FPGAs
+and other accelerators. This has led to significant changes in the design of
+current compilers, which we will touch upon later. Nonetheless, this shift has,
+so far, mostly "limited" itself to new forms of parallelism and the introduction
+of more specialised instruction sets rather than a fundamental redesign of
+existing tools and computing paradigms. The breadth of technologies and
+trade-offs that quantum compilers must face have no equivalent in the classical
+world---at least for the time being.
 
 [^cpu]:
     There are other architectures, such as Risc-V @Waterman2016 and MIPS
@@ -154,8 +154,8 @@ by no means trivial and can be
 [^zig]:
     There are new tools promising to make cross-compilation easier, such as
     [Zig](https://zig.guide/build-system/cross-compilation/). This only proves
-    our point, though: classical cross-compilation is the exception rather than
-    the norm.
+    our point, though: classical cross-compilation has long been a neglected
+    edge case.
 
 The situation is very different for quantum computing. Quantum computational
 resources are so limited that native compilation, in which the program is

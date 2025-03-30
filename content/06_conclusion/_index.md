@@ -9,13 +9,13 @@ slug = "chap:conclusion"
 The time has now come to conclude this thesis. In summary, our claim is that
 given
 
-1. the challenge of scaling up quantum programs sizes to make the most of the
-   computational capabilities of upcoming hardware (c.f.
-   {{< reflink "sec:compilation" "sec:quantum-sota" >}}),
-2. the modularity and expressiveness that quantum compilers will require to
+1. the modularity and expressiveness that quantum compilers will require to
    simultaneoulsy express higher level abstractions, hardware primitives and
    interleaved quantum classical computation (c.f.
    {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}), and
+2. the challenge of scaling up quantum programs sizes to make the most of the
+   computational capabilities of upcoming hardware (c.f.
+   {{< reflink "sec:compilation" "sec:quantum-sota" >}}),
 3. the linearity restrictions that quantum data imposes on the compiler's
    internal representation (IR) of the computation (c.f.
    {{< reflink "sec:basics" "sec:graph-defs" "sec:rewrite-def" >}}),
@@ -75,13 +75,21 @@ many assumptions we have imposed can be relaxed with little impact on
 peformance---conversely, there may be large variations in runtimes for different
 regimes within the asymptotic guarantees of our results.
 
+Another crucially important question that this thesis has not addressed is the
+choice of transformation rules. Beyond the results of @Xu2022 and @Xu2023 that
+we have refered to repeatedly throughout this corpus, very recent work by Amy
+and Lunderville @Amy2025 has present what amounts to the first inroads into
+hybrid classical-quantum optimisations. Developing comprehensive transformation
+rules for hybrid computations would present significant a significant advance
+for the field.
+
 Among the myriad of options, we opt to conclude this thesis with the discussion
 of two particularly promising avenues for future work. The first
 ({{% reflink "sec:conclusion-pm" %}}) relates to increasing the expressivity of
 the pattern matching language; such an extended framework would also enable fast
 pattern matching _directly_ on the persistent data structure $\mathcal{D}$ of
 {{% reflink "chap:parallel" %}}, rather than having to match patterns in each
-graph of $\mathcal{D}$ separately.
+graph of $D \subseteq \mathcal{D}$ separately.
 
 The second ({{% reflink "sec:conclusion-parallel" %}}) is a proposal to use the
 persistent data structure of {{% reflink "chap:parallel" %}} for large scale
