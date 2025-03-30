@@ -11,13 +11,13 @@ given
 
 1. the modularity and expressiveness that quantum compilers will require to
    simultaneoulsy express higher level abstractions, hardware primitives and
-   interleaved quantum classical computation (c.f.
+   interleaved quantum classical computation (cf.
    {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}), and
 2. the challenge of scaling up quantum programs sizes to make the most of the
-   computational capabilities of upcoming hardware (c.f.
+   computational capabilities of upcoming hardware (cf.
    {{< reflink "sec:compilation" "sec:quantum-sota" >}}),
 3. the linearity restrictions that quantum data imposes on the compiler's
-   internal representation (IR) of the computation (c.f.
+   intermediate representation (IR) of the computation (cf.
    {{< reflink "sec:basics" "sec:graph-defs" "sec:rewrite-def" >}}),
 
 graph transformation systems (GTS) are uniquely positioned to serve as the

@@ -1,6 +1,6 @@
 +++
 title = "Quantum compilers cannot do it alone"
-weight = 5
+weight = 4
 layout = "section"
 slug = "sec:need-help"
 +++
@@ -158,19 +158,16 @@ understanding of classical hardware and battle-tested implementations for every
 optimisation pass under the sun---in short, the full thrust of a modern
 state-of-the-art compiler such as `clang` or `gcc`.
 
-To make matters worse, such classical computations are bound to move to dedicated
-accelerators that require specialised compilation,
-such as GPUs and FPGAs, for the most time-critical subroutines:
-  quantum error decoding
-  using GPUs is already well-developed @Bausch2024 @Cao2023 and more esoteric
-  platforms FPGAs @Overwater2022 @Meinerz2022, superconducting circuits
-  @Ueno2021 and compute-in-memory architectures @Wang2024 are being actively
-  studied.
+To make matters worse, such classical computations are bound to move to
+dedicated accelerators that require specialised compilation, such as GPUs and
+FPGAs, for the most time-critical subroutines: quantum error decoding using GPUs
+is already well-developed @Bausch2024 @Cao2023 and more esoteric platforms FPGAs
+@Overwater2022 @Meinerz2022, superconducting circuits @Ueno2021 and
+compute-in-memory architectures @Wang2024 are being actively studied.
 
-
-These observations should leave the reader convinced that in order to
-compile and realise the kind of hybrid quantum-classical programs that we expect
-will become the norm in the field, quantum compilers will need to embrace and
+These observations should leave the reader convinced that in order to compile
+and realise the kind of hybrid quantum-classical programs that we expect will
+become the norm in the field, quantum compilers will need to embrace and
 encompass the full breadth and depth of classical compilers. This leaves us with
 no choice but to fully transform and integrate the existing quantum tooling and
 quantum optimisation research into the established compiler ecosystem. What this
@@ -230,8 +227,8 @@ programs---when we have not already. Examples include
 
 To facilitate such a large swath of abstractions, the first step quantum
 compilers must take is to make a distinction between the language frontend and
-the _internal representation_ (IR) that the compiler uses to reason about the
-program and perform optimisations. This will be the topic of
+the _intermediate representation_ (IR) that the compiler uses to reason about
+the program and perform optimisations. This will be the topic of
 {{% reflink "chap:compiler" %}}. The graph-based IR that we introduce in that
 chapter will then form the foundation for the new quantum compilation techniques
 that will be developed throughout the remainder of the thesis.

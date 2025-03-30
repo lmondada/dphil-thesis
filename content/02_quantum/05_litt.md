@@ -1,6 +1,6 @@
 +++
 title = "Summary and further reading"
-weight = 6
+weight = 5
 layout = "section"
 slug = "sec:litt"
 +++

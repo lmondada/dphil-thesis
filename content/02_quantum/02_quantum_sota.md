@@ -1,7 +1,7 @@
 +++
 title = "Quantum circuit optimisation: a review"
 layout = "section"
-weight = 3
+weight = 2
 slug = "sec:quantum-sota"
 +++
 

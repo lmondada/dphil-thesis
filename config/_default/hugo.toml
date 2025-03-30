@@ -1,6 +1,6 @@
 baseURL = 'http://localhost:1313'
 languageCode = 'en-gb'
-title = "Scaling Quantum Compilation with Graph Rewriting"
+title = "Scaling QC with Graph Rewriting"
 theme = "hugo-book"
 timeout = "60s"
 

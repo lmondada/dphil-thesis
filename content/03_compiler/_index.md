@@ -25,7 +25,7 @@ hardware targets.
 
 In this chapter, we formalise quantum computation and optimisation based on
 graphs and graph transformations, providing the foundation for all
-considerations in later chapters. Albeit slightly simplified, the internal
+considerations in later chapters. Albeit slightly simplified, the intermediate
 representation IR we propose here is based on joint work recently presented at
 the _Workshop on Programming Languages for Quantum Computing_ (PlanQC) 2025
 @Hugr, as well as [ongoing development](https://github.com/CQCL/hugr).

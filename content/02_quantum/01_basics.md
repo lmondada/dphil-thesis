@@ -1,6 +1,6 @@
 +++
 title = "Foundations of quantum computing"
-weight = 2
+weight = 1
 layout = "section"
 slug = "sec:basics"
 +++
@@ -15,15 +15,21 @@ realisations of qubits in real-world architectures. Nonetheless, it is important
 to note one fundamental difference with classical systems. Classical bit values
 (the famous `0`s and `1`s of our computers) are typically encoded using two
 voltages; another way of saying this is that bit values, and hence data,
-correspond to electrical currents on a chip. Gates, i.e. the lowest level of
-operations that can be applied to bits, then correspond to barriers that let the
-electrical current flow through or block it. Generalising slightly, we can
-picture a classical gate as a black box with `n` input wires going into the box
-and `m` output wires leaving it. For any combination of on and off voltages on
-the input wires, the box will turn on some of the output wires. The vital point
-to take away from this classical state of affairs is that we can think of input
-and output bits (i.e. the input and output wires) as physically distinct objects
-(the wires).
+correspond to electrical currents in the wires[^interconnect] of a chip. Gates,
+i.e. the lowest level of operations that can be applied to bits, then correspond
+to barriers that let the electrical current flow through to outgoing wires, or
+block it.
+
+[^interconnect]:
+    In the case of integrated circuits and printed circuits boards, the _wires_
+    we refer to here would be called "interconnects" or "traces".
+
+We can thus picture a classical gate as a black box with `n` input wires going
+into the box and `m` output wires leaving it. For any combination of on and off
+voltages on the input wires, the box will turn on some of the output wires. The
+vital point to take away from this classical state of affairs is that we can
+think of input and output bits (i.e. the input and output wires) as physically
+distinct objects (the wires).
 
 This is not the case in implementations of qubits. Unlike their classical
 counterparts, quantum gates must be understood as operations that _modify_---or

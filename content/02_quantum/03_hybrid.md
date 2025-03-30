@@ -1,6 +1,6 @@
 +++
 title = "Rise of hybrid quantum-classical computation"
-weight = 4
+weight = 3
 layout = "section"
 slug = "sec:hybrid"
 +++
