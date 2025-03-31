@@ -142,35 +142,3 @@ function shortenInlineCitations() {
     }
   });
 }
-
-// Wait for the DOM to be fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-  // Get all citation elements
-  const citations = document.querySelectorAll(".citation");
-
-  const sortedCitations = formatCitationsKeys(citations);
-
-  if (sortedCitations.length > 0) {
-    // Create and append the references section
-    const referencesSection = document.createElement("details");
-    referencesSection.id = "references";
-
-    const referencesTitle = document.createElement("summary");
-    referencesTitle.textContent = "References";
-    referencesSection.appendChild(referencesTitle);
-
-    const referencesList = formatCitationsList(sortedCitations);
-
-    referencesSection.appendChild(referencesList);
-
-    const mainArticle = document.querySelector("main article");
-    if (mainArticle) {
-      mainArticle.appendChild(referencesSection);
-    } else {
-      console.error("Main article element not found");
-    }
-  }
-
-  // Shorten the inline citation-full elements
-  shortenInlineCitations();
-});
