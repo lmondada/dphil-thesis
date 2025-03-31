@@ -92,7 +92,7 @@ measures of pattern size defined in
     isomorphism problem, an NP-complete problem. The assumption is therefore
     necessary and expected.
 
-{{% proposition title="Pattern matching" %}}
+{{% proposition title="Pattern matching" id="prop:pattern-matching" %}}
 
 Let $P_1, \dots, P_\ell$ be patterns with width $w$ and depth $d$. The
 pre-computation runs in time and space complexity

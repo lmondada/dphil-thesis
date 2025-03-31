@@ -2,21 +2,35 @@
 {{- $id := .Get "id" -}}
 {{- $enlarge := .Get "enlarge" -}}
 
-{{ if not (.Page.Parent.Store.Get "proposition_counter") }}
-    {{ .Page.Parent.Store.Set "proposition_counter" 0 }}
+{{ if not $id }}
+    {{ errorf "Proposition shortcode requires an 'id' parameter in %s" .Page.File.Path }}
 {{ end }}
 
-{{ if not (.Site.Store.Get "proposition_map") }}
-    {{ .Site.Store.Set "proposition_map" dict }}
-{{ end }}
-
-{{ .Page.Parent.Store.Add "proposition_counter" 1 }}
-{{ $counter := .Page.Parent.Store.Get "proposition_counter" }}
 {{ $chapternb := index (findRESubmatch `^0*(\d+)` .Page.File.Dir) 0 1 }}
-{{ $propositionNumber := printf "%s.%d" $chapternb $counter }}
+{{ $dir := .Page.File.Dir }}
 
-{{ if $id }}
-    {{ .Site.Store.SetInMap "proposition_map" $id $propositionNumber }}
+{{ if not (.Site.Store.Get "props") }}
+    {{ .Site.Store.Set "props" dict }}
+{{ end }}
+
+{{ $propsMap := .Site.Store.Get "props" }}
+{{ if not (index $propsMap $dir) }}
+    {{ .Site.Store.SetInMap "props" $dir dict }}
+{{ end }}
+
+{{ $chapterMap := index $propsMap $dir }}
+{{ $maxKey := "max_key" }}
+{{ $propositionNumber := "" }}
+
+{{ $propositionNumber = index $chapterMap $id }}
+{{ if not $propositionNumber }}
+    {{ $currentMax := index $chapterMap $maxKey }}
+    {{ if not $currentMax }}
+        {{ $currentMax = 0 }}
+    {{ end }}
+    {{ $currentMax = add $currentMax 1 }}
+    {{ $propositionNumber = $currentMax }}
+    {{ .Site.Store.SetInMap "props" $dir (merge $chapterMap (dict $id $propositionNumber $maxKey $currentMax)) }}
 {{ end }}
 
 {{- $blockClass := "proposition-block" -}}
@@ -24,9 +38,9 @@
   {{- $blockClass = printf "%s enlarge-%s" $blockClass $enlarge -}}
 {{- end -}}
 
-<div class="{{ $blockClass }}"{{ if $id }} id="{{ $id }}"{{ end }}>
+<div class="{{ $blockClass }}" id="{{ $id }}">
 <div class="proposition-header">
-<span class="proposition-label">Proposition {{ $propositionNumber }}</span>
+<span class="proposition-label">Proposition {{ $chapternb }}.{{ $propositionNumber }}</span>
 {{- if $title -}}<span class="proposition-title">{{ $title }}</span>{{- end -}}
 </div>
 <div class="proposition-content">{{ .InnerDeindent | markdownify }}</div>

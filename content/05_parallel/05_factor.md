@@ -13,7 +13,7 @@ which we now define.
 
 Let us introduce first the notion of _overwriting rewrites_.
 
-{{% definition title="Overwriting rewrite" %}}
+{{% definition title="Overwriting rewrite" id="def:overwriting-rewrite" %}}
 
 For two rewrites $r_1$ and $r_2$, we say that $r_2$ _overwrites_ $r_1$, written
 $r_1 \twoheadrightarrow r_2$, if the deletion set $V^-_2$ of $\delta_2$ includes
@@ -105,7 +105,7 @@ $$|\mathcal{G}_\Delta| = |T_\Delta| \geqslant |T'_\Delta| = (2^n)^\Delta.$$
 
 We frame this result as the following proposition.
 
-{{% proposition title="Lower bound for $|\mathcal{G}_\Delta|$" %}}
+{{% proposition title="Lower bound for $|\mathcal{G}_\Delta|$" id="prop:lower-bound-gts" %}}
 
 The naive search tree size $|\mathcal{G}_\Delta|$ is in
 $\Omega(2^{\Delta \cdot n})$.

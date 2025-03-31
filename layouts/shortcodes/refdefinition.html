@@ -1,3 +1,14 @@
 {{- $id := .Get 0 -}}
-{{- $definitionNumber := index (.Site.Store.Get "definition_map") $id -}}
-Definition <a href="#{{ $id }}">{{- $definitionNumber -}}</a>
+{{- $defsMap := .Site.Store.Get "defs" -}}
+{{- $chapternb := "" -}}
+{{- $definitionNumber := "" -}}
+{{- $dir := "" -}}
+{{- range $chapter, $chapterMap := $defsMap -}}
+    {{- if index $chapterMap $id -}}
+        {{- $dir = $chapter -}}
+        {{- $chapternb = index (findRESubmatch `^0*(\d+)` $chapter) 0 1 -}}
+        {{- $definitionNumber = index $chapterMap $id -}}
+    {{- end -}}
+{{- end -}}
+{{- $href := cond .Site.Params.pdfgen (printf "#%s" $id) (printf "%s#%s" $dir $id | relURL) -}}
+Definition <a href="{{ $href }}">{{- $chapternb -}}.{{- $definitionNumber -}}</a>

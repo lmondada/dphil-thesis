@@ -5,7 +5,7 @@ weight = 2
 slug = "sec:ellbound"
 +++
 
-{{% proposition %}}
+{{% proposition id="prop:ellbound" %}}
 
 Let $N_{w,d}$ be the number of port graphs of width $w$, depth $d$ and maximum
 degree $\Delta \geq 4$. We can lower bound

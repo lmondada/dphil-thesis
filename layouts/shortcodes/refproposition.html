@@ -1,3 +1,14 @@
 {{- $id := .Get 0 -}}
-{{- $propositionNumber := index (.Site.Store.Get "proposition_map") $id -}}
-Proposition <a href="#{{ $id }}">{{- $propositionNumber -}}</a> 
+{{- $propsMap := .Site.Store.Get "props" -}}
+{{- $chapternb := "" -}}
+{{- $propositionNumber := "" -}}
+{{- $dir := "" -}}
+{{- range $chapter, $chapterMap := $propsMap -}}
+    {{- if index $chapterMap $id -}}
+        {{- $dir = $chapter -}}
+        {{- $chapternb = index (findRESubmatch `^0*(\d+)` $chapter) 0 1 -}}
+        {{- $propositionNumber = index $chapterMap $id -}}
+    {{- end -}}
+{{- end -}}
+{{- $href := cond .Site.Params.pdfgen (printf "#%s" $id) (printf "%s#%s" $dir $id | relURL) -}}
+Proposition <a href="{{ $href }}">{{- $chapternb -}}.{{- $propositionNumber -}}</a>

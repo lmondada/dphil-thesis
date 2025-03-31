@@ -63,7 +63,7 @@ number of nodes of the $w$-dimensional prefix tree by $1 + (\ell \cdot L)^w$.
 The runtime and space complexity of the construction of the $w$-dimensional
 prefix tree is thus in $O((\ell \cdot L)^w)$, summarised in the result:
 
-{{< proposition title="Multi-dimensional string prefix matching" >}} Let
+{{< proposition title="Multi-dimensional string prefix matching" id="prop:multidimensional-string-prefix-matching" >}} Let
 $\mathcal{D} \subseteq \mathcal{W}$ be a set of string tuples and $L$ the
 maximum length of a string in a tuple of $\mathcal{D}$. There is a prefix tree
 with at most $(\ell \cdot L)^w + 1$ nodes that encodes $\mathcal{D}$ that can be

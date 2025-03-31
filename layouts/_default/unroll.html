@@ -16,7 +16,7 @@
             {{- if .IsSection -}}
                 {{- $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 -}}
                 <p class="chapter-number">Chapter {{ $chapternb }}</p>
-                <h1 class="chapter">{{ .Title }}</h1>
+                <h1 class="chapter" id="{{ .Slug }}">{{ .Title }}</h1>
                 {{- .Content -}}
                 {{- range $index, $page := .Pages -}}
                     <h2 id="{{ .Slug }}">

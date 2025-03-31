@@ -63,7 +63,7 @@ relation constraints {{% refcentered "parent-child-constraint" %}}, defines a
 boolean satisfiability problem (SAT) with variables $x_\delta$. We have shown:
 
 <!-- prettier-ignore -->
-{{< proposition title="Extraction as SAT problem" >}}
+{{< proposition title="Extraction as SAT problem" id="prop:extraction-as-sat-problem" >}}
 
 Consider a GTS with a constant upper bound $s$ on the number of rewrites that
 may overlap any previous rewrite.
@@ -100,7 +100,7 @@ for which the SMT encoding of the optimisation problem becomes particuarly
 simple are _local_ cost functions:
 
 <!-- prettier-ignore -->
-{{% definition number="5.6" title="Local cost function" %}}
+{{% definition title="Local cost function" id="def:local-cost-function" %}}
 
 A cost function $f$ on graphs is _local_ if for all rewrites $r$ there is a cost
 $\Delta f_r$ such that for all graphs $G$ that $r$ applies to
@@ -145,7 +145,7 @@ In these cases, the cost function is integer valued and the extraction problem
 is indeed often _sparse_:
 
 <!-- prettier-ignore -->
-{{% definition number="5.7" title="Sparse cost function" %}}
+{{% definition title="Sparse cost function" id="def:sparse-cost-function" %}}
 
 The local cost function $f$ is said to be sparse on $\mathcal{D}$ if for most
 edits $\delta \in \mathcal{D}$, $\Delta f_\delta = 0$.

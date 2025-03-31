@@ -63,7 +63,7 @@ input and output operations.
 When, on the other hand, both domain and image of $\varphi$ are interface
 graphs, we refer to the morphism as an _interface morphism_:
 
-{{% definition title="MinIR interface morphism" %}}
+{{% definition title="MinIR interface morphism" id="def:minir-interface-morphism" %}}
 
 Let $\bar{G}$ and $\bar{H}$ be two interface graphs. An interface morphism
 $\varphi: \bar{G} \to \bar{H}$ is a linear minIR morphism that maps the input
@@ -96,7 +96,7 @@ A transformation rule along with a linear morphism $G_L \to G$ on the associated
 subgraph $G_L \subseteq \bar{G}_L$ defines a rewrite on $G$:
 
 <!-- prettier-ignore -->
-{{< proposition title="Rule application" >}}
+{{< proposition title="Rule application" id="prop:rule-application" >}}
 
 Let $\bar{G}_L \leftarrow \bar{G}_I \rightarrow \bar{G}_R$ be a minIR
 transformation rule and let $\varphi: G_L \to G$ be a def-injective and

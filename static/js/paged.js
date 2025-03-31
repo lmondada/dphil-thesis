@@ -3,13 +3,8 @@ class MyHandler extends Paged.Handler {
     super(chunker, polisher, caller);
   }
 
-  afterPageLayout(pageFragment, page, breakToken) {
-    // Identify pages with a chapter heading
-    const chapterNumber = pageFragment.querySelector("p.chapter-number");
-    if (chapterNumber) {
-      // Add chapter-head class to the root element of the page
-      pageFragment.classList.add("chapter-head");
-    }
+  afterPageLayout(pageFragment) {
+    markChapterPages(pageFragment);
 
     this.addFootnotes(pageFragment);
   }
@@ -161,5 +156,14 @@ function runCitationFormatter(parsed) {
 
     const referencesList = formatCitationsList(sortedCitations);
     mainArticle.appendChild(referencesList);
+  }
+}
+
+function markChapterPages(pageFragment) {
+  // Identify pages with a chapter heading
+  const chapterNumber = pageFragment.querySelector("p.chapter-number");
+  if (chapterNumber) {
+    // Add chapter-head class to the root element of the page
+    pageFragment.classList.add("chapter-head");
   }
 }

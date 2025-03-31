@@ -33,12 +33,14 @@
     {{- $weight := .Weight -}}
     {{- $slug := .Slug -}}
     {{- if $isSection -}}
-      {{- $link := printf `<a href="%s">%d</a>` .RelPermalink $weight | safeHTML -}}
+      {{- $href := cond $.Site.Params.pdfgen (printf "#%s" $slug) .RelPermalink -}}
+      {{- $link := printf `<a href="%s">%d</a>` $href $weight | safeHTML -}}
       {{- $links = $links | append $link -}}
     {{- else -}}
       {{- with .Parent -}}
         {{- $parentWeight := .Weight -}}
-        {{- $link := printf `<a href="%s#%s">%d.%d</a>` .RelPermalink $slug $parentWeight $weight | safeHTML -}}
+        {{- $href := cond $.Site.Params.pdfgen (printf "#%s" $slug) (printf "%s#%s" .RelPermalink $slug) -}}
+        {{- $link := printf `<a href="%s">%d.%d</a>` $href $parentWeight $weight | safeHTML -}}
         {{- $links = $links | append $link -}}
       {{- end -}}
     {{- end -}}

@@ -2,19 +2,36 @@
 {{- $id := .Get "id" -}}
 {{- $enlarge := .Get "enlarge" -}}
 
-{{ if not (.Page.Parent.Store.Get "definition_counter") }}
-    {{ .Page.Parent.Store.Set "definition_counter" 0 }}
+{{ if not $id }}
+    {{ errorf "Definition shortcode requires an 'id' parameter" }}
 {{ end }}
 
-{{ if not (.Site.Store.Get "definition_map") }}
-    {{ .Site.Store.Set "definition_map" dict }}
-{{ end }}
-
-{{ .Page.Parent.Store.Add "definition_counter" 1 }}
-{{ $counter := .Page.Parent.Store.Get "definition_counter" }}
 {{ $chapternb := index (findRESubmatch `^0*(\d+)` .Page.File.Dir) 0 1 }}
-{{ $definitionNumber := printf "%s.%d" $chapternb $counter }}
-{{ .Site.Store.SetInMap "definition_map" $id $definitionNumber }}
+{{ $dir := .Page.File.Dir }}
+
+{{ if not (.Site.Store.Get "defs") }}
+    {{ .Site.Store.Set "defs" dict }}
+{{ end }}
+
+{{ $defsMap := .Site.Store.Get "defs" }}
+{{ if not (index $defsMap $dir) }}
+    {{ .Site.Store.SetInMap "defs" $dir dict }}
+{{ end }}
+
+{{ $chapterMap := index $defsMap $dir }}
+{{ $maxKey := "max_key" }}
+{{ $definitionNumber := "" }}
+
+{{ $definitionNumber = index $chapterMap $id }}
+{{ if not $definitionNumber }}
+    {{ $currentMax := index $chapterMap $maxKey }}
+    {{ if not $currentMax }}
+        {{ $currentMax = 0 }}
+    {{ end }}
+    {{ $currentMax = add $currentMax 1 }}
+    {{ $definitionNumber = $currentMax }}
+    {{ .Site.Store.SetInMap "defs" $dir (merge $chapterMap (dict $id $definitionNumber $maxKey $currentMax)) }}
+{{ end }}
 
 {{- $blockClass := "definition-block" -}}
 {{- if $enlarge -}}
@@ -23,7 +40,7 @@
 
 <div class="{{ $blockClass }}" id="{{ $id }}">
 <div class="definition-header">
-    <span class="definition-label">Definition {{ $definitionNumber }}</span>
+    <span class="definition-label">Definition {{ $chapternb }}.{{ $definitionNumber }}</span>
     {{- if $title -}}<span class="definition-title">{{- $title -}}</span>{{- end -}}
 </div>
 <div class="definition-content">
