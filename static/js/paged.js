@@ -148,8 +148,9 @@ function runCitationFormatter(parsed) {
       console.error("Main article element not found");
     }
 
-    const referencesTitle = document.createElement("h2");
+    const referencesTitle = document.createElement("h1");
     referencesTitle.textContent = "References";
+    referencesTitle.classList.add("references");
     mainArticle.appendChild(referencesTitle);
 
     const referencesList = formatCitationsList(sortedCitations);
