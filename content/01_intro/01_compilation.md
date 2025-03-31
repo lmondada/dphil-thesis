@@ -7,7 +7,7 @@ slug = "sec:compilation"
 
 We have introduced quantum compilation by drawing an analogy with the
 well-developed field of classical compilers. The novel directions in which
-quantum compilation is taking the field makes for exciting new challenges. Three
+quantum compilation is taking the field make for exciting new challenges. Three
 new quantum-specific properties of compilation form the core motivation for this
 work.
 

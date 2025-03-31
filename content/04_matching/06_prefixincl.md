@@ -141,9 +141,9 @@ $O((\ell \cdot d)^w)$.
 {{% proof %}}
 
 For each pattern, we consider its canonical spanning tree reduction and
-construct a _multi-dimensional prefix tree_ (see appendix
-[A]({{< relref "/99_appendix#sec:prefixtrees" >}}) for each group of patterns
-that share the same spanning tree reduction.
+construct a _multi-dimensional prefix tree_ (see
+{{< refappendix "sec:prefixtrees" >}}) for each group of patterns that share the
+same spanning tree reduction.
 
 Given a graph $G$, we can compute the cPSG of $G$ for anchors $\pi$ and map its
 rooted dual tree to the corresponding prefix tree. This can be done in
@@ -153,8 +153,7 @@ the proof of {{% refproposition "prop-allanchors" %}}. Thus we can assume
 $|G^\pi| \in O(w \cdot d)$.
 
 The rest of the proof and the runtime follow from the multi-dimensional prefix
-tree construction detailed in Appendix
-[A]({{< relref "/99_appendix#sec:prefixtrees" >}}).
+tree construction detailed in {{< refappendix "sec:prefixtrees" >}}).
 
 <!-- prettier-ignore -->
 {{% /proof %}}

@@ -24,3 +24,6 @@ block = true
 title = true
 [markup.goldmark.renderHooks.image]
 enableDefault = true
+
+[markup.highlight]
+style = "catppuccin-latte"

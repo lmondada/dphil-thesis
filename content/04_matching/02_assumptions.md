@@ -75,7 +75,7 @@ from transformation rules by minIR morphisms $\varphi: P \to G$. By assumption,
 all values in $G$ are linear, and thus $\varphi$ is injective. We say $\varphi$
 is an embedding and write it as $\varphi: P \hookrightarrow G$.
 
-Finding such emeddings $P \hookrightarrow G$ is the _pattern matching problem_
+Finding such embeddings $P \hookrightarrow G$ is the _pattern matching problem_
 that we are solving. This problem is equivalent to finding minIR subgraphs
 $H \subseteq G$ of $G$ such that $H$ is isomorphic to the pattern $P \simeq H$.
 

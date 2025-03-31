@@ -14,7 +14,9 @@ $\mathcal{W} = (\Sigma^*)^w$ the set of $w$-tuples of strings over $\Sigma$. For
 a string tuple $(s_1, \dots, s_w) \in \mathcal{W}$ and a set of string tuples
 $\mathcal{D} \subseteq \mathcal{W}$, the $w$-dimensional string prefix matching
 consists in finding the set
+
 $$\{ (p_1, \dots, p_w) \in \mathcal{D} \ | \ \text{for all }1 \leq i \leq w: p_i\text{ is a prefix of }s_i \}.$$
+
 This string problem can be solved using a $w$-dimensional prefix tree. We give a
 short introduction to prefix trees for the string case but refer to standard
 literature for more details @Knuth1999.

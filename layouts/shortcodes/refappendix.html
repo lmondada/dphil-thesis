@@ -1,0 +1,21 @@
+{{- $slug := .Get 0 -}}
+{{- $appendixLetter := "" -}}
+{{- $filename := "" -}}
+{{- $found := false -}}
+{{- $appendixPage := .Site.GetPage "99_appendix" -}}
+{{- range $appendixPage.Pages -}}
+    {{- if eq .Slug $slug -}}
+        {{- $filename = .File.BaseFileName -}}
+        {{- if hasPrefix "01" $filename -}}
+            {{- $appendixLetter = "A" -}}
+        {{- else if hasPrefix "02" $filename -}}
+            {{- $appendixLetter = "B" -}}
+        {{- end -}}
+        {{- $found = true -}}
+    {{- end -}}
+{{- end -}}
+{{- if not $found -}}
+    {{- errorf "Appendix with slug '%s' not found" $slug -}}
+{{- end -}}
+{{- $href := cond .Site.Params.pdfgen (printf "#%s" $filename) (printf "99_appendix#%s" $filename | relURL) -}}
+Appendix <a href="{{ $href }}">{{- $appendixLetter -}}</a> 

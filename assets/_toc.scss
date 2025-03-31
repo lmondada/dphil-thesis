@@ -11,10 +11,9 @@
 
   h2.toc-title {
     font-family: "Noto Serif", serif;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: 500;
-    text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 4rem;
 
     @media print {
       margin-top: 0rem;
@@ -39,16 +38,14 @@
     a {
       text-decoration: none;
       color: inherit;
+      &:visited {
+        color: inherit;
+      }
 
       &:hover {
         text-decoration: underline;
       }
     }
-  }
-
-  .toc-list {
-    display: flex;
-    flex-wrap: wrap;
   }
 
   .toc-chapter-number {
@@ -60,29 +57,26 @@
   .toc-chapter {
     font-weight: 700;
     margin-top: 1rem;
-
-    // LaTeX-style dotted leaders
-    a {
-      &::after {
-        content: "";
-        margin: 0 0.5rem;
-        border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
-      }
-    }
   }
 
   .toc-section {
     font-weight: normal;
+  }
 
+  .toc-list {
     a {
-      display: flex;
       align-items: baseline;
+      display: flex;
 
-      &::after {
-        content: "";
-        flex-grow: 1;
-        margin: 0 0.5rem;
-        border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+      .dots {
+          flex-grow: 1;
+          margin: 0 0.5rem;
+          border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+      }
+
+      .no-dots {
+          flex-grow: 1;
+          margin: 0 0.5rem;
       }
     }
   }

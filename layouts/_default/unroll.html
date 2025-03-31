@@ -15,12 +15,21 @@
         {{- range (where .Pages "Params.bookHidden" "ne" true) -}}
             {{- if .IsSection -}}
                 {{- $chapternb := index (findRESubmatch `^0*(\d+)` .File.Dir) 0 1 -}}
+                {{- $isAppendix := hasPrefix .File.Dir "99" -}}
+                {{- if $isAppendix -}}
+                <p class="chapter-number" id="{{ .Slug }}">Appendix</p>
+                {{- else -}}
                 <p class="chapter-number">Chapter {{ $chapternb }}</p>
                 <h1 class="chapter" id="{{ .Slug }}">{{ .Title }}</h1>
+                {{- end -}}
                 {{- .Content -}}
                 {{- range $index, $page := .Pages -}}
                     <h2 id="{{ .Slug }}">
+                        {{- if $isAppendix -}}
+                        {{ index (slice "A" "B") $index }}.
+                        {{- else -}}
                         {{ $chapternb }}.{{ add $index 1 }}.
+                        {{ end }}
                         <span class="section-name">{{ $page.Title }}</span>
                     </h2>
                     {{- .Content -}}

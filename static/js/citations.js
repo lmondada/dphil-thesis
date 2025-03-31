@@ -22,10 +22,12 @@ function collectCitations(citations) {
       if (!keyToCitation.has(citationKey)) {
         const clonedElement = fullElement.cloneNode(true);
         clonedElement.classList.replace("citation-full", "citation-display");
+        const firstLastName = fullElement.querySelector(".authors .last-name")?.textContent || "";
         keyToCitation.set(citationKey, {
           key: citationKey,
           full: clonedElement,
           authors: fullElement.querySelector(".authors").textContent,
+          firstLastName: firstLastName
         });
       }
     }
@@ -105,7 +107,7 @@ function formatCitationsKeys(citations) {
 
   // Sort citations by author names
   const sortedCitations = Array.from(keyToCitation.entries()).sort((a, b) =>
-    a[1].authors.localeCompare(b[1].authors),
+    a[1].firstLastName.localeCompare(b[1].firstLastName)
   );
 
   // Create mapping from old IDs to new ordered indices

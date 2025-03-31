@@ -389,19 +389,19 @@ We can then discard all qubits and restart from the $\ket 0$ state, applying $P$
 followed by $\tilde{A}$ and an ancilla measurement, repeating until we
 measure 0. As a pseudo-quantum circuit, we could express this as:
 
-<pre>
-psi_qs = create_qubits(n)
-while True:
-   ancilla_q = create_qubit()
-   obtain measurement m from:
 
-   <img src="/rus.svg" style="width: 65%; margin-left: 5em;"/>
-
-    if m == 0:
-        break  # success! we can exit loop and proceed
-    else:
-        reset_qubits(psi_qs)
-</pre>
+<div class="highlight" data-ref="97e76d09-3a8a-42e3-be27-dcb8ee48c9d6"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;" data-ref="d5a12886-79b0-43e0-84d4-be53c8bb3030" data-undisplayed="undisplayed"><code class="language-python" data-lang="python" data-ref="40cb6ecc-cade-4539-beee-15164d507cb2"><span style="display:flex;" data-ref="cf86f9bd-1960-4f55-9ab3-d730826dd95f"><span data-ref="5567a52e-9fa4-4a70-b657-7dd0c405d964">psi_qs <span style="color:#04a5e5;font-weight:bold" data-ref="0582128b-2f52-498e-971e-b6987728e05d" data-undisplayed="undisplayed">=</span> create_qubits(n)
+</span></span><span style="display:flex;" data-ref="6f5718bf-c93f-46a4-b25e-d1c3b7258ee2"><span data-ref="c8c7699b-9ee5-4d22-978b-b24c0395e992"><span style="color:#8839ef" data-ref="9efab953-6821-43a8-a29e-92af6e6df300" data-undisplayed="undisplayed">while</span> <span style="color:#fe640b" data-ref="f9a4b21b-4d30-4e68-84bd-f059e9d1ebe5" data-undisplayed="undisplayed">True</span>:
+</span></span><span style="display:flex;" data-ref="5dbcf82c-9c4d-4e2b-9f1e-7a6f544eacab"><span data-ref="9c7cc0f4-7d8d-4908-85c6-98cf7fbd68da">   ancilla_q <span style="color:#04a5e5;font-weight:bold" data-ref="3fb0c682-3d0c-4f84-9cd8-57d964d7a1fb" data-undisplayed="undisplayed">=</span> create_qubit()
+</span></span><span style="display:flex;" data-ref="220307c2-2650-4fcf-a981-672114390967"><span data-ref="3efc46df-424a-46b3-b32d-e7b2123b6eb7">   obtain measurement m from:
+</span></span><span style="display:flex;" data-ref="20057c4e-c406-421b-97a5-7d0b11fc8257"><span data-ref="e87d8814-0a36-4bda-a13e-51fa2db99938"></span></span>
+<img src="/rus.svg" style="width: 65%; margin-left: 5em;"/>
+</span></span><span style="display:flex;" data-ref="20057c4e-c406-421b-97a5-7d0b11fc8257"><span data-ref="e87d8814-0a36-4bda-a13e-51fa2db99938"></span></span>
+<span style="display:flex;" data-ref="841db4cd-0cc7-47a9-b472-8477c42b5722"><span data-ref="54dc8de4-2d9c-4f54-b15d-d5bed674cc58">    <span style="color:#8839ef" data-ref="a1caaef3-32ca-435e-9aa7-11befe5899d5" data-undisplayed="undisplayed">if</span> m <span style="color:#04a5e5;font-weight:bold" data-ref="c21576db-a4f3-43c9-baf6-eb747420fb87" data-undisplayed="undisplayed">==</span> <span style="color:#fe640b" data-ref="be5bb673-9377-41e2-9477-9e90104ee425" data-undisplayed="undisplayed">0</span>:
+</span></span><span style="display:flex;" data-ref="3e140979-3e9f-47cf-b37e-181b2053a4d8"><span data-ref="f483ac93-0423-4a0c-aa13-0366e59bc7cd">        <span style="color:#8839ef" data-ref="0ded6587-83b4-4703-b2d7-2faa93f8cc86" data-undisplayed="undisplayed">break</span>  <span style="color:#9ca0b0;font-style:italic" data-ref="26d3af22-8e45-40ce-a028-e327820efd04" data-undisplayed="undisplayed"># success! we can exit loop and proceed</span>
+</span></span><span style="display:flex;" data-ref="193bcb98-4d52-4c14-aa74-9186678fcd1f"><span data-ref="5faa1ee3-f682-4960-958e-1f893f0fb0e7">    <span style="color:#8839ef" data-ref="0d98905d-7fc7-46b4-898b-916b4ab24cef" data-undisplayed="undisplayed">else</span>:
+</span></span><span style="display:flex;" data-ref="c8503bb9-d166-4edd-98af-4ed836665028"><span data-ref="7770bd4e-5783-46d2-9492-43a842d0a2bc">        reset_qubits(psi_qs)
+</span></span></code></pre></div>
 
 At each iteration, we can either exit the loop if the state collapse was
 successful (`m == 0`), or reset the qubits to zero and try again. But pseudo

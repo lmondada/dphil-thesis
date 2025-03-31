@@ -3,28 +3,28 @@
 // @import "plugins/_numbered.scss";
 
 .chapter-number {
-  font-size: 1.8em;
-  font-style: italic;
-  margin-bottom: -1em;
-  color: #666;
-  font-family: "Shadows Into Light", serif;
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: 0.07em;
+    font-size: 1.8em;
+    font-style: italic;
+    margin-bottom: -1em;
+    color: #666;
+    font-family: "Shadows Into Light", serif;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.07em;
 }
 
 h1.chapter {
-  margin-bottom: 1.5em;
-  line-height: 1.3;
-  font-family: "Noto Serif", serif;
+    margin-bottom: 1.5em;
+    line-height: 1.3;
+    font-family: "Noto Serif", serif;
 }
 
 article.markdown h2 {
-  line-height: 1.2;
+    line-height: 1.2;
 }
 
 .markdown blockquote {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 // .chapter-head::after {
@@ -32,54 +32,54 @@ article.markdown h2 {
 // }
 
 article {
-  hyphens: auto;
+    hyphens: auto;
 }
 
 p,
 ol {
-  margin-block-start: 0em;
+    margin-block-start: 0em;
 }
 
 pre {
-  margin-block-start: 0em;
-  margin-block-end: 1em;
+    margin-block-start: 0em;
+    margin-block-end: 1em;
 }
 
 .markdown .book-columns {
-  margin-left: -0.5em;
-  margin-right: -0.5em;
+    margin-left: -0.5em;
+    margin-right: -0.5em;
 
-  & > div {
-    padding: 0 0.5em;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .highlight {
-    flex-grow: 1;
-
-    pre {
-      height: 100%;
+    & > div {
+        padding: 0 0.5em;
+        display: flex;
+        flex-direction: column;
     }
-  }
+
+    .highlight {
+        flex-grow: 1;
+
+        pre {
+            height: 100%;
+        }
+    }
 }
 
 article.markdown ul {
-  list-style-type: none;
-  padding-left: 1.6em;
-  margin-block-start: 0em;
+    list-style-type: none;
+    padding-left: 1.6em;
+    margin-block-start: 0em;
 
-  li::before {
-    content: "–";
-    padding-left: 0.2em;
-    display: inline-block;
-    width: 1.2em;
-    margin-left: -1.4em;
-  }
+    li::before {
+        content: "–";
+        padding-left: 0.2em;
+        display: inline-block;
+        width: 1.2em;
+        margin-left: -1.4em;
+    }
 
-  li {
-    margin-bottom: 0.5em;
-  }
+    li {
+        margin-bottom: 0.5em;
+    }
 }
 
 ////// GRID LAYOUT //////
@@ -87,167 +87,166 @@ article.markdown ul {
 $floating-footnotes-width: 20rem;
 
 .book-page {
-  position: relative;
+    position: relative;
 
-  @media screen and (min-width: 56rem) {
-    padding-right: 0;
-    margin-right: 0;
-  }
+    @media screen and (min-width: 56rem) {
+        padding-right: 0;
+        margin-right: 0;
+    }
 }
 
 article.markdown {
-  @media screen and (min-width: 56rem) {
-    display: grid;
-    grid-template-columns: 1rem 1fr $floating-footnotes-width;
+    @media screen and (min-width: 56rem) {
+        display: grid;
+        grid-template-columns: 1rem 1fr $floating-footnotes-width;
 
-    > * {
-      grid-column: 2;
-    }
+        > * {
+            grid-column: 2;
+        }
 
-    > .floating-footnotes {
-      grid-column: 3;
-      grid-row: 1;
-    }
+        > .floating-footnotes {
+            grid-column: 3;
+            grid-row: 1;
+        }
 
-    > .enlarge-full,
-    > .enlarge-half,
-    > .enlarge-quarter {
-      grid-column: 1 / 4;
-    }
+        > .enlarge-full,
+        > .enlarge-half,
+        > .enlarge-quarter {
+            grid-column: 1 / 4;
+        }
 
-    > .enlarge-quarter {
-      margin-right: calc(#{$floating-footnotes-width} * 3 / 4);
-    }
+        > .enlarge-quarter {
+            margin-right: calc(#{$floating-footnotes-width} * 3 / 4);
+        }
 
-    > .enlarge-half,
-    > .enlarge-full {
-      margin-right: calc(#{$floating-footnotes-width} / 2);
+        > .enlarge-half,
+        > .enlarge-full {
+            margin-right: calc(#{$floating-footnotes-width} / 2);
+        }
     }
-  }
 }
 
 ////// FLOATING FOOTNOTES //////
-
 .floating-footnotes {
-  position: absolute;
-  margin: 0 2rem 0 1rem;
-  top: 0;
-  width: calc(#{$floating-footnotes-width} - 3rem);
-
-  font-size: 0.9rem;
-
-  ol li {
     position: absolute;
+    margin: 0 2rem 0 1rem;
+    top: 0;
+    width: calc(#{$floating-footnotes-width} - 3rem);
 
-    p {
-      margin-top: 0px;
+    font-size: 0.9rem;
+
+    ol li {
+        position: absolute;
+
+        p {
+            margin-top: 0px;
+        }
     }
-  }
 }
 
 ////// QVIZ //////
 
 .qviz {
-  display: block;
-  margin: 0 auto;
+    display: block;
+    margin: 0 auto;
 }
 
 ////// FIGURES //////
 ///
 .markdown figure {
-  &.figure-bg {
-    background-color: #f5f5f0;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
-  }
-  padding: 1rem 0;
-
-  .figure-div {
-    display: block;
-    margin: 0 auto;
-
-    img {
-      width: 100%;
+    &.figure-bg {
+        background-color: #f5f5f0;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
     }
-  }
+    padding: 1rem 0;
 
-  figcaption {
-    font-style: italic;
-    margin: 1em auto 0 auto;
-    width: 90%;
+    .figure-div {
+        display: block;
+        margin: 0 auto;
 
-    p {
-      margin-bottom: 0;
+        img {
+            width: 100%;
+        }
     }
-  }
+
+    figcaption {
+        font-style: italic;
+        margin: 1em auto 0 auto;
+        width: 90%;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
 }
 
 ////// References //////
 .markdown details summary {
-  font-size: 1.2rem;
+    font-size: 1.2rem;
 }
 
 ////// CITATIONS //////
 .citation {
-  position: relative;
+    position: relative;
 }
 
 .citation-key,
 .citation-number {
-  cursor: pointer;
-  color: rgb(132, 64, 241);
+    cursor: pointer;
+    color: rgb(132, 64, 241);
 
-  &:hover {
-    text-decoration: underline;
-  }
+    &:hover {
+        text-decoration: underline;
+    }
 
-  a {
-    color: inherit;
-  }
+    a {
+        color: inherit;
+    }
 }
 
 .citation-key {
-  &:before {
-    content: "[";
-  }
+    &:before {
+        content: "[";
+    }
 
-  &:after {
-    content: "]";
-  }
+    &:after {
+        content: "]";
+    }
 }
 
 .citation-number {
-  &.citation-left:before {
-    content: "[";
-  }
+    &.citation-left:before {
+        content: "[";
+    }
 
-  &.citation-right:after {
-    content: "]";
-  }
+    &.citation-right:after {
+        content: "]";
+    }
 
-  &.citation-middle:after {
-    content: ",";
-  }
+    &.citation-middle:after {
+        content: ",";
+    }
 }
 
 .citation-full {
-  display: none;
-  position: absolute;
-  border: 1px solid #000;
-  background-color: #fff;
-  padding: 2px 2px 2px 8px;
-  bottom: 1.4rem;
-  font-size: 0.9rem;
-  width: 300px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    position: absolute;
+    border: 1px solid #000;
+    background-color: #fff;
+    padding: 2px 2px 2px 8px;
+    bottom: 1.4rem;
+    font-size: 0.9rem;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-  @media screen and (min-width: 56rem) {
-    right: 0rem;
-  }
+    @media screen and (min-width: 56rem) {
+        right: 0rem;
+    }
 
-  .citation-key:hover + &,
-  .citation-number:hover + & {
-    display: block;
-  }
+    .citation-key:hover + &,
+    .citation-number:hover + & {
+        display: block;
+    }
 }
 
 @import "titlepage";
@@ -256,103 +255,103 @@ article.markdown {
 
 .definition-block,
 .proposition-block {
-  border: 1px solid var(--gray-200);
-  border-radius: $border-radius;
-  margin: $padding-16 -1em;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--gray-200);
+    border-radius: $border-radius;
+    margin: $padding-16 -1em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .definition-header,
 .proposition-header {
-  background-color: var(--gray-100);
-  padding: $padding-8 $padding-16;
-  border-bottom: 1px solid var(--gray-200);
-  display: flex;
-  align-items: center;
-  gap: $padding-8;
+    background-color: var(--gray-100);
+    padding: $padding-8 $padding-16;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: $padding-8;
 }
 
 .definition-label,
 .proposition-label {
-  font-weight: bold;
-  color: black;
+    font-weight: bold;
+    color: black;
 }
 
 .definition-title,
 .proposition-title {
-  font-style: italic;
-  color: var(--body-font-color);
-  opacity: 0.8;
+    font-style: italic;
+    color: var(--body-font-color);
+    opacity: 0.8;
 }
 
 .definition-content,
 .proposition-content {
-  padding: $padding-16;
-  color: var(--body-font-color);
+    padding: $padding-16;
+    color: var(--body-font-color);
 }
 
 ////// CENTERED ENVIRONMENT //////
 .centered {
-  margin: -0.5em auto;
-  width: 100%;
-  text-align: center;
-  position: relative;
+    margin: -0.5em auto;
+    width: 100%;
+    text-align: center;
+    position: relative;
 }
 
 .centered.numbered::after {
-  content: "(" attr(data-number) ")";
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+    content: "(" attr(data-number) ")";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 ////// PROOFS //////
 details.proof-details {
-  margin-bottom: 1em;
+    margin-bottom: 1em;
 }
 
 .enlarge-full .proof,
 .enlarge-half .proof,
 .enlarge-quarter .proof {
-  margin: $padding-16 0;
+    margin: $padding-16 0;
 }
 
 .proof {
-  padding: $padding-16;
-  border: 1px solid var(--gray-200);
-  border-radius: $border-radius;
-  margin: $padding-16 -1em;
-  background: var(--body-background);
+    padding: $padding-16;
+    border: 1px solid var(--gray-200);
+    border-radius: $border-radius;
+    margin: $padding-16 -1em;
+    background: var(--body-background);
 
-  .proof-header {
-    font-style: italic;
-    margin-right: 0.5em;
-  }
-
-  .markdown-inner:not([data-split-from]) {
-    & > :first-child::before {
-      content: "Proof.";
-      font-style: italic;
-      margin-right: 1em;
+    .proof-header {
+        font-style: italic;
+        margin-right: 0.5em;
     }
-  }
 
-  .markdown-inner {
-    // Remove extra margins in nested markdown content
-    > :first-child {
-      margin-top: 0;
+    .markdown-inner:not([data-split-from]) {
+        & > :first-child::before {
+            content: "Proof.";
+            font-style: italic;
+            margin-right: 1em;
+        }
     }
-    > :last-child {
-      margin-bottom: 0;
+
+    .markdown-inner {
+        // Remove extra margins in nested markdown content
+        > :first-child {
+            margin-top: 0;
+        }
+        > :last-child {
+            margin-bottom: 0;
+        }
     }
-  }
 
-  &[data-split-to] {
-    border-bottom: none;
-  }
+    &[data-split-to] {
+        border-bottom: none;
+    }
 
-  &[data-split-from] {
-    border-top: none;
-  }
+    &[data-split-from] {
+        border-top: none;
+    }
 }

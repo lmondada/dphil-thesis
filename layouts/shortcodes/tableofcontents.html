@@ -1,31 +1,53 @@
 {{- $bookSection := default "docs" .Site.Params.BookSection -}}
-{{- if eq $bookSection "*" -}} {{- $bookSection = "/" -}} {{- end -}}
+{{- if eq $bookSection "*" -}}
+  {{- $bookSection = "/" -}}
+{{- end -}}
 {{- with .Site.GetPage $bookSection -}}
 <div class="toc">
-    <h2 class="toc-title">Table of Contents</h2>
+    <h2 class="toc-title">Contents</h2>
     {{ template "toc-section-children" (dict "Section" . "CurrentPage" $
     "ChapterNum" 0) }}
 </div>
 {{- end -}}
-
 {{- define "toc-section-children" -}}
+{{ $pdfgen := false }}
 <ul class="toc-list">
     {{- $chapterNum := .ChapterNum -}}
     {{- range (where .Section.Pages "Params.bookHidden" "ne" true) -}}
-    {{- if .IsSection -}} {{- $chapterNum = add $chapterNum 1 -}}
+    {{ $pdfgen = .Site.Params.pdfgen }}
+    {{- if .IsSection -}}
+    {{- $chapterNum = add $chapterNum 1 -}}
     <li class="toc-chapter">
-        <p class="toc-chapter-number">Chapter {{ $chapterNum }}.</p>
-        <a href="{{ .RelPermalink }}">{{ partial "docs/title" . }}</a>
-        {{- $sectionNum := 0 -}}
-        {{- range (where .Pages "Params.bookHidden" "ne" true) -}} {{- if .IsPage -}}
-            {{- $sectionNum = add $sectionNum 1 -}}
-            <ul>
-                <li class="toc-section">
-                    <a href="{{ .RelPermalink }}">{{ $sectionNum }}. {{ partial "docs/title" . }}</a>
-                </li>
-            </ul>
+        {{ $href := cond .Site.Params.pdfgen (printf "#%s" .Slug) .RelPermalink }}
+        <a href="{{ $href | safeURL }}">
+            
+            <span>{{- if ne .Title "Appendix" -}}Chapter {{ $chapterNum }}.{{ end }} {{ partial "docs/title" . }}</span>
+            <span class="no-dots"></span>
+            <span class="page-number {{ .Slug }}"></span>
+        </a>
+        {{- $sectionNum := 0 -}} {{- range (where .Pages "Params.bookHidden"
+        "ne" true) -}} {{- if .IsPage -}} {{- $sectionNum = add $sectionNum 1
+        -}}
+        <ul>
+            <li class="toc-section">
+                {{- $href := cond .Site.Params.pdfgen (printf "#%s" .Slug) .RelPermalink -}}
+                <a href="{{ $href | safeURL }}">
+                    <span>{{ $sectionNum }}. {{ partial "docs/title" . }}</span>
+                    <span class="dots"></span>
+                    <span class="page-number {{ .Slug }}"></span>
+                </a>
+            </li>
+        </ul>
         {{ end }} {{ end }}
     </li>
     {{ end }} {{ end }}
+    {{ if $pdfgen }}
+    <li class="toc-chapter">
+        <a href="#references">
+        <span>Bibliography</span>
+        <span class="no-dots"></span>
+        <span class="page-number references"></span></a>
+    </li>
+    {{ end }}
 </ul>
 {{- end -}}

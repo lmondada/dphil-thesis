@@ -122,9 +122,8 @@ $O(\ell \cdot |P| \cdot |G|)$. Using $|P| \leq w\cdot d$ (cf.
 {{% refcentered "eq-overallcompl" %}}, we thus have a speedup in the regime
 $\Theta(c^w / w^{3/2}) < \ell$. On the other hand, $\ell$ is upper bounded by
 the maximum number $N_{w, d}$ of patterns of bounded width and depth. Using a
-crude lower-bound for $N_{w,d}$ derived in appendix
-[B]({{< relref "/99_appendix#sec:ellbound" >}}), we obtain a computational
-advantage for our approach when
+crude lower-bound for $N_{w,d}$ derived in {{< refappendix "sec:ellbound" >}},
+we obtain a computational advantage for our approach when
 
 $$\Theta\left(\frac{c^w}{w^{\frac32}}\right) < \ell < \left(\frac{w}{2e}\right)^{\Theta(w d)} \leq N_{w, d}.$$
 

@@ -3,6 +3,7 @@ title = "Introduction"
 sort_by = "weight"
 weight = 1
 layout = "chapter"
+slug = "chap:intro"
 +++
 
 Quantum computing is the computational model that arises from the quantum

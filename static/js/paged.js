@@ -7,6 +7,8 @@ class MyHandler extends Paged.Handler {
     markChapterPages(pageFragment);
 
     this.addFootnotes(pageFragment);
+
+    addPageNumbers(pageFragment);
   }
 
   beforeParsed(content) {
@@ -150,8 +152,9 @@ function runCitationFormatter(parsed) {
     }
 
     const referencesTitle = document.createElement("h1");
-    referencesTitle.textContent = "References";
+    referencesTitle.textContent = "Bibliography";
     referencesTitle.classList.add("references");
+    referencesTitle.id = "references";
     mainArticle.appendChild(referencesTitle);
 
     const referencesList = formatCitationsList(sortedCitations);
@@ -166,4 +169,30 @@ function markChapterPages(pageFragment) {
     // Add chapter-head class to the root element of the page
     pageFragment.classList.add("chapter-head");
   }
+}
+
+function escapeSelector(selector) {
+  return selector.replace(/[!"#$%&'()*+,-./:;<=>?@[\\\]^`{|}~]/g, "\\$&");
+}
+
+function addPageNumbers(pageFragment) {
+  // Find h1 and h2 elements in the page
+  const headings = pageFragment.querySelectorAll("h1, h2");
+
+  const pageNo = pageFragment.id.split("-").pop();
+
+  // For each heading, check if there is a .page-number element with the heading's ID as the slug
+  headings.forEach((heading) => {
+    const slug = heading.id;
+    if (!slug) {
+      return;
+    }
+    const escapedSlug = escapeSelector(slug);
+    const pageNumbers = document.querySelectorAll(
+      `.page-number.${escapedSlug}`,
+    );
+    pageNumbers.forEach((pageNumber) => {
+      pageNumber.textContent = pageNo;
+    });
+  });
 }
