@@ -51,7 +51,7 @@ $$(v_1, v_2) \in \mu \Rightarrow v_1 \sim_\mu v_2.$$
 
 Then, we can define
 
-- $V = (V_1 \sqcup V_2)/\sim_\mu$ is the set of all equivalences classes of
+- $V = (V_1 \sqcup V_2)/\sim_\mu$ is the set of all equivalence classes of
   $\sim_\mu$, and
 - for $v \in V_1 \sqcup V_2$, $\alpha_\mu(v) \in V$ is the equivalence class of
   $\sim_\mu$ that $v$ belongs to.
@@ -263,7 +263,7 @@ $$\begin{aligned}\mu_o =\ & \{ \left(use(o)_{\rho(i)}, use(H)_{i}\right) \mid i 
 This is almost enough to define a rewrite that replaces the operation $o$ in $G$
 with the values and operations of $H$---the interface compatibility constraint
 $I_H \triangleright I(o)$ that we have imposed ensures that the resulting minIR
-graph is valid. Unfortunately $\mu_o$ is not a partial function as required by
+graph is valid. Unfortunately, $\mu_o$ is not a partial function as required by
 {{% refdefinition "minirdef" %}}.
 
 This is resolved in the following proposition:
@@ -357,7 +357,7 @@ $v \in \textit{def}\,(o)$, but not both.
 
 The simpler case: if $v \in \textit{def}\,(o)$, then there exists $i$ such that
 $\textit{def}\,(o)_i = v$. Furthermore $i$ is unique because by minIR
-definition, $v$ has an unique definition in $G$. It follows from
+definition, $v$ has a unique definition in $G$. It follows from
 {{% refcentered "mu0" %}} that $w_1 = use(o_{out})_{\rho(i)} = w_2$ and hence
 $\alpha_1 = \alpha_2$.
 

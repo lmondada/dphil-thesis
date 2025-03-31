@@ -35,7 +35,7 @@ directly to minIR graphs and, more broadly, to most instances of graph
 rewriting.
 
 The central object of study in this chapter is the _graph rewrite_. We restate a
-simplified verion of {{% refdefinition "minirrewrite" %}} here. We opt for a
+simplified version of {{% refdefinition "minirrewrite" %}} here. We opt for a
 rewrite definition that omits the _edge deletion set_ $E^-$ of
 {{% refdefinition "minirrewrite" %}}. Whilst it represents a restriction from
 the more general definition, it will simplify notation. All constructions and

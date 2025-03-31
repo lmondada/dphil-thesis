@@ -66,7 +66,7 @@ $\Delta$, i.e. there is always at least one applicable rewrite for every graph
 $G' \in T_{\Delta - 1}$ (otherwise the search problem we are trying to solve is
 trivial). Then let $n > 0$ be the largest integer such that for all graphs
 $G' \in T$, there exists a partition of $G'$ into subgraphs
-$\Pi_1, \ldots, \Pi_n$ that satisifes the following property, for all
+$\Pi_1, \ldots, \Pi_n$ that satisfies the following property, for all
 $1 \leq i \leq n:$
 
 {{% centered %}}

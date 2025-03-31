@@ -509,7 +509,7 @@ an embedding of $P$ is not possible.
     that will be merged with $v_G'$. Hence, they will all be attached to the
     outgoing edge of $v_G$ at its $i$-th outgoing endvertex.
 
-Using the approach we have just sketched, pattern matching can thus be performed
+Using the approach we have just sketched pattern matching can thus be performed
 on the persistent data structure $\mathcal{D}$. The runtime of steps 2 and 3
 depend on the type of graphs and patterns that are matched on---these are,
 however, typical problems that appear in most instances of pattern matching,

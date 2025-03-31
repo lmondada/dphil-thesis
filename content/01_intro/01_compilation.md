@@ -28,7 +28,7 @@ particles. Suggestions for the former include charged ions @Kielpinski_2002
 transmons @Blais_2007 and even Majorana @Sau_2010 particles. The equipment that
 drives the desired operations on these particles is then drawn from a jolly
 mixture of lasers, magnetic fields, microwaves, dilution fridges, etc. Each
-combination results in different tradeoffs: some will render a specific
+combination results in different trade-offs: some will render a specific
 computation particularly easy; others promise to scale well to large systems but
 are very error-prone and unreliable; others still achieve high fidelities at the
 expense of slow operations.
@@ -128,7 +128,7 @@ trade-offs that quantum compilers must face have no equivalent in the classical
 world---at least for the time being.
 
 [^cpu]:
-    There are other architectures, such as Risc-V @Waterman2016 and MIPS
+    There are other architectures, such as RISC-V @Waterman2016 and MIPS
     @Hennessy1982, but as of 2025 the quasi totality of consumer and
     professional CPUs run on x86 or ARM from mobile phones to laptops, desktops,
     and data centres. See @Valve2024 for a detailed hardware market share

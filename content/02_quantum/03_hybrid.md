@@ -389,7 +389,6 @@ We can then discard all qubits and restart from the $\ket 0$ state, applying $P$
 followed by $\tilde{A}$ and an ancilla measurement, repeating until we
 measure 0. As a pseudo-quantum circuit, we could express this as:
 
-
 <div class="highlight" data-ref="97e76d09-3a8a-42e3-be27-dcb8ee48c9d6"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;" data-ref="d5a12886-79b0-43e0-84d4-be53c8bb3030" data-undisplayed="undisplayed"><code class="language-python" data-lang="python" data-ref="40cb6ecc-cade-4539-beee-15164d507cb2"><span style="display:flex;" data-ref="cf86f9bd-1960-4f55-9ab3-d730826dd95f"><span data-ref="5567a52e-9fa4-4a70-b657-7dd0c405d964">psi_qs <span style="color:#04a5e5;font-weight:bold" data-ref="0582128b-2f52-498e-971e-b6987728e05d" data-undisplayed="undisplayed">=</span> create_qubits(n)
 </span></span><span style="display:flex;" data-ref="6f5718bf-c93f-46a4-b25e-d1c3b7258ee2"><span data-ref="c8c7699b-9ee5-4d22-978b-b24c0395e992"><span style="color:#8839ef" data-ref="9efab953-6821-43a8-a29e-92af6e6df300" data-undisplayed="undisplayed">while</span> <span style="color:#fe640b" data-ref="f9a4b21b-4d30-4e68-84bd-f059e9d1ebe5" data-undisplayed="undisplayed">True</span>:
 </span></span><span style="display:flex;" data-ref="5dbcf82c-9c4d-4e2b-9f1e-7a6f544eacab"><span data-ref="9c7cc0f4-7d8d-4908-85c6-98cf7fbd68da">   ancilla_q <span style="color:#04a5e5;font-weight:bold" data-ref="3fb0c682-3d0c-4f84-9cd8-57d964d7a1fb" data-undisplayed="undisplayed">=</span> create_qubit()

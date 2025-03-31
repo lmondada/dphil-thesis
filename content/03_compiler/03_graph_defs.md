@@ -180,7 +180,7 @@ complex control flow graphs, or any other control flow structures.
 #### Why not plain branch statements?
 
 There is a simpler---and at least as popular---way of expressing control flow in
-IRs without necessiting regions and operation hierarchies, using _branch_
+IRs without requiring regions and operation hierarchies, using _branch_
 statements[^goto]. For instance, LLVM IR provides a conditional branch statement
 
 ```llvm

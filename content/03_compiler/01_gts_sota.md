@@ -37,7 +37,7 @@ of circuit optimisations with soundness and performance guarantees @Duncan2020
 
 Great strides are also being made in our theoretical understanding of
 transformation systems for quantum circuits. Recently, Clément et al.
-established for the first time completeness @Clement2023 as well as minimality
+established completeness for the first time @Clement2023 as well as minimality
 @Clement2024 of a GTS for quantum circuits. A set of circuit transformation
 rules were presented such that no rule is redundant, and for any two equivalent
 quantum circuits, there exists a sequence of local transformations rewriting one

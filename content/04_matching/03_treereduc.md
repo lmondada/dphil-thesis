@@ -21,7 +21,7 @@ tree given by
 - the parent and children of $o \in O$ are the operations that share a value
   with $o$ in $G$; the parent is the unique operation on the path from $o$ to
   $r$,
-- the children of an operation are ordered according to the the port labels.
+- the children of an operation are ordered according to the port labels.
 
 {{% /definition %}}
 

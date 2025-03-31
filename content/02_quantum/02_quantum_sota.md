@@ -240,7 +240,7 @@ Further improvements to this work have since been presented in @Huang2024 and
 @Schmitz2024, where new heuristics are introduced to choose the Pauli gadget
 ordering. In @Huang2024, the hardware-specific connectivity constraints between
 qubits are also taken into account to produce programs that can be executed on
-the targetted architecture without overhead.
+the targeted architecture without overhead.
 
 A close relative of Pauli gadgets---a strictly smaller subset of it, to be
 precise---are the so-called _phase polynomials_ @Amy2018, obtained when
@@ -418,7 +418,7 @@ tailored optimisation methods. These approaches leverage the unique structure
 and symmetries of quantum computations, achieving significant reductions in
 circuit size, depth, and hardware-specific overheads. Techniques such as phase
 polynomial synthesis and Clifford tableau representations are widely applicable
-and are a cornerstore of modern quantum compilers @Amy2019 @Griend2025.
+and are a cornerstone of modern quantum compilers @Amy2019 @Griend2025.
 Meanwhile, diagrammatic calculi, such as the ZX calculus, provide a flexible and
 theoretically robust framework for optimisations, often revealing
 simplifications invisible in the traditional gate-based model.

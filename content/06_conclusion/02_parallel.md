@@ -29,7 +29,7 @@ architecture might look like.
 #### Inter-process communication
 
 During the rewriting process, the set of processes that are involved must
-reguarly broadcast the edits they have added to (their copy of) the data
+regularly broadcast the edits they have added to (their copy of) the data
 $\mathcal{D}$. Such broadcasted edits must then be merged by the other processes
 into their respective local copies. This is required so that progress that is
 made by one process can be shared and expanded on top of by other processes.

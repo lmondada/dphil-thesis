@@ -56,7 +56,7 @@ $$x_\delta \lor (\neg x_{\delta'}),$$ {{% /centered %}}
 for all $\delta,\delta' \in \mathcal{D}$ such that
 $\delta' \in children(\delta)$.
 
-For any set of edits $\mathcal{D}$, the conjuction of all constraints presented
+For any set of edits $\mathcal{D}$, the conjunction of all constraints presented
 above, i.e. the edit compatibility constraints
 {{% refcentered "edit-compatibility-constraint" %}} and the parent-child
 relation constraints {{% refcentered "parent-child-constraint" %}}, defines a
@@ -96,7 +96,7 @@ flattened history $G' = flat(D)$, then the 'hardness' can be encapsulated within
 an instance of a SMT problem (satisfiability modulo theories @Nieuwenhuis2006
 @Barrett2018), a well-studied generalisation of SAT problems for which highly
 optimised solvers exist @Moura2008 @Sebastiani2015. A class of cost functions
-for which the SMT encoding of the optimisation problem becomes particuarly
+for which the SMT encoding of the optimisation problem becomes particularly
 simple are _local_ cost functions:
 
 <!-- prettier-ignore -->

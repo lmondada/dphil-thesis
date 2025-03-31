@@ -184,7 +184,7 @@ need for continuously parametrised gates and discretises the problem space.
 
 ### Leveraging quantum properties for compilation
 
-We have introduces the universality, reversibility and no-cloning properties of
+We have introduced the universality, reversibility and no-cloning properties of
 quantum computations for a reason: these laws of physics that govern quantum
 computations and are absent from classical computer science are an excellent
 foundation for developing quantum-specific computation optimisations and
@@ -192,8 +192,8 @@ compilation techniques in general.
 
 As we have just discussed, the wide variety of universal gate sets are degrees
 of freedom that the compiler can use. Using universality to translate
-computations between universal gate sets, enabling programmers to seemlessly
-target different hardware, is one of quantum compilers's first and most
+computations between universal gate sets, enabling programmers to seamlessly
+target different hardware, is one of quantum compiler's first and most
 fundamental functions @Sivarajah2020.
 
 Reversibility is also a source of flexibility when expressing quantum programs.

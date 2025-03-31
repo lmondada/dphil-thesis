@@ -24,7 +24,7 @@ our benchmarks in this section do not make any of these simplifying assumptions.
 Our results below give empirical evidence that a significant performance
 advantage can be obtained regardless.
 
-**Implementation.**&emsp; We provide an open source implementation in Rust of
+**Implementation.**&emsp; We provide an open-source implementation in Rust of
 pattern independent matching using the results of this chapter, available on
 [GitHub](https://github.com/lmondada/portmatching). The implementation works for
 weighted or unweighted port graphs---of which typed minIR graphs are a special

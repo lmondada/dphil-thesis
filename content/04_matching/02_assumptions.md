@@ -51,7 +51,7 @@ correspond to values $u_i$ and $u_{i+1}$ in $use(o) \sqcup def(o)$).
 
 #### Linearity assumption
 
-We impose a major restrictions on the general case of minIR graphs, namely that
+We impose a major restriction on the general case of minIR graphs, namely that
 all types in the type system $\Sigma$ must be linear[^graphiso]. Using this
 assumption, every value has exactly one use and one define. As a result, all
 linear paths are disjoint and form a partition of the values of the graph. They
@@ -210,7 +210,7 @@ define operation is missing (i.e. it is a boundary value in a minIR subgraph).
 
 We will simplify refer to hypergraphs that satisfy the above assumptions as
 _graphs_. In the unique instance of this chapter where a graph that does not
-satisfy this construction is refered to, we will specifically call it a _simple
+satisfy this construction is referred to, we will specifically call it a _simple
 graph_.
 
 We conclude with the following notable bound on graph width.

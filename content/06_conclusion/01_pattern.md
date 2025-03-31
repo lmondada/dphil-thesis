@@ -107,6 +107,6 @@ With this proposal, it would appear possible to combine the fast state
 automaton-based approach of {{% reflink "chap:matching" %}} and its scaling to a
 very large number of patterns, with a more expressive pattern language and
 support for non-linear types as well as persistent graph rewriting. An
-implementation of this is currently being worked on in the open source
+implementation of this is currently being worked on in the open-source
 portmatching project, available on
 [GitHub](https://github.com/lmondada/portmatching).

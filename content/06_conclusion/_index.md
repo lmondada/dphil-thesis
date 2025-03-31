@@ -2,7 +2,7 @@
 title = "Future Work and Conclusions"
 layout = "chapter"
 sort_by = "weight"
-weight = 7
+weight = 6
 slug = "chap:conclusion"
 +++
 
@@ -10,7 +10,7 @@ The time has now come to conclude this thesis. In summary, our claim is that
 given
 
 1. the modularity and expressiveness that quantum compilers will require to
-   simultaneoulsy express higher level abstractions, hardware primitives and
+   simultaneously express higher level abstractions, hardware primitives and
    interleaved quantum classical computation (cf.
    {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}), and
 2. the challenge of scaling up quantum programs sizes to make the most of the
@@ -47,7 +47,7 @@ optimisation of quantum computations is framed as a search problem over the
 space of all reachable graphs in the GTS.
 {{% reflink "upper" "chap:parallel" %}} introduced a novel confluently
 persistent data structure that uses the structure of the rewrite search space to
-speedup its exploration. In typical applications, the _factorised_ search space
+speed up its exploration. In typical applications, the _factorised_ search space
 thus obtained is conjectured to grow linearly with the size of the input---an
 exponential improvement over the naive search strategy, without which GTS-based
 compiler optimisations on real-world computations with thousands of gates will
@@ -64,7 +64,7 @@ Combined, these contributions lay the groundwork for a quantum compiler platform
 that is **modular** in the hardware primitives, high-level programming
 abstractions and transformation rules that it can model, and **scalable** in the
 size of the computation and number of rules that it can match and optimise over.
-Work on such a platform is well underway within the TKET2 open source compiler,
+Work on such a platform is well underway within the TKET2 open-source compiler,
 available on [GitHub](https://github.com/CQCL/tket2).
 
 Further work could take many directions. The graph transformation semantics of
@@ -80,12 +80,12 @@ on the properties of the GTS and graph domain. In both cases, a more in-depth
 study of how the runtime of actual implementations depend on properties of the
 inputs would be very informative. We suspect from anecdotal observations that
 many assumptions we have imposed can be relaxed with little impact on
-peformance---conversely, there may be large variations in runtimes for different
+performance---conversely, there may be large variations in runtimes for different
 regimes within the asymptotic guarantees of our results.
 
 Another crucially important question that this thesis has not addressed is the
 choice of transformation rules. Beyond the results of @Xu2022 and @Xu2023 that
-we have refered to repeatedly throughout this corpus, very recent work by Amy
+we have referred to repeatedly throughout this corpus, very recent work by Amy
 and Lunderville @Amy2025 has present what amounts to the first inroads into
 hybrid classical-quantum optimisations. Developing comprehensive transformation
 rules for hybrid computations would present significant a significant advance
