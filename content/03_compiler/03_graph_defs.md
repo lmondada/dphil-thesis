@@ -295,14 +295,14 @@ for hyperedges and wires for values, we obtain a more familiar representation:
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/minir-graph.svg"
-    width="60%"
+    width="58%"
     enlarge="full"
     caption="An equivalent representation of the computation above, now representing operations as boxes and values as wires. The arrow direction indicates the flow from value definition to value use(s). Dashed arrows have been changed to point to regions instead of individual operations."
 %}}
 <!-- prettier-ignore-end -->
 
-The two representations are equivalent, but the rewriting semantics are clearest
-when viewing values as vertices.
+The two representations are equivalent, but the rewriting semantics are most
+explicit when viewing values as vertices.
 
 ### Type graph
 
@@ -312,8 +312,8 @@ well-defined. In the example above, each operation must have a fixed number of
 inputs and outputs, `regiondef` operations must have a nested region with
 exactly one `in` and one `out` operation, etc. This is best captured by a _type
 system_---the last missing part in our graph formalism. Graph-based modelling
-frameworks admit an elegant approach to typing, which is given by graph
-morphisms and type graphs.
+frameworks admit an elegant approach to typing, given by graph morphisms and
+type graphs.
 
 Graph morphisms on hypergraphs are maps of vertices and hyperedges that preserve
 the structure of the graph, i.e. the endpoints of mapped hyperedges must be the

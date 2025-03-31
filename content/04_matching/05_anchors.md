@@ -1,5 +1,5 @@
 +++
-title = "Enumerating all PSGs"
+title = "Enumerating all path-split graphs"
 layout = "section"
 weight = 5
 slug = "sec:anchors"
@@ -334,11 +334,12 @@ be the length of the values returned by the three recursive calls to
 arguments $H$, $r$ and $S$. Let $c_a, c_b$ and $c_c$ be the three neighbours of
 $r$ in $H$. If the child $c_x$ does not exist, then one can set $w_x = 0$ and it
 can be ignored---the argument below still holds in that case. The definition of
-`seen0` on line 20 in `AllAnchors` coincides with the update to the variable `seen_paths` on
-line 18 of `CanonicalAnchors`; similarly, the updates to `G` on lines 14 and 18
-of `AllAnchors` are identical to the lines 11 and 15 of `CanonicalAnchors` that
-update `H`. Let the updated `seen_paths` be the set $S_a$, the updated `G` be
-$G_a$ and the updated $H$ be $H_a$, with $H_a \subseteq G_a$.
+`seen0` on line 20 in `AllAnchors` coincides with the update to the variable
+`seen_paths` on line 18 of `CanonicalAnchors`; similarly, the updates to `G` on
+lines 14 and 18 of `AllAnchors` are identical to the lines 11 and 15 of
+`CanonicalAnchors` that update `H`. Let the updated `seen_paths` be the set
+$S_a$, the updated `G` be $G_a$ and the updated $H$ be $H_a$, with
+$H_a \subseteq G_a$.
 
 As every anchor operation reduces the number of unseen linear paths by exactly
 one (using the simplifying assumptions of

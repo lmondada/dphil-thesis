@@ -345,7 +345,7 @@ In the scenario where a first party (Alice) wants to send a one-qubit quantum
 state to Bob, they can achieve that by creating a Bell pair state, the first
 qubit of which is given to Bob and the second to Alice. When Alice then gets in
 possession of another qubit $\ket \psi$ whose data she wants to transmit to Bob,
-she can achieve that by executing $\text{Bell}^{-1}$, measuring her two qubits
+she can achieve that by executing $\textit{Bell}^{-1}$, measuring her two qubits
 and communicating the (classical) measurement outcomes to Bob. Bob can perform
 the necessary corrections and will then have state $\ket \psi$.
 

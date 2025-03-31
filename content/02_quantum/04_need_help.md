@@ -30,7 +30,7 @@ in mind: specifically, with the assumption that at any one time, there are
 exactly $n$ (for some fixed value of $n$) resources available for computation.
 This for example means that in the following program
 
-{{% figure src="svg/overwrite-bit.svg" width="40%" nobg="true" %}}
+{{% figure src="svg/overwrite-bit.svg" width="30%" nobg="true" %}}
 
 in which two measurements write to the same classical bit, it would be
 impossible to append a gate controlled on the first measurement outcome after

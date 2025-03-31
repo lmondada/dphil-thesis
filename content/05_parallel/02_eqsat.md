@@ -139,11 +139,11 @@ representation we presented in {{< reflink "sec:graph-defs" >}}---but also the
 quantum circuit representation---captures quantum computations, not as a term,
 but in a directed acyclic graph (DAG) structure.
 
-A generalisation of equality saturation to computational DAGs was studied in
-@Yang2021 in the context of optimisation of computational graphs for deep
+A generalisation of equality saturation to computation DAGs was studied in
+@Yang2021 in the context of optimisation of computation graphs for deep
 learning. Their approach is based on the observation that the computation of a
-(classical) computational DAG can always be expressed by a term for each output
-of the computation. Consider, for example, the simple computation that takes two
+(classical) computation DAG can always be expressed by a term for each output of
+the computation. Consider, for example, the simple computation that takes two
 inputs `(x, y)` representing 2D cartesian coordinates and returns its equivalent
 in polar coordinates `(r, θ)`.
 
@@ -163,7 +163,7 @@ invariant.
 This duplicating and merging of data is fundamentally at odds with the
 constraints we must enforce on linear data, such as quantum resources. Each
 operation (or data) of a DAG that is split into multiple terms introduces a new
-constraint that must be imposed on the extraction algorithm: a computational DAG
+constraint that must be imposed on the extraction algorithm: a computation DAG
 will only satisfy the _no-discarding_ theorem ({{% reflink "sec:basics" %}}) for
 linear values if, for each split operation it contains, it either contains all
 or none of its split components.

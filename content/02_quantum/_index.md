@@ -10,7 +10,7 @@ Many (too many?) introductions to quantum computing have been written, so we
 will refrain from adding another entry to the collection. Instead, beyond the
 absolute basics, our focus is on the expressive power and _syntax_ of quantum
 programs. This demystifies quantum compilation into program transformation
-problems that amount to traditional compiler methods that will be very familiar
+problems, amounting to traditional compiler methods that will be very familiar
 to computer scientists.
 
 In this chapter, we lay the groundwork for this thesis by introducing what

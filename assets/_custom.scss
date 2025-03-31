@@ -346,7 +346,11 @@ details.proof-details {
             margin-bottom: 0;
         }
     }
+}
 
+.proof,
+.definition-block,
+.proposition-block {
     &[data-split-to] {
         border-bottom: none;
     }

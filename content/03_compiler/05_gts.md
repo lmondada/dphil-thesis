@@ -271,8 +271,7 @@ equivalence class could capture. Any valid transformation will preserve minIR
 constraints such as linearity, whilst allowing the copying and discarding of
 non-linear values, which arise from non injective boundary maps.
 
-<!-- prettier-ignore-start -->
-{{% hint info %}}
-TODO: figure
-{{% /hint %}}
-<!-- prettier-ignore-end -->
+{{% figure src="svg/eq-classes.svg"
+           enlarge="full" width="85%"
+           caption="Two examples of minIR equivalence classes. MinIR programs are expressed as hybrid quantum circuits; single lines represent qubit values, double lines are classical (solid for booleans and dashed for floats). The left-hand side shows a case where the classical inputs $\alpha$ and $\beta$ may be mapped non-injectively: transformations from C to A and B are allowed as the $\alpha = \beta$ input may be copied, but the inverse transformations are not. On the right-hand side, the transformation from F to D or E would be non-surjective on its outputs and correspond to discarding the boolean $b$. The inverse transformations are impossible as F does not produce a value for $b$."
+%}}

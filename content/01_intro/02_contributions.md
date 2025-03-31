@@ -12,20 +12,21 @@ concepts on which the rest of the thesis is built. Aside from a short
 introduction to quantum computations ({{% reflink "sec:basics" %}}) and a survey
 of the major quantum circuit optimisation techniques
 ({{% reflink "sec:quantum-sota" %}}), this chapter makes two observations that
-impart a research direction for the rest of the thesis:
+impart a research direction to the rest of the thesis:
 
 1. The emergence of hybrid quantum-classical computations is rendering the
    quantum circuit obsolete as the main representation of quantum computations
    within compilers ({{% reflink "sec:hybrid" %}}).
 2. The best optimisation outcomes will be obtained by combining classical and
    quantum compiler optimisations. The way to achieve this is by adopting
-   abstractions that are interoperable with classical compiler infrastructure.
+   abstractions that are interoperable with classical compiler infrastructure
+   ({{% reflink "sec:need-help" %}}).
 
 #### A graph transformation formalism for quantum computations
 
 {{% reflink "upper" "chap:compiler" "chap:matching" "chap:parallel" %}} form the
 core of this thesis and present our main contributions. The results in
-{{% reflink "chap:compiler" %}} are a crucial stepping stone for the rest of the
+{{% reflink "chap:compiler" %}} are crucial stepping stones for the rest of the
 thesis. {{% reflink "upper" "chap:matching" "chap:parallel" %}} meanwhile
 present our most significant contributions to the state of the art.
 
@@ -80,7 +81,7 @@ and computational biology @Danos2007 @Boutillier2017, no algorithm is known with
 provable sub-exponential worst-case complexity bounds. These results were
 published in @Mondada2024.
 
-The proven complexity bound applies to computations with only linear
+The proved complexity bound applies to computations with only linear
 values[^otherwisehard], of which quantum circuits are a special case. The result
 is expressed in terms of maximal pattern _width_ $w$ and _depth_ $d$, two
 measures of pattern size defined in
@@ -112,8 +113,7 @@ where $c = 6.75$ is a constant.
 The runtime complexity is dominated by an exponential scaling in maximal pattern
 width $w$. Meanwhile, the advantage of our approach over matching one pattern at
 a time grows with the number of patterns $\ell$. It is thus of particular
-interest for matching numerous small width patterns. In the case of quantum
-circuits, the width of the patterns is given by the number of qubits.
+interest for matching numerous small width patterns.
 
 We illustrate this point by comparing our approach to a standard algorithm that
 matches one pattern at a time @Jiang1998, with runtime complexity
@@ -126,6 +126,11 @@ crude lower-bound for $N_{w,d}$ derived in {{< refappendix "sec:ellbound" >}},
 we obtain a computational advantage for our approach when
 
 $$\Theta\left(\frac{c^w}{w^{\frac32}}\right) < \ell < \left(\frac{w}{2e}\right)^{\Theta(w d)} \leq N_{w, d}.$$
+
+In the case of quantum circuits, the width of the patterns is given by the
+number of qubits. The low-qubit regime where our approach shines coincides
+exactly with the typical applications of GTSs in quantum compilation: in @Xu2022
+and @Xu2023, all rules used have at most 4 qubits.
 
 We present benchmarks on a real world dataset of 10'000 quantum circuits in
 {{% reflink "sec:benchmarks" %}}, showing a 20x speedup over a leading C++

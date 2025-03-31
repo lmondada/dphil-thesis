@@ -12,7 +12,7 @@ given
 1. the modularity and expressiveness that quantum compilers will require to
    simultaneously express higher level abstractions, hardware primitives and
    interleaved quantum classical computation (cf.
-   {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}), and
+   {{< reflink "sec:hybrid" "sec:need-help" "sec:graph-defs">}}),
 2. the challenge of scaling up quantum programs sizes to make the most of the
    computational capabilities of upcoming hardware (cf.
    {{< reflink "sec:compilation" "sec:quantum-sota" >}}),
@@ -55,10 +55,11 @@ be infeasible.
 
 In both cases, the guarantees that linear values provide and that minIR enforces
 translate into asymptotic runtime guarantees that cannot be derived otherwise.
-In the absence of linearity, pattern matching becomes an NP-hard problem;
-meanwhile, the graph rewriting space would grow super-exponentially and require
-pruning heuristics for the extraction problem, as explored in @Yang2021 and
-@Barbulescu2024.
+In the absence of linearity, the pattern matching of
+{{% reflink "chap:matching" %}} becomes an NP-hard problem; meanwhile, the graph
+rewriting space considered in {{% reflink "chap:parallel" %}} would grow
+super-exponentially and require pruning heuristics for the extraction problem,
+as studied in @Yang2021 and @Barbulescu2024.
 
 Combined, these contributions lay the groundwork for a quantum compiler platform
 that is **modular** in the hardware primitives, high-level programming
@@ -80,8 +81,8 @@ on the properties of the GTS and graph domain. In both cases, a more in-depth
 study of how the runtime of actual implementations depend on properties of the
 inputs would be very informative. We suspect from anecdotal observations that
 many assumptions we have imposed can be relaxed with little impact on
-performance---conversely, there may be large variations in runtimes for different
-regimes within the asymptotic guarantees of our results.
+performance---conversely, there may be large variations in runtimes for
+different regimes within the asymptotic guarantees of our results.
 
 Another crucially important question that this thesis has not addressed is the
 choice of transformation rules. Beyond the results of @Xu2022 and @Xu2023 that

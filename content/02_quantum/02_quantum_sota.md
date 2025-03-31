@@ -38,19 +38,21 @@ performance of compiled programs, the quantum world must often contend with
 simplified noise and architecture models to design proxy metrics, given the
 limited scale and availability of current quantum devices.
 
+<!-- prettier-ignore -->
 The quantum compilers research community has mostly coalesced around cost
 functions based on gate count statistics @Karuppasamy2025. Counting a type of
 gate is a simple and popular choice. Making some additional assumptions on the
 gate parallelism of future hardware, one may also consider cost functions based
 on gate depth, i.e. the length of the longest chain of gates that cannot be run
-simultaneously @Selinger*2013 @Basilewitsch2024. In spite (or precisely
-\_because*) of their simplicity, gate counts serve well as cost functions in
+simultaneously @Selinger_2013 @Basilewitsch2024. In spite (or precisely
+_because_) of their simplicity, gate counts serve well as cost functions in
 many quantum compilation use cases. Most circuit optimisations target one of two
 hardware regimes.
 
+<!-- prettier-ignore -->
 On most current hardware architectures, the major challenge is achieving high
 accuracy on entangling operations, i.e. quantum gates that make two or more
-qubits interact @Acharya2024 @Pino2021 @Koch*2007 @Blais_2007. In
+qubits interact @Acharya2024 @Pino2021 @Koch_2007 @Blais_2007. In
 superconducting qubit and ion trap architectures[^otherhard], for example, the
 gate set is typically composed of one and two-qubit gate types, with error rates
 dominated by an order of magnitude by the latter @Steiger_2018 @Sivarajah2020.

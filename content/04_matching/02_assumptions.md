@@ -142,7 +142,7 @@ pattern embeddings. We do not enforce that boundary values must be in the same
 regions or that parent-child relations cannot be boundary values. Similarly to
 convexity, we defer checking these properties to a post-processing step.
 
-#### Further (harmless) assumptions
+#### Further assumptions (harmless)
 
 We will further simplify the problem by making presentation choices that do not
 imply any loss of generality. First of all, we assume that all patterns have the

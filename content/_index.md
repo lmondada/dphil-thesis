@@ -33,7 +33,7 @@ Hilary 2025
 
 <div class="abstract">
 
-## Abstract
+## Abstract (TODO: rewrite)
 
 This thesis addresses the critical challenges in developing scalable and modular
 quantum compilers necessitated by the vast diversity of quantum hardware
