@@ -75,9 +75,10 @@ bound independent of the number of patterns being matched, achieved using a
 one-off pre-computation. This is to our knowledge the first pattern matching
 algorithm for quantum circuits that does not depend on the number of patterns
 being matched. Whilst similar multi-pattern matching techniques have been
-explored in other domains such as RETE networks and computational biology, no
-algorithm is known with provable sub-exponential worst-case complexity bounds.
-These results were peer-reviewed and published in @Mondada2024.
+explored in other domains such as RETE networks @Forgy1982 @Varro2013 @Ian2003
+and computational biology @Danos2007 @Boutillier2017, no algorithm is known with
+provable sub-exponential worst-case complexity bounds. These results were
+published in @Mondada2024.
 
 The proven complexity bound applies to computations with only linear
 values[^otherwisehard], of which quantum circuits are a special case. The result
@@ -134,47 +135,82 @@ implementation of pattern matching for quantum circuits.
 #### Confluently persistent graph rewriting
 
 Our second major contribution, in **{{% reflink "chap:parallel" %}}**, presents
-a novel data structure $\mathcal{D}$ to represent the space $\mathcal{G}$ of all
-graphs reachable from an input within a GTS. We show in
+a novel data structure $\mathcal{D}$ that compresses the representation of the
+space $\mathcal{G}$ of all graphs reachable from an input within a GTS. We call
+$\mathcal{D}$ the _factorised search space_ of $\mathcal{G}$. We show in
 {{% reflink "sec:factor-gts" %}} that under mild assumptions on the GTS and
-input, there is an exponential separation between the size of $\mathcal{D}$ and
-the size of the rewrite space $\mathcal{G}$ that it encodes.
+input, there is an exponential complexity separation in the input size between
+the size of the factorised search space $\mathcal{D}$---which admits an
+asymptotically _linear_ upper bound---and the size of the rewrite space
+$\mathcal{G}$ that it encodes---which grows at least exponentially. We are not
+aware of any previous work that explores compressed representations of
+$\mathcal{G}$.
 
-enables graph rewriting that is both _persistent_---i.e. with immutable data and
-fast non-destructive updates---and _confluent_---i.e. multiple changes can be
-merged and combined.
+$\mathcal{D}$ is furthermore the first _confluently persistent_ data structure
+@Driscoll1994 @Fiat2003 @Collette2012: it performs non-destructive rewrites on
+immutable graph objects by maintaining an explicit history of all graph rewrites
+and their dependencies. This allows concurrent application of multiple rewrites
+and can merge rewritten graphs that were obtained independently. This represents
+an exciting development in its own right that opens the door to functional
+programming and massively parallelised approaches to graph rewriting (see
+{{% reflink "sec:conclusion-parallel" %}}).
+
+The intuition behind the exponential reduction in search space size is as
+follows: if rewrites $r_1, \dots, r_n$ apply to disjoint subgraphs of a common
+graph $G$, then $\mathcal{D}$ will be of size $n$, storing the set possible
+rewrites, rather than the up to $2^n$ distinct graphs in $\mathcal{G}$ obtained
+by applying a subset of the rewrites. To generalise to arbitrary rewrites, the
+data structure $\mathcal{D}$ must keep track of the dependencies and overlaps
+between rewrites and update these as more rewrites are added to $\mathcal{D}$.
+
+A lot of parallels can be drawn between this approach and _equality saturation_,
+a technique for term rewriting with applications in classical compilers. We
+explore these connections in {{% reflink "sec:eqsat" %}}.
 
 Unlike the results of {{% reflink "chap:matching" %}}, the construction and
 bounds proven in {{% reflink "chap:parallel" %}} can be applied to a wide range
-of graph rewriting domains.
+of graph rewriting domains. It has particularly significant implications for
+applications of GTSs that are unable to derive rewriting strategies from first
+principles, and hence have to resort to an exhaustive (or heuristic) exploration
+of the rewrite space $\mathcal{G}$. They can proceed as follows:
 
-This chapter contributes to this goal by introducing a data structure for the
-_concurrent_ exploration of the state space of GTSs. As the name implies, this
-will allow for a parallelised exploration of the state space; but more
-importantly, we will see that it significantly reduces the size of the total
-search space, whilst keeping the solution space unchanged.
+1. _Exploration phase_. Construct the factorised search space $\mathcal{D}$ by
+   finding and applying rewrites, in time proportional to $|\mathcal{D}|$. With
+   our results, this results in an exponential speedup over the naive
+   exploration of $\mathcal{G}$ ({{% reflink "sec:persistent-ds" %}}).
 
-Our proposal draws much from the design and techniques of classical compilers
-(cf. {{< reflink "sec:graph-defs" "sec:eqsat" >}}). Quantum, however,
-distinguishes itself in two ways, forming the cornerstones of our design. The
-focus on small, local graph transformations for quantum optimisation is
-justified by the groundbreaking work by Clément et al @Clement2023 @Clement2024.
-They showed that the rich algebraic structure of quantum circuits can be fully
-captured and expressed using local rewrite rules[^eqcomp]. Our compiler can
-therefore restrict program manipulation to local transformations without losing
-expressiveness. This design choice in turn opens the door for large scale
-optimisation and compilation on parallel or even distributed hardware.
+2. _Extraction phase_. Unlike the case of $\mathcal{G}$ where the optimal
+   solution is an element $G_{opt} \in \mathcal{G}$, constructing the optimal
+   solution $\mathcal{D} \rightarrow G_{opt}$ in $\mathcal{D}$ is a non-trivial
+   extraction problem. We show in {{% reflink "sec:extraction" %}} that the
+   extraction can be expressed as a boolean satisfiability (SAT) problem;
+   depending on the cost function, the optimisation can then be encoded as a
+   side condition on SAT or by a generalisation of the problem to Satisfiability
+   Modulo Theories (SMT).
 
-Equally important, the linear types of quantum computing (cf.
-{{< reflink "sec:graph-defs" >}}) significantly constrain the space of possible
-program transformations. Our contributions in this thesis highlight how these
-restrictions can be leveraged to create quantum-specific variants of classical
-compilation techniques that scale much more favourably. This makes approaches
-that are too expensive for classical compilers (cf. {{< reflink "sec:eqsat" >}})
-perfectly feasible[^unfeasible] in the context of quantum compilation.
+In the worst case, SAT and SMT problems will require exponential time to solve
+@Cook1971 @Moskewicz2001 @Biere2021, thus cancelling the exponential compression
+of the search space $\mathcal{G} \rightarrow \mathcal{D}$. However, SAT and SMT
+are standardised problems for which heavily optimised solvers and optimisers
+have been developed @Moura2008 @Sebastiani2015. We expect that the instances of
+SAT and SMT that encode the extraction problem will scale well in practice:
 
-[^eqcomp]:
-    More precisely, they show that any two equivalent quantum circuits can be
-    transformed into each other using a finite number of local rewriting rules.
+- Clauses in the problem encode _local_ properties that SAT solvers are
+  well-suited to solve @Zulkoski2018&#x200B;: the boolean variables represent
+  rewrites, which only impose restrictions on other rewrites that apply in the
+  same neighbourhood of the graph.
+- Furthermore, in quantum compilation applications, $\mathcal{D}$ can be
+  _sparsified_: most rewrties in $\mathcal{D}$ do not change the cost function
+  (think of IR transformations that reorder operations but do not reduce the
+  runtime) and thus do not need to be encoded in the SAT problem.
 
-[^unfeasible]: Or at least, less unfeasible.
+#### Conclusion
+
+The thesis concludes in {{% reflink "chap:conclusion" %}} with a discussion on
+how our contributions serve our overall goal of a scalable and modular quantum
+compiler platform. We discuss in particular two extensions of our work that we
+see as particularly promising: the generalisation of fast multi-pattern matching
+to non-linear values and to the persistent data structure $\mathcal{D}$ of
+{{% reflink "chap:parallel" %}} ({{% reflink "sec:conclusion-pm" %}}) and the
+deployment of confluently persistent graph rewriting to a massively parallel
+distributed compute architecture ({{% reflink "sec:conclusion-parallel" %}}).

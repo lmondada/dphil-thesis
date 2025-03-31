@@ -23,9 +23,10 @@ given
 graph transformation systems (GTS) are uniquely positioned to serve as the
 backbone of a quantum compilation framework.
 
-To this aim, {{% reflink "chap:compiler" %}} presented a graph-based compiler IR
-with explicit support for linear types. To go along with it, we proposed the
-first formalisation of graph transformation semantics that preserve linearity.
+To this aim, {{% reflink "chap:compiler" %}} presented minIR, a graph-based
+compiler IR with explicit support for linear types. To go along with it, we
+proposed the first formalisation of graph transformation semantics that preserve
+linearity.
 
 {{% reflink "upper" "chap:matching" "chap:parallel" %}} built on this foundation
 and solved two critical scaling problems for the adoption of GTS techniques in
@@ -51,6 +52,13 @@ thus obtained is conjectured to grow linearly with the size of the input---an
 exponential improvement over the naive search strategy, without which GTS-based
 compiler optimisations on real-world computations with thousands of gates will
 be infeasible.
+
+In both cases, the guarantees that linear values provide and that minIR enforces
+translate into asymptotic runtime guarantees that cannot be derived otherwise.
+In the absence of linearity, pattern matching becomes an NP-hard problem;
+meanwhile, the graph rewriting space would grow super-exponentially and require
+pruning heuristics for the extraction problem, as explored in @Yang2021 and
+@Barbulescu2024.
 
 Combined, these contributions lay the groundwork for a quantum compiler platform
 that is **modular** in the hardware primitives, high-level programming

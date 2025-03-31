@@ -208,7 +208,8 @@ modelled in the extraction phase by an integer linear programming (ILP) problem.
 However, @Yang2021 observed that this approach causes the term graph to encode a
 solution space that grows super-exponentially with rewrite depth (see Fig. 7 in
 @Yang2021), rendering the ILP extraction problem computationally intractable
-beyond 3 subsequent rewrites.
+beyond 3 subsequent rewrites. Recent work has attempted to tackle this issue
+using reinforcement learning @Barbulescu2024.
 
 #### Linearity-preserving rewrites are an exponentially small subset
 
