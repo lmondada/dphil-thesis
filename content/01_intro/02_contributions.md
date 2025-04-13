@@ -132,7 +132,7 @@ number of qubits. The low-qubit regime where our approach shines coincides
 exactly with the typical applications of GTSs in quantum compilation: in @Xu2022
 and @Xu2023, all rules used have at most 4 qubits.
 
-We present benchmarks on a real world dataset of 10'000 quantum circuits in
+We present benchmarks on a real world dataset of 10,000 quantum circuits in
 {{% reflink "sec:benchmarks" %}}, showing a 20x speedup over a leading C++
 implementation of pattern matching for quantum circuits.
 

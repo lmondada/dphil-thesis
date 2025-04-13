@@ -90,11 +90,12 @@ a copy of the original state before modifying it!
 {{% /hint %}}
 <!-- prettier-ignore-end -->
 
-This would allow us to do more than one computation from a temporary value. No,
-big no-no! This is a profound restriction (or property, depending on your point
-of view) with deep roots in the physics of quantum mechanics. This principle,
-known as the no-cloning theorem, is one of three fundamental properties of
-quantum physics that quantum computing builds upon.
+This would allow us to do more than one computation from a temporary value. It
+turns out that copying is a big NO in quantum computing. It is a profound
+restriction (or property, depending on your point of view) with deep roots in
+the physics of quantum mechanics. This principle, known as the no-cloning
+theorem, is one of three fundamental properties of quantum physics that quantum
+computing builds upon.
 
 ### The physical constraints of quantum computation
 
@@ -102,7 +103,7 @@ quantum physics that quantum computing builds upon.
 
 The no-cloning principle @Wootters1982 provides a formal foundation for the
 vague statement _"qubits live forever"_ we made earlier. It is a fundamental
-tenant of quantum information, deserving a more rigorous treatment than we are
+tenet of quantum information, deserving a more rigorous treatment than we are
 giving it here. We recommend that the curious reader refers themselves to more
 respectful references such as @Nielsen2016.
 
@@ -155,10 +156,11 @@ we consider that every operation must be reversible.
 
 #### Universality
 
+<!-- prettier-ignore -->
 Finally, a third distinguishing property of quantum computation is how
 arbitrarily large computations can be generated from single-qubit gates and
-pairwise entangling interactions between qubits (two-qubit gates) @Barenco*1995.
-It is furthermore the case that the choice of a \_fixed* two-qubit gate, along
+pairwise entangling interactions between qubits (two-qubit gates) @Barenco_1995.
+It is furthermore the case that the choice of a _fixed_ two-qubit gate, along
 with single-qubit gates, is sufficient to generate any arbitrary quantum
 computation. We call a set of gates that can be used to construct any arbitrary
 quantum computation a **universal gate set**.
@@ -270,7 +272,7 @@ practice. These have standard names that are widely used in the field. The most
 common single qubit gates are arguably the Hadamard, represented in circuits by
 a $H$ box, and the $X$, $Y$ and $Z$-axis rotations, drawn as $R_x(\theta)$,
 $R_y(\theta)$ and $R_z(\theta)$ boxes respectively. Note that rotation gates are
-parametrised by an angle $\theta \in [0, 4\pi)$ that must be specified to
+parametrised by an angle $0 \leqslant \theta < 4\pi$ that must be specified to
 execute the rotation.
 
 There are also commonly used multi-qubit gates. For these, it becomes slightly

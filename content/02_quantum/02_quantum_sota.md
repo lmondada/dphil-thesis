@@ -56,7 +56,7 @@ qubits interact @Acharya2024 @Pino2021 @Koch_2007 @Blais_2007. In
 superconducting qubit and ion trap architectures[^otherhard], for example, the
 gate set is typically composed of one and two-qubit gate types, with error rates
 dominated by an order of magnitude by the latter @Steiger_2018 @Sivarajah2020.
-Circuit optimisations for computations on such \_noisy* hardware thus often
+Circuit optimisations for computations on such _noisy_ hardware thus often
 define cost functions based on the number of two-qubit gates---typically the
 $\mathit{CX}$ gate, though many other two-qubit gates could be used
 equivalently.
@@ -191,9 +191,9 @@ but as we have seen, it suffers from severe scaling problems in the number of
 qubits. The problem is not so much that quantum computations require exponential
 space to be described _in the worst case_---after all, the space of all
 $n$-qubit unitaries $SU(2^n)$ is exponentially large. However, the set of
-unitaries implementable _in practice_ can only be a tiny subset
-$poly \subseteq SU(2^n)$[^su2n]---the set of unitaries that admit a
-polynomial-sized circuit representation.
+unitaries implementable _in practice_ can only be a tiny subset of
+$SU(2^n)$[^su2n]---the set of unitaries that admit a polynomial-sized circuit
+representation.
 
 [^su2n]:
     Polynomial-sized quantum circuits constitute a polynomial-dimensional

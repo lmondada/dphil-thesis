@@ -33,47 +33,45 @@ Hilary 2025
 
 <div class="abstract">
 
-## Abstract (TODO: rewrite)
+## Abstract
 
-This thesis addresses the critical challenges in developing scalable and modular
-quantum compilers necessitated by the vast diversity of quantum hardware
-architectures, the increasing complexity of quantum programs, and the emergence
-of hybrid quantum-classical computations. The central argument of this work is
-that **graph transformation systems (GTS)** provide a robust foundation for
-building such compiler platforms.
+As the capabilities of quantum hardware advance and their architectures become
+more complex, **quantum compilers** must evolve to optimise increasingly large
+programs and support a growing range of computational primitives. In particular,
+the emergence of **hybrid quantum-classical computations**, required for
+instance by implementations of quantum error correcting protocols, poses
+significant challenges to established quantum compilation techniques.
 
-To this aim, the thesis introduces **minIR**, a novel graph-based intermediate
-representation (IR) that explicitly supports linear types, enabling the unified
-modeling of both classical and quantum data within a single representation
-interoperable with classical compiler infrastructures. Furthermore, the thesis
-proposes the first formalization of graph transformation semantics for minIR
-that provably preserve the fundamental linearity constraints of quantum
-computation.
+This thesis argues that **graph transformation systems (GTS)** offer a
+principled foundation for compiler platforms that can express arbitrary hardware
+primitives and support computations over both quantum and classical data. To
+this end, it introduces a **graph-based intermediate representation** (IR), with
+support for **linear types** to model quantum data. This unifies graphical
+formalisms used for reasoning over quantum computations (such as the ZX
+calculus) with IR-based program transformation techniques from classical
+compiler design.
 
 Building upon this foundation, the thesis tackles two critical scaling problems
 hindering the adoption of GTS in quantum compilers. First, it presents an
-efficient **pattern matching algorithm** for minIR graphs that utilizes a
-pre-computed data structure, allowing for rapid identification of all pattern
-matches with a query time independent of the number of transformation rules.
-This approach involves a reduction of graph pattern matching to tree inclusion
-through the development of path-split graphs (PSGs) and their canonical
-representations. Second, the thesis introduces a **confluently persistent data
-structure** capable of exploring the exponentially large space of possible graph
-transformations in a GTS. This factorized search space offers a significant
-complexity advantage compared to naively exploring all reachable graphs. The
-thesis also discusses the problem of extracting optimal programs from this data
-structure, relating it to boolean satisfiability (SAT) problems.
+efficient **pattern matching algorithm** based on a precomputed data structure
+that achieves query times **independent of the number of transformation rules**
+in the system. This removes a key bottleneck in quantum **superoptimisers**,
+which optimise quantum programs using tens to hundreds of thousands of rules.
 
-The contributions of this thesis lay the groundwork for a **modular and scalable
-quantum compiler platform** capable of handling diverse hardware primitives,
-high-level programming abstractions, and a large number of optimization rules.
-The enforcement of linearity within minIR is shown to be crucial for achieving
-asymptotic runtime guarantees. Ongoing work integrating these techniques into
-the TKET2 open-source compiler further underscores their practical relevance.
-Finally, the thesis outlines promising avenues for future research, including
-enhancing the expressiveness of the pattern matching language and extending the
-application of the persistent data structure for direct pattern matching and
-distributed parallel graph rewriting.
+Second, the thesis introduces a **confluently persistent data structure** that
+enables efficient exploration of the GTS state space of possible graph
+transformations. This factorised search space offers an exponential complexity
+advantage in search space size and traversal time compared to naively exploring
+all reachable graphs. The thesis also discusses the problem of extracting
+optimal programs from this data structure, relating it to Boolean satisfiability
+(SAT) problems.
+
+Together, these contributions lay the groundwork for scalable, GTS-based quantum
+compilers and advance the integration of quantum and classical compilation
+techniques. The persistent data structure for graph rewriting also opens the
+door for **concurrent graph rewriting** in distributed systems, a technique that
+may have applications within the graph transformations field more broadly and
+merits further research.
 
 </div>
 
@@ -83,21 +81,26 @@ distributed parallel graph rewriting.
 <div class="acknowledgements"><div>
 
 <!-- prettier-ignore -->
-To my family that supported me throughout these years. Thank you thank you thank
-you.
+To my family who supported me throughout these years. I couldn’t have done it without you.
 { .gap }
 
+<!-- prettier-ignore -->
 To my friends and colleagues that made this adventure an unforgettable journey.
-Thank you to Aleks and the entire group in Oxford and thank you to Ross and your
-amazing crew at Quantinuum. I could name you all, but you know who you are.
-Thank you from the bottom of my heart.
+Thank you to Aleks and the entire group in Oxford.
+{ .gap }
+
+A special mention goes to Ross and the amazing crew at Quantinuum: Dan, Pablo
+and Thomas---thank you for proofreading---as well as Alan, Agustin, Alec,
+Callum, Craig, Doug, Ian, Lukas, Mark, Richie, Silas, Seyon, Will, Yao, and so
+many more! I look forward to continuing this incredible undertaking with you
+all.
 
 </div></div>
 
 <!-- prettier-ignore -->
 This document is also available as HTML
 [here](https://luca.mondada.net/dphil-thesis). If you are reading this document
-on a screen, you might find the experience much more pleasant in the browser (you can hover citations, resize the window, search the text and more).
+on a screen, you might find the experience much more pleasant in the browser (you can hover on citations, resize the window to your liking, search the document and more).
 { .online-version }
 
 </div>

@@ -30,7 +30,7 @@ more common within category theory (see string diagrams @Selinger2010 and their
 formalisation in the hypergraph category @Bonchi2022 @Wilson2022). We will see
 that this definition is particularly well-suited for graph transformation
 because the graph transformations of interest to us correspond to graph glueing
-semantics, i.e. akin to double pushout (DPO) rewrites.
+semantics, akin to double pushout (DPO) rewrites.
 
 At a minimum, a hypergraph is defined by a set of vertices $V$ and a set of
 (hyper) edges $E \subseteq V^\ast$---we will always consider hypergraphs where

@@ -52,17 +52,19 @@ $$P^{-1}(\delta) = \left\{\delta_c \in \mathcal{D} \mid \delta \in P(\delta_c)\r
 
 A rewrite $r = (G_R, V^-, \mu)$ that applies to a replacement graph of an edit
 $\delta_p$, i.e. $V^- \subseteq V(\delta_p)$ immediately defines a valid edit
-$\delta := r$. In that case, $\delta_r$ has a unique parent
+$\delta_r := r$. In that case, $\delta_r$ has a unique parent
+$$P(\delta_r) = \{ \,\delta_p\, \}.$$
 
-$$P(\delta) = \{ \,\delta_p\, \}.$$
-
-Confluent persistence also requires the notion of _merges_ of versions of the
-data. Rather than handling merges of versions of the data structure explicitly,
-an edit $\delta \in \mathcal{D}$ can define graph mutation operations that apply
-on collections of edits $P \subseteq \mathcal{D}$---the resulting mutation is
-equivalent to explicitly creating a merged version of the versions in $P$,
-followed by the desired rewrite. In this case, the parents of $\delta$ are
-precisely the set $P = P(\delta)$.
+Creating an edit $\delta_r$ from a rewrite $r$ is the simplest type of data
+mutation that can be recorded in $\mathcal{D}$. For $\mathcal{D}$ to be a
+confluently persistent data structure, it must also be allowed to _merge_
+mulitple data mutations together. Rather than handling merges of versions of the
+data structure explicitly, an edit $\delta \in \mathcal{D}$ can define graph
+mutation operations that apply on collections of edits
+$P \subseteq \mathcal{D}$---the resulting mutation is equivalent to explicitly
+creating a merged version of the versions in $P$, followed by the desired
+rewrite. In this case, the parents of $\delta$ are precisely the set
+$P = P(\delta)$.
 
 In other words, the parent-child relationships of $\mathcal{D}$ is precisely the
 _edit history_ of $\mathcal{D}$: a directed graph with vertex set $\mathcal{D}$
@@ -71,8 +73,8 @@ $\mathcal{D}$ to define a valid confluently persistent data structure, we need
 to
 
 1. Ensure that the edit history is acyclic, and
-2. Define how _data mutations_, i.e. edits, are defined and added to
-   $\mathcal{D}$.
+2. Define conditions that guarantee that edits correspond to valid _data
+   mutations_.
 
 We hit both birds with one stone by restricting how $\mathcal{D}$ can be
 constructed and modified in such a way that acyclicity is guaranteed.
@@ -176,6 +178,24 @@ $\mathcal{D}$ is _in some sense_ equivalent to applying rewrites on a graph, it
 is hard to see how the data structure $\mathcal{D}$ would be useable for graph
 rewriting. This is precisely our next point.
 
+<!-- prettier-ignore -->
+{{% hint "info" %}}
+In a valid non-empty $\mathcal{D}$, edits $\delta \in \mathcal{D}$
+form a directed acyclic graph and therefore there must always be (at least) one
+"root" edit $\delta_1 \in \mathcal{D}$ with no parents
+$P(\delta_1) = \varnothing$. $\delta_1$ is thus a valid rewrite that can be applied to
+any graph.
+
+For the applications of $\mathcal{D}$ that we consider, it will always be
+sufficient to have a unique root edit $\delta_1$. Viewing $\delta_1$ as a
+rewrite that applies to the empty graph $G_0 = \varnothing \to G_1$, we can
+understand it as _injecting_ the input graph $G_1$ into $\mathcal{D}$.
+
+Non-root edits in $\mathcal{D}$ on the other hand typically correspond to valid
+(semantics preserving) rewrites in the GTS under consideration.
+
+{{% /hint %}}
+
 Consider a set of compatible edits $D \in \Gamma(\mathcal{D})$. Define a
 topological ordering $\delta_1, \ldots, \delta_k$ of the edits in $D$, i.e. if
 $\delta_j \in P(\delta_i)$ then $i < j$.
@@ -195,13 +215,13 @@ on $G_{i-1}$ and $G_i = r_i(G_{i-1})$.
 
 Define the empty graph $G_0 = \varnothing$. The edit $\delta_1$ has no parent
 and thus must have an empty vertex deletion set and glueing relation. It is thus
-a valid rewrite $r_1$ on $G_0$.
+a valid rewrite $r_1$ on $G_0$. Define $G_1 = r_1(G_0)$.
 
-We can repeat this construction inductively for graphs $G_2, \ldots, G_k$ if we
-show for $2 \leqslant i \leqslant k$ that the $i$-th edit $\delta_i$ defines a
-valid rewrite $r_i$ on $G_{i-1}$. The set of vertices in $G_{i-1}$ is the union
-of all vertices in the replacement graph of $\delta_1, \ldots, \delta_{i-1}$
-minus their vertex deletion sets
+We can similarly define $G_i = r_i(G_{i-1})$ inductively for graphs
+$G_2, \ldots, G_k$ if we show for $2 \leqslant i \leqslant k$ that the $i$-th
+edit $\delta_i$ defines a valid rewrite $r_i$ on $G_{i-1}$. The set of vertices
+in $G_{i-1}$ is the union of all vertices in the replacement graph of
+$\delta_1, \ldots, \delta_{i-1}$ minus their vertex deletion sets
 
 $$V(G_{i-1}) = \left(\bigsqcup_{1 \leqslant j < i} V(\delta_j)\right) \setminus \left(\bigsqcup_{1 \leqslant j < i} V^-_j\right),$$
 

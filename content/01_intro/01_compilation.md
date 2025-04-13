@@ -163,7 +163,9 @@ compiled and run on the same machine, is unfeasible---and will remain so for the
 foreseeable future[^qcomp]. When we put the possibility of pure-quantum
 compilation aside, we are left with a cross-compilation problem that is entirely
 the realm of classical computer science; the output of which happens to be
-destined to run on a quantum computer.
+destined to run on a quantum computer. This is simliar to how in classical
+computing, GPU programs are typically compiled on CPUs before being uploaded and
+executed on the GPU.
 
 [^qcomp]:
     First valiant efforts at defining optimisation problems relevant to quantum

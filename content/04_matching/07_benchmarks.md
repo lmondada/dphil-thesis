@@ -36,7 +36,7 @@ implementation against a leading C++ implementation of pattern matching for
 quantum circuits from the Quartz superoptimiser project @Xu2022. Using a
 real-world dataset of patterns obtained by the Quartz equivalence classes of
 circuits (ECC) generator, we measured the pattern-matching runtime on a random
-subset of up to 10'000 patterns.
+subset of up to 10,000 patterns.
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -58,7 +58,7 @@ is $3\times$ faster than Quartz, scaling up to $20\times$ faster for
 $\ell=10^5$. The results are summarised in the figure above.
 
 We also provide a more detailed scaling analysis of our implementation by
-generating random sets of 10'000 quantum circuits with 15 gates for qubit
+generating random sets of 10,000 quantum circuits with 15 gates for qubit
 numbers between $w=2$ and $w=10$, using the previous gate set; the results are
 shown in the figure below. From {{% refproposition "prop-main" %}}, we expect
 that the pattern matching runtime is upper bounded by a $\ell$-independent

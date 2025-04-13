@@ -61,11 +61,12 @@ are emerging from hardware advances within quantum computing. It also limits the
 interaction and sharing across field boundaries and impedes the development of
 tools applicable to a broader range of graph transformation domains.
 
-The ambitious aim of this thesis is to advocate graph transformation as a robust
-basis for a _scalable_ and _modular_ compiler platform for quantum
+The ambitious aim of this thesis is to advocate for graph transformation as a
+robust basis for a _scalable_ and _modular_ compiler platform for quantum
 computations---and hope that in the process, our contributions will strengthen
 the bridge between research in classical compilation, quantum computing and
-graph transformations.
+graph transformations. The key desired properties of our compilation framework
+can be summarised as follows:
 
 **Scalable.** The compiler should handle quantum computations of the kind we
 realistically expect to execute within the coming decade: thousands of logical
@@ -88,4 +89,4 @@ concrete contributions to this goal are then summarised in
 
 {{% figure src="/img/butterfly-bridge.jpg"
            width="60%"
-           caption="Just like this thesis: a three-legged bridge---the Butterfly Bridge in Copenhagen. Image credits: Christian Lindgren, [archdaily.com](https://www.archdaily.com/620622/butterfly-bridge-dietmar-feichtinger-architectes)." %}}
+           caption="This thesis hopes to strenghten the bridge between the fields of classical compilation, quantum computing and graph transformations. Three-legged bridges also exist in the real world---here the Butterfly Bridge in Copenhagen. Image credits: Christian Lindgren, [archdaily.com](https://www.archdaily.com/620622/butterfly-bridge-dietmar-feichtinger-architectes)." %}}

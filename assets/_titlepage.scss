@@ -3,8 +3,10 @@
 
 .titlepage {
     align-items: center;
-    width: 80%;
-    margin: 0 auto;
+    @media screen and (min-width: 56rem) {
+        width: 80%;
+        margin: 0 auto;
+    }
 
     font-optical-sizing: auto;
     font-style: normal;
@@ -94,8 +96,11 @@
         font-style: italic;
         margin-top: 8cm;
         margin-bottom: 6cm;
-        width: 60%;
         display: flex;
+
+        @media screen and (min-width: 56rem) {
+            width: 60%;
+        }
 
         p {
             margin: 0;

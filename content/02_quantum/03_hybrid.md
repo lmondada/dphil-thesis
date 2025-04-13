@@ -54,8 +54,8 @@ introduce a graphical representation for the classical bit of data the
 measurement produces. The field has adopted the double-wire
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 10" width="30" height="10"><line x1="2" y1="3" x2="28" y2="3" stroke="black" stroke-width="1.5"/><line x1="2" y1="7" x2="28" y2="7" stroke="black" stroke-width="1.5"/></svg>
 for this, even though a "half" wire would arguably have been more appropriate to
-reflect the reduced information content relative to quantum wires. Ladies and
-gentlemen, I present to you the measurement box:
+reflect the reduced information content relative to quantum wires. I present to
+you the measurement box:
 
 [^disappear]:
     Where did the qubit go? All the information in a qubit post-measurement is

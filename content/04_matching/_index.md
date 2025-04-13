@@ -37,13 +37,13 @@ pattern-matching queries can be answered in running time independent of the
 number of rules in the transformation system.
 
 The asymptotic complexity results presented in this chapter depend on some
-simplifying assumptions on pattern graphs and embedding. This represents a
-restriction on the generality of minIR graphs, but we do not find that they
-restrict the usefulness of the result in practice. As discussed in
-{{< reflink "sec:benchmarks" >}}, none of these assumptions are required in
-practice for the implementation. We have not observed any impact on performance
-when the imposed constraints are lifted, so we conjecture that these assumptions
-can be relaxed and our results generalised.
+simplifying assumptions on the properties that the pattern graphs and embeddings
+must satisfy. This represents a restriction on the generality of minIR graphs,
+but we do not find that they restrict the usefulness of the result in practice.
+As discussed in {{< reflink "sec:benchmarks" >}}, none of these assumptions are
+required in practice for the implementation. We have not observed any impact on
+performance when the imposed constraints are lifted, so we conjecture that at
+least some of these assumptions can be relaxed and our results generalised.
 
 After a discussion of related work in
 {{% reflink "sec:sota-pattern-matching" %}},
@@ -60,7 +60,7 @@ In {{< reflink "sec:automaton" >}}, we introduce a pre-computation step and show
 that the pattern-matching problem reduced to tree structures can be solved using
 a prefix tree-like automaton that is fixed and pre-computed for a given set of
 patterns. Combining the automaton construction with bounds from
-{{< reflink "sec:anchors" >}} leads to the final result.
-We conclude in {{< reflink "sec:benchmarks" >}} with benchmarks on a real-world
-dataset of 10000 quantum circuits, obtaining a 20x speedup over a leading
-C++ implementation of pattern matching for quantum circuits.
+{{< reflink "sec:anchors" >}} leads to the final result. We conclude in
+{{< reflink "sec:benchmarks" >}} with benchmarks on a real-world dataset of
+10000 quantum circuits, obtaining a 20x speedup over a leading C++
+implementation of pattern matching for quantum circuits.

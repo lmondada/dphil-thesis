@@ -35,11 +35,16 @@ directly to minIR graphs and, more broadly, to most instances of graph
 rewriting.
 
 The central object of study in this chapter is the _graph rewrite_. We restate a
-simplified version of {{% refdefinition "minirrewrite" %}} here. We opt for a
-rewrite definition that omits the _edge deletion set_ $E^-$ of
-{{% refdefinition "minirrewrite" %}}. Whilst it represents a restriction from
-the more general definition, it will simplify notation. All constructions and
-discussions presented in this chapter also apply to the more general definition.
+simplified version of {{% refdefinition "minirrewrite" %}} here. We opt for
+convenience for a rewrite definition that omits the _edge deletion set_ $E^-$ of
+{{% refdefinition "minirrewrite" %}}. This is not a restriction of the general
+case, as can be seen by adding a "dummy" vertex $v_e$ for each edge $e$ in a
+graph: a rewrite that removes an edge $e \in E^-$ can equivalently be expressed
+by the rewrite that removes the dummy vertex $v_e \in V^-$[^notdpo].
+
+[^notdpo]:
+    This makes use of the fact that unlike in DPO, our rewrite definition allows
+    the (implicit) deletion of edges with one endvertex in $V^-$.
 
 As in previous chapters, $\sqcup$ denotes disjoint union,
 $f: A \rightharpoonup B$ denotes a partial function and $dom$ denotes the domain
@@ -60,15 +65,13 @@ with
 <!-- prettier-ignore -->
 {{% /definition %}}
 
-Define the subgraph $G_L = (V_L, E_L)$ of $G$ given by
-
-$$\begin{aligned}V_L &= (V \smallsetminus V^-) \ \cup\ dom(\mu)\\E_L &= (E \smallsetminus E^-)\ \cap\ V_L^\ast.\end{aligned}$$
+Define the _context_ subgraph $G_C$ as the subgraph induced by the vertices
+$$V_C = (V \smallsetminus V^-) \ \cup\ dom(\mu).$$
 
 The rewritten graph resulting from applying $r$ to $G$ is the glueing
+$$r(G) = (G_C \sqcup G_R) / \sim_\mu.$$
 
-$$r(G) = (G_L \sqcup G_R) / \sim_\mu.$$
-
-obtained from the union of $G_L$ and $G_R$ by merging all vertices within the
+obtained from the union of $G_C$ and $G_R$ by merging all vertices within the
 same class in the equivalence relation $\sim_\mu$ that is the closure of $\mu$.
 We refer to {{% reflink "sec:graph-defs" %}} for more details and an
 illustration of glueings and rewrites.

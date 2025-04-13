@@ -101,10 +101,10 @@ subgraph $G_L \subseteq \bar{G}_L$ defines a rewrite on $G$:
 Let $\bar{G}_L \leftarrow \bar{G}_I \rightarrow \bar{G}_R$ be a minIR
 transformation rule and let $\varphi: G_L \to G$ be a def-injective and
 def-surjective linear morphism such that the image $H = \varphi(G_L)$ of $G_L$
-is a valid minIR subgraph of $G$.
+is a valid convex minIR subgraph of $G$.
 
 If $I_H$ and $I_R$ are the interfaces of $H$ and $G_R$ respectively, then we
-have $I_R \triangleright I_H$.
+have $I_H \triangleleft I_R$.
 
 _Corollary:_ Let $B$ be the boundary values of the subgraph
 $\varphi(G_L) \subseteq G$ and let
@@ -123,7 +123,7 @@ here.
 <!-- prettier-ignore -->
 {{% proof %}}
 The second half of the statement (under "corollary") follows directly from
-{{% refproposition "prop-fullrewrite" %}}. All that remains to be shown is $I_R \triangleright I_H.$
+{{% refproposition "prop-fullrewrite" %}}. All that remains to be shown is $I_H \triangleleft I_R.$
 
 Let $\varphi_L: \bar{G}_I \to \bar{G}_L$ and
 $\varphi_R: \bar{G}_I \to \bar{G}_R$ be the interface morphisms that make up the
@@ -161,7 +161,7 @@ $$\rho_U^{(L)}: \mathrm{Idx}(U) \to \mathrm{Idx}(U_L)$$ is obtained from the
 restriction of $\varphi \circ \varphi_L$ to the domain $U$. Defining
 $\rho_U = \rho_U^{(L)} \circ \rho_U^{(R)}$ gives us a pair of index maps
 $(\rho_D, \rho_U)$ that satisfy {{% refdefinition "def-interface" %}} and hence
-we conclude that $I_R \triangleright I_H$.
+we conclude that $I_H \triangleleft I_R$.
 
 <!-- prettier-ignore -->
 {{% /proof %}}
