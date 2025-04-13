@@ -17,9 +17,9 @@ impart a research direction to the rest of the thesis:
 1. The emergence of hybrid quantum-classical computations is rendering the
    quantum circuit obsolete as the main representation of quantum computations
    within compilers ({{% reflink "sec:hybrid" %}}).
-2. The best optimisation outcomes will be obtained by combining classical and
-   quantum compiler optimisations. The way to achieve this is by adopting
-   abstractions that are interoperable with classical compiler infrastructure
+2. The best optimisation outcomes will combine classical and quantum compiler
+   optimisations. This can be achieved by adopting abstractions that are
+   interoperable with classical compiler infrastructure
    ({{% reflink "sec:need-help" %}}).
 
 #### A graph transformation formalism for quantum computations
@@ -74,12 +74,12 @@ Our first major contribution is a pattern matching algorithm, presented in
 **{{% reflink "chap:matching" %}}**. The main result is a runtime complexity
 bound independent of the number of patterns being matched, achieved using a
 one-off pre-computation. This is to our knowledge the first pattern matching
-algorithm for quantum circuits that does not depend on the number of patterns
-being matched. Whilst similar multi-pattern matching techniques have been
-explored in other domains such as RETE networks @Forgy1982 @Varro2013 @Ian2003
-and computational biology @Danos2007 @Boutillier2017, no algorithm is known with
-provable sub-exponential worst-case complexity bounds. These results were
-published in @Mondada2024.
+algorithm for quantum circuits that does not depend on the number of patterns.
+Whilst similar multi-pattern matching techniques have been explored in other
+domains such as RETE networks @Forgy1982 @Varro2013 @Ian2003 and computational
+biology @Danos2007 @Boutillier2017, no algorithm is known with provable
+sub-exponential worst-case complexity. These results were published in
+@Mondada2024.
 
 The proved complexity bound applies to computations with only linear
 values[^otherwisehard], of which quantum circuits are a special case. The result

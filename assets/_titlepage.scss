@@ -3,6 +3,10 @@
 
 .titlepage {
     align-items: center;
+    @media print {
+        width: 80%;
+        margin: 0 auto;
+    }
     @media screen and (min-width: 56rem) {
         width: 80%;
         margin: 0 auto;
@@ -30,8 +34,8 @@
     .logo img {
         margin: 5rem 0;
         @media print {
-            margin-top: 4rem;
-            margin-bottom: 3rem;
+            margin-top: 7rem;
+            margin-bottom: 8rem;
         }
         display: block;
         margin-left: auto;
@@ -46,7 +50,7 @@
     }
 
     .university {
-        margin-bottom: 3rem;
+        margin-bottom: 6rem;
     }
 
     .title,
@@ -99,6 +103,9 @@
         display: flex;
 
         @media screen and (min-width: 56rem) {
+            width: 60%;
+        }
+        @media print {
             width: 60%;
         }
 

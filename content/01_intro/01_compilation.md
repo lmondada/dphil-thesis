@@ -181,8 +181,8 @@ Cross-compilation presents significant challenges. As quantum programs grow in
 size and complexity, debugging and verifying their correctness without access to
 the target hardware becomes increasingly difficult @Rovara2024, as we hit the
 limits of what can be simulated classically. Quantum simulation is a vibrant
-research area that has been---and will continue to be---the subject of theses
-(e.g. @Flannigan2020 @Azad2024) in its own right.
+research area that is the subject of theses (e.g. @Flannigan2020 @Azad2024) in
+its own right.
 
 On the flip side, using classical hardware for quantum program compilation comes
 with a giant opportunity for compilers: the classical computational resources
@@ -218,8 +218,8 @@ programs expressed as quantum circuits (cf. {{% reflink "sec:basics" %}}). This
 formalism has its roots in quantum information theory, the field that gave birth
 to quantum computing and makes for an ideal framework to develop the theory and
 optimisation techniques. However, it does not include any of the fundaments of
-compiler and programming language design that make classical software
-engineering as composable and scalable as it is today.
+compiler and programming language design that make classical software as
+composable and scalable as it is today.
 
 <!-- prettier-ignore -->
 For example, there is no concept of subroutine or function calls; neither can a
@@ -227,7 +227,7 @@ program execution be branching or looping based on runtime values. This makes
 code reuse impossible, resulting in huge program sizes and unsurmountable
 challenges for scaling up compilation to problems of real-world interest
 @Ittah_2022. The absence of code abstractions is being felt even more acutely
-with the emergence of _hybrid_ quantum-classical computations, a discussion we  in more details in {{% reflink "sec:hybrid" %}}.
+with the emergence of _hybrid_ quantum-classical computations, as we discuss in {{% reflink "sec:hybrid" %}}.
 
 With applications of quantum computing that cannot be expressed as quantum
 circuits proliferating, a move away from circuit-based representations is

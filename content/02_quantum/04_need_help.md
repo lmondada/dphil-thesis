@@ -53,12 +53,10 @@ amount of classical computation was very minimal, limiting itself to
 conditionals and loops based on simple boolean expressions. Surely the
 full-blown powers of a classical compiler are not required!
 
-You bet.
-
-Scientists have shown no lack of imagination in this field---and so have found
-very compelling use cases for complex classical computations within quantum
-programs. To drive this point home, let us consider the concrete example of
-quantum error correction.
+Unfortunately (and as usual), scientists have shown no lack of imagination in
+this field---and so have found very compelling use cases for complex classical
+computations within quantum programs. To drive this point home, let us consider
+the concrete example of quantum error correction.
 
 ### The quantum error correction use case
 

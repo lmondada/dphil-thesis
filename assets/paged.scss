@@ -54,6 +54,7 @@ div.footnotes {
 }
 
 .pagedjs_blank_page .pagedjs_margin-content,
+.page-titlepage .pagedjs_margin-content,
 .chapter-head .pagedjs_margin-top-center {
     display: none;
 }
@@ -197,13 +198,14 @@ h1.references {
     break-before: right;
 }
 
+#sec\:need-help,
 #sec\:simplifying-assumptions,
 #prop-treeincl {
     break-before: page;
 }
 
 //// Disable shadows for print
-.markdown figure .figure-bg,
+.markdown figure.figure-bg,
 .definition-block,
 .proposition-block {
     box-shadow: none !important;

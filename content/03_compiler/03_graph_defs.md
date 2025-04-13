@@ -55,9 +55,9 @@ equivalence relation $u \sim v$ of connected vertices, i.e. either
 $u \leadsto v$, $v \leadsto u$, or there exists $w$ with $u \sim w$ and
 $w \sim v$.
 
-In minIR, the hypergraph vertices are the values of the computation, while the
-hyperedges define the operations. We call values that are target endpoints of an
-operation $o$ the _definitions_ of $o$, and those that are source endpoints its
+In minIR, the vertices are the values of the computation, while the hyperedges
+define the operations. We call values that are target endpoints of an operation
+$o$ the _definitions_ of $o$, and those that are source endpoints its
 _uses_---and hence rename the adjacency functions $\mathit{src}$ and
 $\mathit{tgt}$ to $\mathit{use}$ and $\mathit{def}$ respectively. For a
 hypergraph to be a valid minIR graph, some constraints must further be

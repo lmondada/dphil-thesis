@@ -169,6 +169,11 @@ function markChapterPages(pageFragment) {
     // Add chapter-head class to the root element of the page
     pageFragment.classList.add("chapter-head");
   }
+  const isTitlePage = pageFragment.querySelector("p.logo");
+  if (isTitlePage) {
+    // Add chapter-head class to the root element of the page
+    pageFragment.classList.add("page-titlepage");
+  }
 }
 
 function escapeSelector(selector) {

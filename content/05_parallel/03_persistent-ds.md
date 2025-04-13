@@ -23,10 +23,9 @@ union of all vertex sets of replacement graphs in $\mathcal{D}$. We will
 similarly use $V(\delta)$ to denote the set of vertices in the replacement graph
 of a rewrite $\delta$.
 
-Edits are very similar to rewrites as defined in
-{{% refdefinition "def-rewrite" %}} but differ in that they do not apply to a
-single graph $G$, i.e. there is no graph $G$ such that $V^- \subseteq V(G)$, but
-instead
+Edits resemble rewrites as defined in {{% refdefinition "def-rewrite" %}} but
+differ in that they do not apply to a single graph $G$, i.e. there is no graph
+such that $V^- \subseteq V(G)$. Instead,
 
 {{% centered numbered="def-all-vertices" %}}
 $$V^-\ \subseteq\ \bigsqcup_{\delta \in \mathcal{D}} V(\delta) = V(\mathcal{D}).$$

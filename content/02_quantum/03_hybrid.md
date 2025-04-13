@@ -233,7 +233,7 @@ which a quantum gate that has an additional classical bit wire attached to it
 represents a classically controlled operation that is only executed if the bit
 value is `1`.
 
-{{% figure src="svg/meas-correct.svg" width="70%" nobg="true" %}}
+{{% figure src="svg/meas-correct.svg" width="65%" nobg="true" %}}
 
 #### Quantum Teleportation
 
@@ -300,7 +300,7 @@ $\ket {00} + \ket{11}$ but we do know how to map that state to $\ket {00}$:
 that's the inverse of the Bell pair state preparation circuit! This results in
 the following circuit:
 
-{{% figure src="svg/bell-bellinv-circ.svg" width="70%" nobg="true" %}}
+{{% figure src="svg/bell-bellinv-circ.svg" width="60%" nobg="true" %}}
 
 This brings us to the same situation as we had for the block encoding
 application above: conditioned on the measurement outcome of the second and

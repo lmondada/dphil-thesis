@@ -81,7 +81,7 @@ merits further research.
 <div class="acknowledgements"><div>
 
 <!-- prettier-ignore -->
-To my family who supported me throughout these years. I couldn’t have done it without you.
+To my family who have supported me throughout these years. I couldn’t have done it without you.
 { .gap }
 
 <!-- prettier-ignore -->

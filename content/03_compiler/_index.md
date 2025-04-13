@@ -14,8 +14,8 @@ constraints, or cost functions.
 This thesis proposes interpreting quantum compilation as a graph transformation
 system (GTS). GTSs endow quantum compilation with well-defined semantics and
 strong theoretical foundations @Lack2005. They establish a practical, purely
-declarative framework in which compiler transformations can be defined, debugged
-and analysed.
+declarative framework in which compiler transformations can be defined and
+studied.
 
 This allows us to decouple the semantics of quantum programs and the
 architecture specifics from the compiler infrastructure itself. We can thus
@@ -36,7 +36,7 @@ interchangeably in the literature. In the context of this thesis, we will take
 these words to distinguish two slightly different problems:
 
 The study of equivalences and other relations between graphs under well-defined
-graph semantics is the subject of **graph transformations**. For instance:
+semantics is the subject of **graph transformations**. For instance:
 
 - a _graph transformation rule_ $L \to R$ ({{% refdefinition "minirtransfo" %}})
   expresses that an instance of $L$ can always be transformed into an instance

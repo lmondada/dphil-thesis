@@ -90,12 +90,11 @@ a copy of the original state before modifying it!
 {{% /hint %}}
 <!-- prettier-ignore-end -->
 
-This would allow us to do more than one computation from a temporary value. It
-turns out that copying is a big NO in quantum computing. It is a profound
-restriction (or property, depending on your point of view) with deep roots in
-the physics of quantum mechanics. This principle, known as the no-cloning
-theorem, is one of three fundamental properties of quantum physics that quantum
-computing builds upon.
+This would allow us to do more than one computation from a temporary value.
+However, copying is a big NO in quantum computing. It is a profound restriction
+(or property, depending on your point of view) with deep roots in the physics of
+quantum mechanics. This principle, the no-cloning theorem, is one of three
+fundamental properties of quantum physics that quantum computing builds upon.
 
 ### The physical constraints of quantum computation
 

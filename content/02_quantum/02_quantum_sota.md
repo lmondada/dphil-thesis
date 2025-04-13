@@ -209,9 +209,7 @@ optimisations.
 
 A particularly convenient global representation of many quantum circuits is as
 products of Pauli exponentials, also known as _Pauli gadgets_ @Cowtan2019. These
-unitaries are of the form
-
-$$U = \prod_{s \in P} exp(i \alpha_s \cdot s)$$
+unitaries are of the form $$U = \prod_{s \in P} exp(i \alpha_s \cdot s)$$
 
 where $\alpha_s \in \mathbb [0, 2\pi)$ are real coefficients and
 $s \in P = \{I, X, Y, Z\}^n$ are strings of length $n$ of the four Pauli
@@ -254,16 +252,20 @@ circuit synthesis.
 
 The action of phase polynomials on quantum states is quite easy to understand.
 Instead of the exponentials of $I$ and $Z$-based Pauli string, the computation
-can equivalently be given by its action on the basis states
+can equivalently be given by its action on the basis states. A quantum basis
+state---just like a classical state---is given by a bistring $b_1 \cdots b_n$ of
+bits $b_i \in \{0, 1\}$. Writing $e_{b_1 \cdots b_n}$ for the basis state
+corresponding to the bitstring $b_1 \cdots b_n$, the action of a phase
+polynomial $U$ on $e_{b_1 \cdots b_n}$ is given by
 
 {{% centered numbered="phasepoly" %}}
-$$\ket{b_1 \cdots b_n} \mapsto \underbrace{\exp(i \cdot \sum_{s \in \{I, Z\}^n} a_s \cdot (\tilde{s}_1 b_1 \oplus \cdots \oplus \tilde{s}_n b_n))}_{\in\,\mathbb{R}} \ket{b_1 \cdots b_n}$$
+$$e_{b_1 \cdots b_n} \mapsto \underbrace{\exp(i \cdot \sum_{s \in \{I, Z\}^n} a_s \cdot (\tilde{s}_1 b_1 \oplus \cdots \oplus \tilde{s}_n b_n))}_{\in\,\mathbb{R}} e_{b_1 \cdots b_n}$$
 {{% /centered %}}
 
-where $b_1 \cdots b_n$ and $\tilde{s}_1 \cdots \tilde{s}_n$ are now bitstrings
-of booleans: $b_i, \tilde{s}_i \in \{0, 1\}$. The boolean $\tilde{s}_i$ has
-value `1` if and only if the $i$-th character in the Pauli string $s$ is $Z$,
-and $\oplus$ denotes the boolean XOR operation.
+where $\tilde{s}_1 \cdots \tilde{s}_n$ is now also a bitstring of booleans
+$\tilde{s}_i \in \{0, 1\}$, and $\oplus$ denotes the boolean XOR operation. The
+boolean $\tilde{s}_i$ has value $1$ if and only if the $i$-th character in the
+Pauli string $s$ is $Z$,
 
 The exponential expression in {{% refcentered "phasepoly" %}} is just a real
 number---indeed each term in the sum simply evaluates to either $a_s$ or $0$. A
