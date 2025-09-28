@@ -240,22 +240,102 @@ $n \cdot s^{\Theta(\gamma^{\Delta - 1})}$.
 <!-- prettier-ignore -->
 {{% /proposition %}}
 
-### Discussion of the complexity separation
+### Discussion and empirical exploratory analysis
 
-The main feature of the complexity separation between the two bounds we have
-proved is that the upper bound of the factorised search space is _linear_ in
-$n$, and thus linear in the size of the input graph $G$. This stands in stark
-contrast to the lower bound of the naive search tree, which scales exponentially
-with the size of the input graph. The other variables in the bound of
-{{% refproposition "prop-upper-bound" %}} are "local" properties of the GTS: $s$
-relates to the density of rewrites (the "minimal pattern density" $\rho$),
-whereas $\gamma$ relates to the number of parent rewrites that a rewrite can
-overlap with (and thus ultimately, is bounded by the size of the pattern in the
-rewrite).
+We have derived bounds on the size of the search spaces and shown that under
+some assumptions on the properties of the GTS, the factorised search space grows
+_linearly_ in the size of the input graph $G$. This stands in stark contrast to
+the lower bound of the naive search tree, which scales exponentially with the
+size of the input graph.
 
-Note further that whilst it looks as though there would be a regime of
-$s, \gamma, \Delta$ and $n$ in which the factorised search space is larger than
-the naive search tree, this is not the case. It is purely an artifact of the
-looseness of our bounds: it is easy to see that each state in the factorised
-search space must also appear in the naive search tree, and thus we always have
-$|F_\Delta| \leqslant |T_\Delta|$.
+However, when considering the overall optimisation problem of finding the
+optimal solution over the set of reachable graphs in a GTS, the exponential
+overhead does not disappear: it is rather shifted to the extraction phase that
+relies on a SAT solver. It is therefore an open question whether the factorised
+search space can be used to improve optimisation problems on GTSs.
+
+To this end, we devise a simple numerical experiment that assesses the potential
+of using the unfolding construction as presented in this chapter in the context
+of quantum computation optimisation.
+
+**The toy problem.**&emsp; We consider a very simple circuit optimisation
+problem that is desiged to require a deep search space (i.e. a large number of
+rewrites) to be solved. This will exacerbate the scaling difference between an
+optimiser that must traverse the naive search space and another that relies on
+the factorised representation instead.
+
+The inputs are quantum circuits composed of two-qubit $\textit{CX}$ and
+single-qubit $\textit{Rz}$ rotation gates. The angles of the rotations are not
+relevant and set randomly. They are of the following form:
+
+{{% figure src="/svg/cx-rz-circ.svg" nobg=true width="70%" %}}
+
+i.e. each pair of subsequent qubits have 2 $\textit{CX}$ gates at either end and
+10 $\textit{Rz}$ rotation in-between, on the control qubits of the $\textit{CX}$
+gates. These circuits admit a very simple optimisation that can be expressed by
+the following two transformation rules:
+
+{{% figure src="/svg/cx-rz-rules.svg" nobg=true width="95%" %}}
+
+Given the objective of minimising the number of $\textit{CX}$ gates, the
+optimiser must commute the leftmost $\textit{CX}$ gates through all of the
+rotation gates, until the two $\textit{CX}$ on each qubit are adjacent and
+cancel out. We study the performance of the optimisers as we increase the number
+$2q$ of qubits in the circuit.
+
+**Optimisers.**&emsp; We define two optimisers. _Badger_ is a backtracking
+search through the naive search space of reachable graphs in the GTS: starting
+from the input, the search space is expanded by computing all possible rewrites
+at a given state. States with the lowest cost function are processed first. This
+is similar to an A\* search @Hart1968.
+
+_Seadog_ on the other hand performs the backtracking search on the factorised
+search space instead: when expanding a state of the search space, only rewrites
+that overlap with the last rewrite are considered and added to the search space,
+as discussed in {{% reflink "sec:extraction" %}}. In a second phase, the search
+space is encoded as a SAT problem that is solved using Z3 @Moura2008.
+
+Tl
+he Badger optimiser is released and publicly available as part of the
+open-source TKET package[^pyandrust]. The Seadog optimiser on the other hand is
+still in early development; more benchmarks and a release will follow.
+
+[^pyandrust]:
+    As a Python package on [PyPI](https://pypi.org/project/tket/) and a rust
+    crate on [crates.io](https://docs.rs/tket/latest/tket/)).
+
+**Results.**&emsp; We ran the experiment on an Apple M3 Max CPU (4.05GHz) for
+inputs between $2$ ($12$ gates) and $78$ qubits ($468$ gates). Both optimisers
+ran on a single core. For each instance, we set a timeout of $2$ seconds and
+report the relative $\textit{CX}$ gate reduction, i.e.
+$$\frac{\textit{CX}_\text{final} - \textit{CX}_\text{initial}}{\textit{CX}_\text{init}}.$$
+The results are shown in the following figure.
+
+{{% figure src="/img/badger-seadog-bench.png" width="80%" enlarge="full"
+           caption="CX gate count reduction (left) and runtime (right) for the Badger and Seadog optimisers. 100% gate count reduction is optimal. A timeout was set to 2 seconds." %}}
+
+**Discussion.**&emsp; On the left, we observe that both optimisers are able to
+find the optimum for circuits with up to 30 CX gates. Beyond that point, the
+time limit starts impacting Badger performance, which drops continuously and
+reaches 0% for inputs of 50 CX gates and above. Seadog on the other hand does
+not time out and is able to explore the entire (factorised) search space
+exhaustively up until 70 CX gates.
+
+Observe that the Badger optimiser reaches the time limit for as few as 10 CX.
+Indeed, the complete naive search space size can be calculated to have $12^q$
+states (each pair of qubits can be in one of 12 states). For $2q = 6$ we get
+$1728$ states, but this already reaches over $20'000$ states for $2q = 8$. On
+the other hand, the factorised search space will only contain $12$ states for
+each qubit pair.
+
+Where the runtime exceeds the 2 second timeout, this is due to pre- and
+post-optimisation steps such as memory allocation/deallocation, I/O, file
+parsing etc that are included in the measurements. The quadratic runtime scaling
+that we observe in Seadog is due to a hash function that is run on every state
+of the search space to detect and discard duplicates: as the number of states in
+the search space grows linearly with input size and each state requires a hash
+in linear time, the overall runtime grows quadratically. In addition, we have
+observed that the SAT-based extraction phase of Seadog corresponds to less than
+1% of the runtime budget (under 15ms). We therefore expect that incremental
+improvements to factorised search space-based optimisers could result in
+dramatically faster runtimes.
