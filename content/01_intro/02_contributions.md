@@ -138,17 +138,19 @@ implementation of pattern matching for quantum circuits.
 
 #### Confluently persistent graph rewriting
 
-Our second major contribution, in **{{% reflink "chap:parallel" %}}**, presents
-a novel data structure $\mathcal{D}$ that compresses the representation of the
-space $\mathcal{G}$ of all graphs reachable from an input within a GTS. We call
-$\mathcal{D}$ the _factorised search space_ of $\mathcal{G}$. We show in
-{{% reflink "sec:factor-gts" %}} that under mild assumptions on the GTS and
-input, there is an exponential complexity separation in the input size between
-the size of the factorised search space $\mathcal{D}$---which admits an
+Our second major contribution, in **{{% reflink "chap:parallel" %}}**, uses a
+well-known construction in GTSs, the _unfolding_ @Baldan1999a, to derive a novel
+data structure $\mathcal{D}$ that compresses the representation of the space
+$\mathcal{G}$ of all graphs reachable from an input within a GTS. We call
+$\mathcal{D}$ the _factorised search space_ of $\mathcal{G}$. Optimisation
+problems over the space of reachable graphs in a GTS can then equivalently be
+expressed as optimisation problems over $\mathcal{D}$.
+
+We show in {{% reflink "sec:factor-gts" %}} that under some assumptions on the
+GTS and input, there is an exponential complexity separation in the input size
+between the size of the factorised search space $\mathcal{D}$---which admits an
 asymptotically _linear_ upper bound---and the size of the rewrite space
-$\mathcal{G}$ that it encodes---which grows at least exponentially. We are not
-aware of any previous work that explores compressed representations of
-$\mathcal{G}$.
+$\mathcal{G}$ that it encodes---which grows at least exponentially.
 
 $\mathcal{D}$ is furthermore the first _confluently persistent_ data structure
 @Driscoll1994 @Fiat2003 @Collette2012: it performs non-destructive rewrites on
@@ -207,6 +209,13 @@ SAT and SMT that encode the extraction problem will scale well in practice:
   _sparsified_: most rewrties in $\mathcal{D}$ do not change the cost function
   (think of IR transformations that reorder operations but do not reduce the
   runtime) and thus do not need to be encoded in the SAT problem.
+
+In a first exploratory analysis, we present some empirical results that support
+our claims: by searching over the factorised search space instead of the naive
+search space, the optimiser is able to find the global optimum for circuits that
+are twice as large. Our results also exhibit a linear scaling in the size of the
+factorised search space, confirming that the approach should scale well to
+larger problems.
 
 #### Conclusion
 

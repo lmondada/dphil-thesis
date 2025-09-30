@@ -36,29 +36,28 @@ Hilary 2025
 ## Abstract
 
 As the capabilities of quantum hardware advance and their architectures become
-more complex, **quantum compilers** must evolve to optimise increasingly large
+more complex, quantum compilers must evolve to optimise increasingly large
 programs and support a growing range of computational primitives. In particular,
-the emergence of **hybrid quantum-classical computations**, required for
-instance by implementations of quantum error correcting protocols, poses
-significant challenges to established quantum compilation techniques.
+the emergence of hybrid quantum-classical computations, required for instance by
+implementations of quantum error correcting protocols, poses significant
+challenges to established quantum compilation techniques.
 
-This thesis argues that **graph transformation systems (GTS)** offer a
-principled foundation for compiler platforms that can express arbitrary hardware
-primitives and support computations over both quantum and classical data. To
-this end, it introduces a **graph-based intermediate representation** (IR), with
-support for **linear types** to model quantum data. This unifies graphical
-formalisms used for reasoning over quantum computations (such as the ZX
-calculus) with IR-based program transformation techniques from classical
-compiler design.
+This thesis argues that graph transformation systems (GTS) offer a principled
+foundation for compiler platforms that can express arbitrary hardware primitives
+and support computations over both quantum and classical data. To this end, it
+introduces a graph-based intermediate representation (IR), with support for
+linear types to model quantum data. This unifies graphical formalisms used for
+reasoning over quantum computations (such as the ZX calculus) with IR-based
+program transformation techniques from classical compiler design.
 
 Building upon this foundation, the thesis tackles two critical scaling problems
 hindering the adoption of GTS in quantum compilers. First, it presents an
-efficient **pattern matching algorithm** based on a precomputed data structure
-that achieves query times **independent of the number of transformation rules**
-in the system. This removes a key bottleneck in quantum **superoptimisers**,
-which optimise quantum programs using tens to hundreds of thousands of rules.
+efficient pattern matching algorithm based on a precomputed data structure that
+achieves query times independent of the number of transformation rules in the
+system. This removes a key bottleneck in quantum superoptimisers, which optimise
+quantum programs using tens to hundreds of thousands of rules.
 
-Second, the thesis introduces a **confluently persistent data structure** that
+Second, the thesis introduces a confluently persistent data structure that
 enables efficient exploration of the GTS state space of possible graph
 transformations. This factorised search space offers an exponential complexity
 advantage in search space size and traversal time compared to naively exploring
@@ -69,9 +68,9 @@ optimal programs from this data structure, relating it to Boolean satisfiability
 Together, these contributions lay the groundwork for scalable, GTS-based quantum
 compilers and advance the integration of quantum and classical compilation
 techniques. The persistent data structure for graph rewriting also opens the
-door for **concurrent graph rewriting** in distributed systems, a technique that
-may have applications within the graph transformations field more broadly and
-merits further research.
+door for concurrent graph rewriting in distributed systems, a technique that may
+have applications within the graph transformations field more broadly and merits
+further research.
 
 </div>
 

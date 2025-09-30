@@ -123,7 +123,6 @@ However, what we can always do is express $A$ as a matrix of dimensions
 $2^n \times 2^n$, where $n$ is the number of qubits in the state $\ket{\psi}$.
 Then, there is a neat trick that we can sometimes apply: instead of trying to
 execute $A$, we enlarge the matrix to a bigger $\tilde{A}$:
-
 $$\tilde{A} = \begin{pmatrix}A & G_1\\ G_2 & G_3 \end{pmatrix}$$
 
 where $G_1, G_2$ and $G_3$ are "garbage" matrices that we do not care about, but
@@ -147,8 +146,8 @@ $$\tilde{A} (\ket 0 \otimes \ket \psi) = \ket 0 \otimes A \ket \psi + \ket 1 \ot
 {{% /centered %}}
 
 The expression $A \ket \psi$ means the operation $A$ applied to
-$\ket \psi$---exactly the output state we are seeking. We can also input the
-ancilla qubit in state $\ket 1$, but what we then get is pure garbage:
+$\ket \psi$---exactly the output state we are seeking. If we input the ancilla
+qubit in state $\ket 1$, we get garbage:
 
 $$\tilde{A} (\ket 1 \otimes \ket \psi) = \ket 0 \otimes G_2 \ket \psi + \ket 1 \otimes G_3 \ket \psi.$$
 
@@ -159,7 +158,7 @@ interested in.
     This is obtained by a simple matrix multiplication. The vector
     representation of the quantum state $\ket 0 \otimes \psi$ is obtained using
     the Kronecker product. You can also just trust me that this works out this
-    way :)
+    way.
 
 How can we recover $A$ from {{% refcentered "ablock" %}}? This is precisely what
 measurements do! When quantum states are expressed as sum of states, the terms

@@ -13,7 +13,7 @@ This is the purpose of this section.
 
 We introduce for this purpose a _canonical_, that is, invariant under
 isomorphism, choice of PSG $G^\pi$ of $G$. The result is a unique canonical
-transformation $G \mapsto G^\pi \mapsto c(G^\pi)$ from $G$ to cPSG that we can
+transformation $G \mapsto G^\pi \mapsto c(G^\pi)$ from $G$ to a cPSG that we can
 use for pattern matching.
 
 We proceed by using the total order that we have defined on port labels and can
@@ -50,7 +50,7 @@ def CanonicalPathSplit(G: Graph, root: Operation) -> Graph:
   all_operations := Operations(G)
   sorted_operations := sort(
       all_operations,
-      sort_key= v -> PathAsPortLabels(G, root, v)
+      sort_key= lambda v: PathAsPortLabels(G, root, v)
   )
 
   # keep track of the visited linear paths
@@ -72,6 +72,12 @@ def CanonicalPathSplit(G: Graph, root: Operation) -> Graph:
 [^sortkey]:
     The `sort_key` parameter of the `sort` function defines the total order
     according to which the elements are sorted, from smallest to largest.
+
+The following figure shows an example of splitting a graph into its canonical
+PSG using `CanonicalPathSplit`.
+
+{{% figure src="/svg/canonical-path-split.svg" enlarge="full" width="60%"
+          caption="Splitting a graph into its canonical PSG. Ports are ordered counter-clockwise on each edge, and numbered according to the lexicographic order of the paths from _root_ to the port, as returned by `PathAsPortLabels`. This induces an order on the hyperedges, reflected in the alphabetic order of the edge labels. Linear paths are formed by ports in a horizontal line (as marked by the dotted lines). Vertex _root_ is chosen as the root of the canoncal splitting. Vertices _d_ and _g_ are not split because they are the smallest edges that contain the fourth, respectively first linear path." %}}
 
 {{% proposition title="Correctness of `CanonicalPathSplit`" id="prop-canonical-correctness" %}}
 
@@ -159,7 +165,6 @@ process, we will also see that we can replace the tree equality check of line 12
 with a subtree inclusion check, further reducing the number of PSGs that must be
 considered.
 
-
 <!-- prettier-ignore-start -->
 {{% columns ratio="1:1" enlarge="full" %}}
 **Naive pattern matching.**
@@ -197,8 +202,6 @@ for root_G in Operations(G):
 ```
 {{% /columns %}}
 <!-- prettier-ignore-end -->
-
-
 
 [^overlapgraph]:
     Think for example of the same root operation $r$ that is considered

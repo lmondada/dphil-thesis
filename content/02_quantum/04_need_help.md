@@ -68,13 +68,16 @@ for computations themselves but is widespread in communications (e.g. within the
 TCP/IP protocol for the internet @rfc9293) or for memory and storage in critical
 applications.
 
-For quantum hardware, no one expects to be able to manipulate qubits without
-introducing errors for a very long time[^majorana], and so error correction will
-be absolutely everywhere as soon as our quantum computers have managed to
-implement such protocols.
+No one expects to be able to manipulate matter-based qubits without introducing
+errors for a very long time. Photons, on the other hand, are prone to data
+losses throuh absorption and can only be entangled using complex and noisy
+schemes such as the Knill–Laflamme–Milburn protocol @Knill_2001[^majorana].
+Simply put, it is safe to assume that error correction will be found
+everywhere---as soon as our quantum computers manage to implement such
+protocols.
 
 [^majorana]:
-    We should at this point---at the risk of stoking controversy--- acknowledge
+    We should at this point---at the risk of stoking controversy---acknowledge
     the commendable efforts of scientists chasing the Majorana particle
     @Sau_2010 @Haaf2024 @Mourik_2012. The topological quantum computers these
     would enable are, to our knowledge, the only quantum architecture proposed
@@ -93,9 +96,9 @@ modified outcomes, called the error _syndrome_.
 The challenging bit comes next: from a run of syndrome measurements, one must
 infer the most likely errors---a step known as _syndrome decoding_. This is a
 purely classical maximum likelihood problem that requires a non-trivial amount
-of compute to resolve. For small problem instances, all possible input syndromes
-can be tabled, and the outputs precomputed---in which case the problem at
-runtime is reduced to fast table lookups. However, the higher the fault
+of computations to resolve. For small problem instances, all possible input
+syndromes can be tabled, and the outputs precomputed---in which case the problem
+at runtime is reduced to fast table lookups. However, the higher the fault
 tolerance we require, the more qubits must be used in the encodings, and so
 invariably, the problem quickly becomes very demanding computationally.
 
@@ -186,14 +189,15 @@ compilers is the perfect opportunity to reconcile program representations and
 integrate the learnings from decades of classical programming language research
 into quantum computing.
 
-There have been several trailblazing initiatives to create quantum programming
-languages, such as QCL @Oemer2000, Q# @Qsharp and Silq @Bichsel2020. Admittedly,
-their impact and adoption in the quantum ecosystem have so far remained limited,
-overshadowed by the popularity of python-based APIs for quantum circuit-based
-representations, as offered by Qiskit @JavadiAbhari2024, Pennylane @Bergholm2022
-and Cirq @CirqDevelopers2024. There is, as a result, a justified dose of
-scepticism in the quantum community on how well the ideas from classical
-programming really translate to quantum.
+There have been several trailblazing initiatives to formalise quantum
+programming and create dedicated languages, such as QCL @Oemer2000, Quipper
+@Green2013 @Rios2018 @Fu2023, Q# @Qsharp and Silq @Bichsel2020. Their adoption
+in the quantum ecosystem have so far remained limited, overshadowed by the
+popularity of python-based APIs for quantum circuit-based representations, as
+offered by Qiskit @JavadiAbhari2024, Pennylane @Bergholm2022 and Cirq
+@CirqDevelopers2024. There is, as a result, a justified dose of scepticism in
+the quantum community on how well the ideas from classical programming really
+translate to quantum.
 
 It is thus all the more notable that we are seeing a new generation of quantum
 programming tooling being developed @Koch2024 @Ittah_2024 @Cudaq, driven by the

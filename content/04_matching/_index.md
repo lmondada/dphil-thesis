@@ -17,7 +17,7 @@ operations of an input program, its equivalence class can be determined. Any
 replacement of that set of operations with another program in the same
 equivalence class is a valid transformation and, thus, a potential peephole
 optimisation. Transformation systems on minIR graphs based on equivalence
-classes were formalised in {{% reflink "sec-gts-def" %}}.
+classes were formalised in {{% reflink "sec:rewrite-def" %}}.
 
 First results of this approach are promising. @Xu2022 demonstrated that
 optimisation performance improves markedly with larger sets of transformation

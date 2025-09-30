@@ -43,6 +43,20 @@ visited operation remains in `G`. As a consequence, `CanonicalAnchors` may be
 called on disconnected graphs, which explains why an additional call to
 `ConnectedComponent` (line 4) is required.
 
+{{% proposition title="Equivalence of `CanonicalPathSplit` and `CanonicalAnchors`" id="prop-tree-equiv" %}}
+
+Let $G$ be a connected graph and let $r$ be a root operation in $G$. Then
+`CanonicalAnchors` maps the graph to the canonical anchor set:
+
+$$(G, r, \{\}) \mapsto (\pi(G)_r, L, \varnothing),$$
+
+where $L$ is the set of all paths in $G$ and $\varnothing$ designates the empty
+graph.
+
+{{% /proposition %}}
+
+The proof follows directly from the previous paragraphs.
+
 <!-- prettier-ignore-start -->
 ```python {linenos=inline}
 def CanonicalAnchors(
@@ -54,7 +68,7 @@ def CanonicalAnchors(
   operations_queue := queue(sorted_operations)
 
   # Skip all operations that are not anchors
-  op := operations_queue.pop() or return ({}, {}, G)
+  op := operations_queue.pop() # never emtpy, contains root
   G = RemoveOperation(G, op)
   while len(LinearPaths(G, op)) == 1 or
         issubset(LinearPaths(G, op), seen_paths):
@@ -75,20 +89,6 @@ def CanonicalAnchors(
 ```
 <!-- prettier-ignore-end -->
 
-{{% proposition title="Equivalence of `CanonicalPathSplit` and `CanonicalAnchors`" id="prop-tree-equiv" %}}
-
-Let $G$ be a connected graph and let $r$ be a root operation in $G$. Then
-`CanonicalAnchors` maps the graph to the canonical anchor set:
-
-$$(G, r, \{\}) \mapsto (\pi(G)_r, L, \varnothing),$$
-
-where $L$ is the set of all paths in $G$ and $\varnothing$ designates the empty
-graph.
-
-{{% /proposition %}}
-
-The proof follows directly from the previous paragraphs.
-
 #### Maximal PSGs
 
 In addition to "simplifying" the data required to define path splitting, the
@@ -108,15 +108,13 @@ on the common subtree.
 
 Let $G$ be a connected graph, $\pi$ a set of operations in $G$ and $r \in \pi$ a
 root operation. Consider the set
+$\mathcal{G}_\pi = \{H \subseteq G \mid \pi_r(H) = \pi \}.$
 
-$$\mathcal{G}_\pi = \{H \subseteq G \mid \pi_r(H) = \pi \}.$$
-
-- There is a subgraph $M \subseteq G$ such that for all subgraphs
-  $H \in \mathcal{G}_X$: $H \subseteq M$.
-- Furthermore, for all graph $P$, there is $r'$ and $\pi' = \pi(P)_{r'}$ such
-  that {{% centered numbered="maximal-psg" %}}
-  $$P \simeq H \in \mathcal{G}_X \quad\Leftrightarrow\quad \tau_{r'}(P^{\pi'}) \subseteq \tau_r(M^\pi).$$
-  {{% /centered %}}
+There is a subgraph $M \subseteq G$ such that for all subgraphs
+$H \in \mathcal{G}_X$: $H \subseteq M$. Furthermore, for all graph $P$, there is
+$r'$ and $\pi' = \pi(P)_{r'}$ such that {{% centered numbered="maximal-psg" %}}
+$$P \simeq H \in \mathcal{G}_X \quad\Leftrightarrow\quad \tau_{r'}(P^{\pi'}) \subseteq \tau_r(M^\pi).$$
+{{% /centered %}}
 
 We call $M^\pi$ the _maximal PSG_ with anchors $\pi$ in $G$.
 
@@ -223,13 +221,24 @@ given a root operation $r$.
 The procedure is similar to `CanonicalAnchors`, described in detail in the
 previous paragraphs. In addition to the arguments of `CanonicalAnchors`,
 `AllAnchors` requires a width $w \geq 1$ argument. It then returns all sets of
-$w$ operations that form the canonical anchors of some width-$w$ subgraph of $G$
-with root $r$. The main difference between `CanonicalAnchors` and `AllAnchors`
-is that the successive recursive calls (line 22 in `CanonicalAnchors`) are
-replaced by a series of nested loops (lines 42--48 in `AllAnchors`) that
-exhaustively iterate over the possible outcomes for different subgraphs of $G$.
-The results of every possible combination of recursive calls are then collected
-into a list of anchor sets, which is returned.
+at most $w$ operations[^atmostw] that form the canonical anchors of some
+width-$w$ subgraph of $G$ with root $r$. The main difference between
+`CanonicalAnchors` and `AllAnchors` is that the successive recursive calls (line
+22 in `CanonicalAnchors`) are replaced by a series of nested loops (lines 42--48
+in `AllAnchors`) that exhaustively iterate over the possible outcomes for
+different subgraphs of $G$. The results of every possible combination of
+recursive calls are then collected into a list of anchor sets, which is
+returned.
+
+[^atmostw]:
+    Every anchor operation is on at least one previously unseen linear path,
+    thus there can be at most $w$ operations in the set of anchors.
+
+The part of the pseudocode that is without comments is unchanged from
+`CanonicalAnchors`. Using {{% refproposition "prop-dualspanningtree" %}}, we
+know that we can assume that every operation has at most 3 children, and thus 3
+neighbours in `G`, given that the operations equivalent to parent nodes were
+removed.
 
 ```python {linenos=inline}
 def AllAnchors(
@@ -244,7 +253,7 @@ def AllAnchors(
   sorted_operations := sort(operations)
   operations_queue := queue(sorted_operations)
 
-  op := operations_queue.pop() or return [({}, {}, G)]
+  op := operations_queue.pop()
   G = RemoveOperation(G, op)
   while len(LinearPaths(G, op)) == 1 or
         issubset(LinearPaths(G, op), seen_paths):
@@ -271,14 +280,12 @@ def AllAnchors(
   return all_anchors
 ```
 
-The part of the pseudocode that is without comments is unchanged from
-`CanonicalAnchors`. Using {{% refproposition "prop-dualspanningtree" %}}, we
-know that we can assume that every operation has at most 3 children, and thus 3
-neighbours in `G`, given that the operations equivalent to parent nodes were
-removed.
+We can represent the sequence of recursive calls to `AllAnchors` as a tree. The
+call tree for the graph used as example to illustrate `CanonicalAnchors` earlier
+is given on the next page.
 
-Let us write $\Pi_r^w(G)$ for the set of sets of anchors returned by
-`AllAnchors(G, r, w, {})`.
+We now show correctness of the procedure. Let us write $\Pi_r^w(G)$ for the set
+of sets of anchors returned by `AllAnchors(G, r, w, {})`.
 
 <!-- prettier-ignore -->
 {{< proposition title="Correctness of AllAnchors" id="prop-allanchors-correctness" >}}
@@ -289,6 +296,9 @@ $\pi_r(H) \subseteq \Pi_r^w(G).$
 
 <!-- prettier-ignore -->
 {{< /proposition >}}
+
+{{% figure src="svg/all-anchors-tree.svg" enlarge="full" width="95%"
+           caption="A call tree for an execution of `AllAnchors` on the example graph of the previous figure with $w = 3$. Starting from the root, each node in the tree corresponds to either picking an operation as anchor or not (thus splitting it). Edges are labelled by the values assigned to $w$ for the respective children of the source node. One path from root to leaf leads to no solution (it is impossible to find an unseen linear path from operation $b$. The other paths each lead to a valid set of three anchors." %}}
 
 The proof is by induction over the width $w$ of the subgraph $H$. The idea is to
 map every recursive call in `CanonicalAnchors` to one of the calls to

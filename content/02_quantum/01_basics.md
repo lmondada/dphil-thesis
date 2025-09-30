@@ -28,15 +28,22 @@ We can thus picture a classical gate as a black box with `n` input wires going
 into the box and `m` output wires leaving it. For any combination of on and off
 voltages on the input wires, the box will turn on some of the output wires. The
 vital point to take away from this classical state of affairs is that we can
-think of input and output bits (i.e. the input and output wires) as physically
-distinct objects (the wires).
+think of the carriers of input and output data (i.e. the input and output wires)
+as physically distinct objects that can exist and can be read simultaneously.
 
-This is not the case in implementations of qubits. Unlike their classical
-counterparts, quantum gates must be understood as operations that _modify_---or
-"mutate", to borrow a term from programming languages---the physical qubits
-themselves. An input qubit to a gate is thus submitted to physical interactions
-that change its internal state. After the gate execution is completed, the
-qubits that held the input states now contain the operation's output.
+Quantum physics rules out such an implementations of qubits. In the case of
+matter-based qubits, such as ions in traps or Josephson junctions on
+superconductors, quantum gates are operations that _modify_---or "mutate", to
+borrow a term from programming languages---the physical qubits themselves. An
+input qubit to a gate is thus submitted to physical interactions that change its
+internal state. After the gate execution is completed, the qubits that held the
+input states now contain the operation's output.
+
+Similarly, photonic systems encode qubits using modes of the electromagnetic
+field. A gate in this setting acts by transforming these modes---mixing them,
+shifting their phases, or entangling them with ancillary modes. It is never
+possible to modify qubit data coherently whilst keeping access to the original
+input data.
 
 This has several profound implications for quantum computing. First and
 foremost, every quantum gate must have the same number of inputs as outputs.
@@ -143,10 +150,10 @@ The fact that the amount of quantum information can never increase by
 transforming quantum states matches our intuition: if no new information is
 added from outside the system, then the total information encoded should not be
 increasing. Why, however, is it impossible to erase some information and thus
-reduce its total? The answer is reversibility: it is another foundation of
-quantum physics that every quantum of operation must be undoable, i.e. a
-computation must have an inverse operation that recovers the input when applied
-to the output.
+reduce its total? The answer is reversibility of closed quantum systems: if we
+exclude the option of discarding parts of the physical system, every quantum of
+operation is undoable. In other words, a computation must have an inverse
+operation that recovers the input when applied to the output.
 
 If a quantum operation were thus to erase any information, then an inverse
 operation would exist that creates information from nothing! The two halves of

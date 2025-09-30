@@ -5,13 +5,31 @@ weight = 1
 slug = "sec:sota_parallel"
 +++
 
-First proposed and studied in 1986 by Driscoll et al. @Driscoll1989, persistent
-data structures have a rich history in computer science @Lagogiannis2005, and
-particularly within functional programming @Okasaki1996 @Okasaki1998 @Hinze2005.
-Confluently persistent data structures were first explored in @Driscoll1994. A
-general treatment of the approach was subsequently presented in @Fiat2003 and
-improved in @Collette2012. @Chalermsook2018 proposed a data structure for
-confluently persistent tries.
+The unfolding of a graph transformation system (GTS) was first proposed in
+@Baldan1999a as a generalisation of a well-known construction on Petri nets
+@Winskel1987. Originally defined for DPO rewriting, the unfolding was later
+generalised to SPO @Baldan2007 @Baldan2014 and SqPO @Behr2019 in arbitrary
+adhesive categories. The unfolding is a powerful GTS technique that has found
+applications in model verification @Baldan2008 @Baldan2008b @Costa2012 and other
+formal analysis tools such as model-based diagnosis @Baldan2008a and model
+transformation analysis @Bisztray2009.
+
+Unfoldings of finite GSTs are often infinite. A lot of work has therefore
+concerned itself with finding sufficient conditions for finiteness or the
+existence of finite complete prefixes of unfoldings @Baldan2008 @Baldan2004
+@Baldan2008c @Baldan2010 @Schwoon2013. On the other hand, unfoldings of GTSs of
+quantum computation are expected to be intractably large @Yang2021, with no
+complete prefixes in general. Rather, our interests lie in finding heuristics
+that determine the subspace of the unfolding of interest, combined with fast
+algorithms to expand finite unfolding prefixes into larger ones. This chapter is
+to our knowledge the first work in this direction.
+
+Persistent data structures on the other hand have a rich history in computer
+science @Driscoll1989 @Lagogiannis2005, and particularly within functional
+programming @Okasaki1996 @Okasaki1998 @Hinze2005. Confluently persistent data
+structures were first explored in @Driscoll1994. A general treatment of the
+approach was subsequently presented in @Fiat2003 and improved in @Collette2012.
+@Chalermsook2018 proposed a data structure for confluently persistent tries.
 
 Within the field of graph transformations, there is a well-developed theory for
 persistent (and confluently persistent) transformations in the form of the

@@ -1,0 +1,45 @@
+{{- $title := .Get "title" | markdownify -}}
+{{- $id := .Get "id" -}}
+{{- $enlarge := .Get "enlarge" -}}
+
+{{ if not $id }}
+    {{ errorf "Hypothesis shortcode requires an 'id' parameter" }}
+{{ end }}
+
+{{ $dir := .Page.File.Dir }}
+
+{{ if not (.Site.Store.Get "hyps") }}
+    {{ .Site.Store.Set "hyps" dict }}
+{{ end }}
+
+{{ $hypsMap := .Site.Store.Get "hyps" }}
+
+{{ $maxKey := "max_key" }}
+{{ $hypothesisNumber := "" }}
+
+{{ $hypothesisNumber = index $hypsMap $id }}
+{{ if not $hypothesisNumber }}
+    {{ $currentMax := index $hypsMap $maxKey }}
+    {{ if not $currentMax }}
+        {{ $currentMax = 0 }}
+    {{ end }}
+    {{ $currentMax = add $currentMax 1 }}
+    {{ $hypothesisNumber = $currentMax }}
+    {{ .Site.Store.SetInMap "hyps" $id $hypothesisNumber }}
+    {{ .Site.Store.SetInMap "hyps" $maxKey $currentMax }}
+{{ end }}
+
+{{- $blockClass := "definition-block" -}}
+{{- if $enlarge -}}
+  {{- $blockClass = printf "%s enlarge-%s" $blockClass $enlarge -}}
+{{- end -}}
+
+<div class="{{ $blockClass }}" id="{{ $id }}">
+<div class="definition-header">
+    <span class="definition-label">Hypothesis {{ $hypothesisNumber }}</span>
+    {{- if $title -}}<span class="definition-title">{{- $title -}}</span>{{- end -}}
+</div>
+<div class="definition-content">
+    {{ .Inner | safeHTML }}
+</div>
+</div>

@@ -7,17 +7,25 @@ slug = "sec:simplifying-assumptions"
 
 For simplicity, we will throughout consider minIR graphs that admit a type
 system $\Sigma$, though most of the results can also be adapted to other graph
-domains.
+domains. We will write $T$ for the types of $\Sigma$ (i.e. its values) and
+$\Gamma$ for the operation types (i.e. its edges).
 
 #### Linear paths and operation splitting
 
 An operation type $\nu \in \Gamma$ in the type system $\Sigma$ is a hyperedge.
-Its endpoints $def(\nu)$ and $use(\nu)$ are strings of data types that define
-the input and output signature of the operation $\nu$. We can refer to the set
-of all hyperedge endpoints of $\nu$ using the string indices
-$\mathrm{Idx}(\cdot)$ ($\sqcup$ denotes the disjoint set union):
+Its endpoints
 
-$$P_\nu = \mathrm{Idx}(def(\nu)) \sqcup \mathrm{Idx}(use(\nu)).$$
+$$
+\textit{src}(\nu) = \textit{src}_1(\nu) \cdots
+\textit{src}_s(\nu) \textrm{ and } \textit{tgt}(\nu) = \textit{tgt}_1(\nu) \cdots \textit{tgt}_t(\nu)
+$$
+
+are strings of data types that define the input and output signature of the
+operation $\nu$. We can refer to the set of all hyperedge endpoints of $\nu$
+using the string indices $\mathrm{Idx}(\cdot)$ ($\sqcup$ denotes the disjoint
+set union):
+
+$$P_\nu = \mathrm{Idx}(\textit{src}(\nu)) \sqcup \mathrm{Idx}(\textit{tgt}(\nu)) = \{1, \dots, s\} \sqcup \{1, \dots, t\}.$$
 
 Fix a partition of $P_\nu$ into disjoint pairs
 
@@ -27,17 +35,22 @@ where the last set of the partition may be a singleton if $|P_\nu|$ is odd. For
 every $\nu \in \Gamma$, we then define $f = \lceil |P_o| / 2 \rceil$ new _split
 operation types_ $\nu_1, \dots, \nu_f$, each with two endpoints: the $i$-th
 operation type $\nu_i$ has endpoints $p_i$ and $p_i'$ in $P_\nu$. For every
-operation $o \in O$ of type $\nu$, we can then _split_ $o$ into $f$ operations
-$o_1, \dots, o_f,$ each of arity 2 and of types $\nu_1, \dots, \nu_f$
+operation $o \in E$ of type $\nu$, we can then _split_ $o$ into $f$ operations
+$o_1, \dots, o_f,$ each of arity 1 or 2 and of types $\nu_1, \dots, \nu_f$
 respectively. We will refer to the graph transformation that replaces an
 operation $o$ in a minIR graph with the operations $o_i$ for
 $1 \leqslant i \leqslant f$ as _operation splitting_.
+
+It is important to note that the splitting of an operation $o$ is _unique_ and
+given by the type of $o$, and thus invariant under (typed) morphisms: there is a
+morphism $P \to G$ of a pattern into a graph if and only if there is a morphism
+$P' \to G'$ from the split pattern $P'$ into the split graph $G'$.
 
 <!-- prettier-ignore-start -->
 {{< figure
     src="svg/operation-split.svg"
     alt="Operation splitting"
-    caption="Splitting an operation with 3 uses and 2 defines. The choice of endpoint partition made here, obtained by pairing the $i$-th use with the $i$-th define, is arbitrary, although often a \"natural\" choice."
+    caption="A transformation rule splitting an operation with 3 sources and 2 targets. The choice of endpoint partition made here, obtained by pairing the $i$-th use with the $i$-th define, is arbitrary but convenient for quantum gates as they correspond to the input and output values of a same qubit."
     width="50%"
 >}}
 <!-- prettier-ignore-end -->
@@ -47,33 +60,67 @@ in a minIR graph are on the same linear path if there are values
 $u_1, \dots, u_k$ with $v = u_1$ and $v' = u_k$ such that $u_i$ is connected to
 $u_{i+1}$ through an operation $o$ and they correspond to the same pair of
 endpoints in the endpoints partition (i.e. the indices of $P_{type(o)}$
-correspond to values $u_i$ and $u_{i+1}$ in $use(o) \sqcup def(o)$).
+correspond to values $u_i$ and $u_{i+1}$ in
+$\textit{src}(o) \sqcup \textit{tgt}(o)$).
 
-#### Linearity assumption
+#### Linearity assumption and rigidity
 
-We impose a major restriction on the general case of minIR graphs, namely that
-all types in the type system $\Sigma$ must be linear[^graphiso]. Using this
-assumption, every value has exactly one use and one define. As a result, all
-linear paths are disjoint and form a partition of the values of the graph. They
-correspond to the paths that form the connected components of the _fully split
-graph_, i.e. the graph obtained by splitting every operation. We call the number
-of linear paths (and hence the number of connected components in the fully split
-graph) the graph _width_, written $width(G)$. We also use the linear path
-decomposition to define _graph depth_, written $depth(G)$, as the longest linear
-path in $G$.
+Recall that in {{% refdefinition "def-linearity" %}}, $V_\textit{src}$ and
+$V_\textit{tgt}$ refer to the subset of values that are within the domain of
+definition of $\textit{src}$ and $\textit{tgt}$ respectively. For this chapter,
+we will assume $V_\textit{src} = V_\textit{tgt} = V$; in other words, minIR
+graphs are IO-free (this is w.l.o.g., see discussion after
+{{% refproposition "prop-dpo-valid" %}}) and all values are linear[^graphiso]
+(this is definitely _not_ w.l.o.g.!).
+
+As a result of this assumption, the subcategory of minIR graphs that we consider
+forms a _rigid_ category, as introduced by Danos et al. @Danos2014. The
+definition, which we reproduce here, is given in terms of morphisms that
+_intersect all components_ of the codomain. We refer to @Danos2014 for the
+precise definition of that notion: in the context of linear-valued minIR graphs,
+this is equivalent to requiring that the image of the graph homomorphism
+intersects every connected component of the codomain.
+
+{{% definition title="Rigid Category" id="def-rigid-category" %}}
+
+A category $\mathbb C$ is rigid if for all morphisms $A \xrightarrow{h} B$ in
+$\mathbb C$ that intersects all components of $B$ and for all
+$A \xrightarrow{g} C$ that factorises as $g = f \circ h$, then
+$B \xrightarrow{f} C$ is unique.
+
+{{% /definition %}}
+
+In other words, there is a unique way to extend a morphism $A \xrightarrow{g} C$
+to a morphism $B \xrightarrow{f} C$, if it exists. If we interpret $A$ and $B$
+as graph patterns that we are interested in matching with $A \subseteq B$, then
+rigidity guarantees that there is (at most) a unique way to extend a match
+morphism $A \to G$ into a match morphism on the larger pattern $B \to G$.
+
+The linearity assumption also has other useful consequences. Every linear value
+has exactly one use and one definition. As a result, all linear paths are
+disjoint and form a partition of the values of the graph. They correspond to the
+paths that form the connected components of the _fully split graph_, i.e. the
+graph obtained by splitting every operation. We call the number of linear paths
+(and hence the number of connected components in the fully split graph) the
+_circuit width_, written $width(G)$. We also use the linear path decomposition
+to define _circuit depth_, written $depth(G)$, as the longest linear path in
+$G$.
 
 [^graphiso]:
-    This restriction is necessary: copyable values may admit an arbitrary number
-    of adjacent hyperedges. As a result, minIR graph pattern matching with
-    copyable values is a generalisation of the subgraph isomorphism problem, a
-    well-known NP-complete problem @Cook1971. The approach generalises to
-    non-linear types, but the complexity analysis no longer holds (we pay a
-    computational price for every non-linear value matched).
+    This restriction is necessary for our results: copyable values may admit an
+    arbitrary number of adjacent hyperedges. As a result, minIR graph pattern
+    matching with copyable values is a generalisation of the subgraph
+    isomorphism problem, a well-known NP-complete problem @Cook1971. The
+    approach generalises to non-linear types, but the complexity analysis no
+    longer holds (we pay a computational price for every non-linear value
+    matched).
 
-As discussed in {{% reflink "sec-gts-def" %}}, minIR rewrites are instantiated
-from transformation rules by minIR morphisms $\varphi: P \to G$. By assumption,
-all values in $G$ are linear, and thus $\varphi$ is injective. We say $\varphi$
-is an embedding and write it as $\varphi: P \hookrightarrow G$.
+As discussed in {{% reflink "sec:rewrite-def" %}}, minIR rewrites are
+instantiated from transformation rules by minIR match morphisms $m: P \to G$.
+Restricting our considerations to linear-valued minIR graphs has the further
+implication that all such match morphsisms $m$ will be injective. We call $m$ an
+embedding and write it using greek letters and a hooked arrow
+$$m = \varphi: P \hookrightarrow G.$$
 
 Finding such embeddings $P \hookrightarrow G$ is the _pattern matching problem_
 that we are solving. This problem is equivalent to finding minIR subgraphs
@@ -83,15 +130,16 @@ $H \subseteq G$ of $G$ such that $H$ is isomorphic to the pattern $P \simeq H$.
 
 According to {{% refproposition "prop-fullrewrite" %}}, a necessary condition
 for a subgraph $H$ to define a valid minIR rewrite is _convexity_. In this
-chapter we weaken this requirement and propose a condition based on graph width:
+chapter we weaken this requirement and propose a condition based on circuit
+width:
 
 <!-- prettier-ignore -->
 {{< proposition title="Necessary condition for convexity" id="prop-convexity" >}}
 
-Let $\varphi: P \hookrightarrow G$ be an embedding of a pattern $P$ into a minIR
-graph $G$ with linear types such that $\varphi(P)$ is a convex subgraph of $G$.
-Then for every subgraph $H \subseteq G$ such that $\varphi(P) \subseteq H$, it
-holds that $width(P) \leq width(H).$
+Let $\varphi: P \hookrightarrow G$ be an embedding of a pattern $P$ into a
+linear-valued minIR graph $G$ such that $\varphi(P)$ is a convex subgraph of
+$G$. Then for every subgraph $H \subseteq G$ such that $\varphi(P) \subseteq H$,
+it holds that $width(P) \leq width(H).$
 
 <!-- prettier-ignore -->
 {{< /proposition >}}
@@ -163,7 +211,7 @@ on two linear paths as follows:
     caption="Expressing an operation on $\Delta = 3$ linear paths as a composition of two operations on 2 linear paths." width="70%">}}
 <!-- prettier-ignore-end -->
 
-This transformation leaves graph width unchanged but may multiply the graph
+This transformation leaves circuit width unchanged but may multiply the graph
 depth by up to a factor $\Delta$.
 
 We furthermore define the set of all _port labels_
@@ -175,12 +223,14 @@ _port label_ from the set $P_{all}$. We further endow the labels $P_{all}$ with
 a total order (for instance, based on the string index values). The total order
 on $P_{all}$ then induces a total order on the paths $v_1\cdots v_k \in V^\ast$
 in $G$ that start in the same value $v_1$: the paths are equivalently described
-the sequence of port labels of the operations traversed. These form strings in
-$P_{all}^\ast$, which we order lexicographically. Given a root value $r$, for
+by the sequence of port labels of the operations traversed. These form strings
+in $P_{all}^\ast$, which we order lexicographically. Given a root value $r$, for
 every value $v$ in $G$ there is thus a unique smallest path from $r$ to $v$ in
 $G$[^thisisdfs]. This path is invariant under isomorphism of the underlying
 graph (i.e. relabelling of the values and operations but preserving the port
-labels).
+labels). With this we conclude the discussions of the specificities of minIR
+graphs related to typing, linearity and hierarchy, and the related assumptions
+that we are making.
 
 [^thisisdfs]:
     Remark that the ordering of the operations thus defined is a particular case
@@ -188,39 +238,36 @@ labels).
     that has been visited, all its descendants will be visited before proceeding
     to any other operation.
 
-With this we conclude the discussions of the specificities of minIR graphs
-related to typing, linearity and hierarchy, and the related assumptions that we
-are making. Syntactically, minIR graphs as they are considered in this chapter
-are hypergraphs as defined in {{% refdefinition "def-hypergraph" %}} with the
-following properties
+To summarise, minIR graphs as they are considered in this chapter are
+hypergraphs ({{% refdefinition "def-hypergraph" %}}) that satisfy the following
+properties
 
-- vertices are values, hyperedges are operations in the computation,
-- every vertex is incident to at most two hyperedges. It is the target of at
-  most one hyperedge (its _definition_) and the source of at most one hyperedge
+- every vertex (value) is incident to exactly two hyperedges (operations). It is
+  the target of one hyperedge (its _definition_) and the source of another one
   (its _use_),
 - every hyperedge is incident to at most four vertices,
 - every hyperedge can be _split_ in a unique way (and invariant under
   isomorphism) into at most two split operations, with each at most two
   endpoints.
 
-Note that such hypergraphs also model subgraphs of minIR graphs, which may not
-be valid minIR graphs themselves, because of missing hyperedge connections at
-the boundary of the subgraph. In this case, we say a value is _open_ if a use or
-define operation is missing (i.e. it is a boundary value in a minIR subgraph).
+When modelling subgraphs of IO-free minIR graphs (typically patterns for pattern
+matching), some hyperedge connections at the boundary of the subgraph will be
+missing. We say a value is _open_ if a use or define operation is missing (i.e.
+it is a boundary value in a minIR subgraph).
 
 We will simplify refer to hypergraphs that satisfy the above assumptions as
 _graphs_. In the unique instance of this chapter where a graph that does not
 satisfy this construction is referred to, we will specifically call it a _simple
 graph_.
 
-We conclude with the following notable bound on graph width.
+We conclude with the following notable bound on circuit width.
 
 <!-- prettier-ignore -->
-{{< proposition title="Bound on graph width" id="prop-widthbound" >}}
+{{< proposition title="Bound on circuit width" id="prop-widthbound" >}}
 
 Let $G$ be a graph with $n_\textrm{odd}$ operations of odd arity (i.e.
-$|def(o) + use(o)|$ is odd) and $n_\omega$ open values. Then, the graph width of
-$G$ is
+$|def(o) + use(o)|$ is odd) and $n_\omega$ open values. Then, the circuit width
+of $G$ is
 
 $$width(G) = \lfloor(n_\textrm{odd} + n_\omega) / 2\rfloor.$$
 
@@ -244,3 +291,11 @@ one such operation and one open value, or two open values. The result follows.
 
 <!-- prettier-ignore -->
 {{% /proof %}}
+
+$$
+
+
+$$
+
+$$
+$$

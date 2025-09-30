@@ -57,12 +57,11 @@ of $G$ to produce a set of _rewrites_ that can be applied to $G$ and mutate $G$.
 
 {{% /hint %}}
 
-In this thesis, we are mostly preoccupied with problems of _graph rewriting_,
-i.e. the definition and application of the data required to mutate graphs, as
-opposed to _graph transformations_. As a result, whereas the literature often
-presents transformation rules first and then derives the set of corresponding
-graph mutations, our presentation focuses primarily on graph and graph mutation
-semantics and defers the discussion of rules to {{< reflink "sec-gts-def" >}}.
+Our contributions in the subsequent chapters are mostly preoccupied with
+problems of _graph rewriting_, i.e. the definition and application of the data
+required to mutate graphs, as opposed to _graph transformations_. This chapter
+nonetheless considers both, using the mature graph transformation framework as a
+foundation to define IR rewriting semantics.
 
 {{< reflink "upper" "sec:gts-sota" >}} starts with a review of previous related
 work at the intersection of graph transformation software and quantum program
@@ -70,11 +69,12 @@ optimisation. We then discuss in {{< reflink "sec-compgraphs" >}} a fundamental
 difference between classical computation graphs and the requirements of quantum
 computation. This motivates a new graph-based IR tailored to quantum computation
 that we present in {{< reflink "sec:graph-defs" >}}, along with formal graph
-rewriting semantics ({{< reflink "sec:rewrite-def" >}}). The main difficulty
-here is in ensuring that rewrites cannot create invalid graphs. We conclude in
-{{< reflink "sec-gts-def" >}} by proposing definitions for transformation
-systems on the IR and discuss how they compare to the double pushout (DPO)
-construction.
+rewriting semantics based on sesqui-pushout (SqPO) transformations
+({{< reflink "sec:rewrite-def" >}}). Whilst the SqPO transformation definition
+is constructive, its existence is not guaranteed. We conclude the chapter in
+{{< reflink "sec:rewrite-operational" >}} by discussing a more restricted
+"operational" notion of graph rewriting that will be useful for the rest of the
+thesis.
 
 <!-- The term "rewriting" is also used in this thesis whenever we mention
 transformation systems that act not on graphs but on strings and terms, as this

@@ -27,95 +27,390 @@ requires storing and preserving an ordering of the incoming and outgoing edges
 
 Instead, we adopt the hypergraph formalisation of computation graphs, which is
 more common within category theory (see string diagrams @Selinger2010 and their
-formalisation in the hypergraph category @Bonchi2022 @Wilson2022). We will see
-that this definition is particularly well-suited for graph transformation
-because the graph transformations of interest to us correspond to graph glueing
-semantics, akin to double pushout (DPO) rewrites.
+formalisation in the hypergraph category @Bonchi2022 @Wilson2022). This
+definition is particularly well-suited for our purposes because it frames the
+graph transformations of interest to us in the well-studied language of
+rewriting within adhesive categories @Lack2004.
 
-At a minimum, a hypergraph is defined by a set of vertices $V$ and a set of
-(hyper) edges $E \subseteq V^\ast$---we will always consider hypergraphs where
-the vertices attached to $e \in E$ are given by a list, i.e. are ordered.
-Equivalently, the edges can be defined by an arbitrary set $E$ along with a map
-$E \to V^\ast$. We opt for this latter formalism, as it allows us to distinguish
-between two types of edge endpoints: edge _sources_ and _targets_.
+### Hypergraphs and minIR
+
+At a minimum, a directed hypergraph---for simplicity sometimes in the following
+referred to simply as _graph_---is defined by a set of vertices $\mathbf V$ and
+a set of (hyper) edges $\mathbf E$. We will always consider hypergraphs where
+the edges $e \in \mathbf E$ are directed and the vertices attached to $e$ are
+given by ordered lists. We formalise this incidence relation between vertices in
+$\mathbf V$ and edges in $\mathbf E$ by writing $\mathbf E$ as the partition
+over the disjoint sets $\mathbf E_{st}$
+
+$$\mathbf E = \bigsqcup_{s, t \in \mathbb{N}} \mathbf E_{st}$$
+
+and introducing $s$ source and $t$ target maps for each $\mathbf E_{st}$. Why we
+write sets in boldface will become clear in a moment.
 
 <!-- prettier-ignore -->
-{{% definition title="Hypergraph" id="def-hypergraph" %}}
-A hypergraph is a tuple $G = (V, E, \mathit{src}, \mathit{tgt})$
-where $V$ is a set of vertices, $E$ is a set of edges and $\mathit{src}$ and $\mathit{tgt}$
-are functions that map edges to lists of sources and target vertices, respectively:
-$$\mathit{src}: E \rightarrow V^\ast \quad\quad\quad \mathit{tgt}: E \rightarrow V^\ast.$$
+{{% definition title="Directed hypergraph" id="def-hypergraph" %}}
+A directed hypergraph is given by sets $\mathbf V$ and $\mathbf E_{st}$ for $s, t \in\mathbb{N}$,
+along with maps
+
+{{% centered numbered="eq-hypergraph" %}}
+
+$$
+\begin{aligned}
+\textit{src}_{st,i}&: \mathbf E_{st} \to \mathbf V\quad&\textrm{for } 1 \leqslant i \leqslant s\\
+\textit{tgt}_{st,j}&: \mathbf E_{st} \to \mathbf V&\textrm{for } 1 \leqslant j \leqslant t\\
+\end{aligned}
+$$
+
+{{% /centered %}}
+
+for all $s, t \in \mathbb{N}$.
 
 <!-- prettier-ignore -->
 {{% /definition %}}
 
-We write $u \leadsto v$ to say that there is an edge from $u$ to $v$, i.e. there
-is $e \in E$ such that $u \in src(e)$ and $v \in tgt(e)$. We also define the
-equivalence relation $u \sim v$ of connected vertices, i.e. either
-$u \leadsto v$, $v \leadsto u$, or there exists $w$ with $u \sim w$ and
-$w \sim v$.
+Note that in this thesis, as in most common uses of hypergraphs, the sets
+$\mathbf V$ and $\mathbf E = \bigsqcup \mathbf E_{st}$ will always be finite,
+and thus $\mathbf E_{st} \neq \varnothing$ for a finite number of
+$s, t \in \mathbb{N}$ only.
+
+For simplicity, we can further omit the $st$ subscript of the source
+$\textit{src}_{st,i}$ and target $\textit{tgt}_{st,j}$ maps whenever it can be
+inferred from the domain of definition of the map. For $e \in \mathbf{E}_{st}$,
+we call $\textit{src}_{1}(e), \dots, \textit{src}_{s}(e) \in \mathbf{V}$ the $s$
+source vertices of $e$ and
+$\textit{tgt}_{1}(e), \dots, \textit{tgt}_{t}(e) \in \mathbf{V}$ the $t$ target
+vertices of $e$.
+
+We introduce the notation $u \leadsto v$ to signify that there is an edge from
+$u$ to $v$, i.e. there is $e \in \mathbf E_{st}$ for some $s, t \in \mathbb N$
+and $1 \leqslant i \leqslant s, 1 \leqslant j \leqslant t$ such that
+$u = src_i(e)$ and $v = tgt_j(e)$. We define the equivalence relation
+$\sim \subseteq \mathbf V^2$ of connected vertices, given by the transitive,
+symmetric and reflexive closure of $\leadsto$. The equivalence classes of $\sim$
+are the connected components of the graph. We will write $[v]$, resp. $[e]$ for
+the connected component that contains the vertex $v$, resp. the edge $e$.
+
+To proceed, it is useful to frame the hypergraph definition in a categorical
+setting. We write $[\mathbb{C}, \mathrm{Set}]$ for the presheaf topos of the
+category $\mathbb{C}$, i.e. the category with functors
+$\mathbb{C} \to \mathrm{Set}$ as objects and natural transformations as
+morphisms. {{% refdefinition "def-hypergraph" %}} can be equivalently restated
+as:
+
+> hypergraphs are objects in the presheaf topos
+> $\mathbb H = [\mathbb{C}, \mathrm{Set}]$,
+
+where the category $\mathbb{C}$ has objects $V$ and $E_{st}$ for
+$s, t \in \mathbb{N}$ and arrows given by {{% refcentered "eq-hypergraph" %}},
+now interpreted as morphisms in $\mathbb{C}$ rather than as functions in
+$\mathrm{Set}$. In this framing, a graph is a functor that defines a set for
+each object of $\mathbb{C}$ and specifies functions between these sets---one for
+each arrow in $\mathbb{C}$.
+
+This is where the distinction between bold and non-bold typeface comes from: we
+use bold letters to refer to images in $\mathrm{Set}$ of a hypergraph functor,
+whereas the non-bold typeface is refers to objects in the indexing category
+$\mathbb C$. The distinction between $\mathbb C$ and $\mathrm{Set}$ is less
+important for morphisms---it will typically be clear from the context. We thus
+use the same symbols for both.
+
+#### Linearity constraints
+
+The introduction of $\mathbb H$ not only gives us a notion of hypergraph
+homomorphisms---maps between hypergraphs that preserve the structure of the
+graph. It also provides us with a way to express the linearity constraints that
+arise from our discussion in {{% reflink "sec-compgraphs" %}}, and which we must
+enforce on our computation graphs.
+
+The definition that follows adds the coproduct $E$ explicitly as an object of
+the category (which we did not need to do in
+{{% refdefinition "def-hypergraph" %}}), as we need it as the codomain of the
+new morphisms $\textit{use}$ and $\textit{def}$. The adhesitivity of the
+category does no longer comes for free---we will get back to this in
+{{% reflink "sec:rewrite-def" %}}.
+
+<!-- prettier-ignore -->
+{{% definition title="Hypergraph with linearity constraints" id="def-linearity" %}}
+The category
+$\textrm{lin-}\mathbb{C}$ is the category given by objects
+$$\{V, V_\textit{src}, V_\textit{tgt}\} \cup \{ E \} \cup \{ E_{st}\, |\, s, t \in \mathbb{N}\}.$$
+Its arrows are the incidence morphisms given in {{% refcentered "eq-hypergraph" %}},
+along with
+
+$$
+\begin{aligned}
+\mathit{use}&: V_\textit{src} \to E\quad&
+\mathit{def}&: V_\textit{tgt} \to E\\
+\lambda_\mathit{src}&: V_\textit{src} \rightarrowtail V&
+\lambda_\mathit{tgt}&: V_\textit{tgt} \rightarrowtail V\\
+\end{aligned}
+$$
+
+and $\iota_{st}: E_{st} \rightarrowtail E$ for all $s, t \in \mathbb{N}$. The
+morphisms $\lambda_\mathit{src}, \lambda_\mathit{tgt}, \iota_{st}$ are split
+monomorphisms and the following diagrams commute for all $s, t \in \mathbb{N}$
+and $1 \leqslant i \leqslant s, 1 \leqslant j \leqslant t$:
+
+<!-- prettier-ignore-start -->
+{{% centered numbered="eq-linearity" %}}
+{{% figure
+    src="/svg/linearity-cd.svg"
+    width="60%"
+    nobg=true
+%}}
+{{% /centered %}}
+<!-- prettier-ignore-end -->
+
+Directed hypergraphs with linearity conditions are objects in the full
+subcategory $\textrm{lin-}\mathbb H$ given by objects
+$H_\mathrm{lin} \in [\textrm{lin-}\mathbb{C}, \mathrm{Set}]$ such that
+$$\mathbf E = \bigsqcup \mathbf E_{st}$$ is the coproduct in $\mathrm{Set}$ and
+$H_\mathrm{lin}(\iota_{st}): H_\mathrm{lin}(E_{st}) \to H_\mathrm{lin}(E)$ are
+the injections into $H_\mathrm{lin}(E)$.
+
+<!-- prettier-ignore -->
+{{% /definition %}}
+
+We probably owe an explanation for this definition---at least for the sake of
+the few computer scientists that are still following us.
+
+First of all, notice that every hypergraph with linearity constraint corresponds
+to a hypergraph in the sense of {{% refdefinition "def-hypergraph" %}}: there is
+an obvious functor $\mathcal{L}: \mathbb{C} \to \textrm{lin-}\mathbb{C}$ that
+maps each object and morphism in $\mathbb{C}$ to the object or morphism with the
+same name in $\textrm{lin-}\mathbb{C}$. By contravariance, we can thus
+(functorially) map every hypergraph with linearity constraints
+$H_\mathrm{lin} \in \textrm{lin-}\mathbb{H}$ to the hypergraph
+$H = H_\mathrm{lin} \circ \mathcal{L} \in \mathbb{H}$.
+
+Another way of looking at this is to realise that by requiring that
+$\lambda_\mathit{src}, \lambda_\mathit{tgt}$ be split monomorphisms, we obtain
+that the resulting functions in $\mathrm{Set}$ are injective. Up to isomorphism,
+we can consider that
+$\mathbf{V}_\textit{src}, \mathbf{V}_\textit{tgt} \subseteq \mathbf{V}$ are
+subsets of vertices in $H_\mathrm{lin}$. A hypergraph with linearity constraints
+is thus a directed hypergraph with two selected subsets of vertices
+$\mathbf{V}_\textit{src}$ and $\mathbf{V}_\textit{tgt}$.
+
+Vertices within these subsets are special. For every
+$v \in \mathbf{V}_\textit{src}$, there exist unique indices
+$s, t \in \mathbb{N}$, $1 \leq i \leq s$ and edge
+$use(v) = e \in \mathbf{E}_{st}$ such that $\textit{src}_i(e) = v$. In words,
+for every $v\in \mathbf{V}_\textit{src}$ there is a unique edge in the
+hypergraph that has $v$ as one of its sources. We then say that $e$ is the
+unique _use_ of vertex $v$. Similarly, vertices in $\mathbf{V}_\textit{tgt}$
+have a unique edge $e$ in the hypergraph with $v$ as one of its targets---it is
+the unique _definition_ of $v$.
+
+#### Typed graphs
+
+MinIR graphs are strongly typed. We introduce _typed_ graphs for this purpose, a
+concept for which graph transformation was first formalised in @Ehrig2004. A
+_type system_ for directed hypergraphs is just another object
+$\Sigma \in \mathbb H$. A _typed graph_ is then an object of the slice category
+$\mathbb H \searrow \Sigma$, that is to say, typed graphs are morphisms
+$H \to \Sigma$ of $\mathbb{H}$ and morphisms between typed graphs are given by
+the subset of morphisms $H_1 \rightarrow H_2$ of $\mathbb H$ that make the
+triangle diagram formed by $H_1$, $H_2$ and $\Sigma$ commute.
+
+To type hypergraphs with linearity constraints, we do not pick the type system
+$\Sigma$ in $\textrm{lin-}\mathbb H$, as the existence of $use$ and $def$
+morphisms impose restrictions that are too strict. We consider instead the
+category $\textrm{lin-}\mathbb C_\textrm{type}$ given by the same objects as
+$\textrm{lin-}\mathbb C$, as well as the same morphisms, with the omission of
+$use$ and $def$. There is an obvious functor
+$\textrm{lin-}\mathbb C_\textrm{type} \to \textrm{lin-}\mathbb C$ and thus, by
+contravariance, every hypergraph with linearity constraints
+$H_\textrm{lin} \in \textrm{lin-}\mathbb H$ can be mapped to a hypergraph in
+$\textrm{lin-}\mathbb H_\textrm{type}$. We say that a hypergraph with linearity
+constraints $H_\textrm{lin} \in \textrm{lin-}\mathbb H$ is $\Sigma$-_typed_ for
+a type system $\Sigma \in \textrm{lin-}\mathbb H_\textrm{type}$ if there is a
+morphism $\Sigma \to H_\textrm{lin}$, when interpreting $H_\textrm{lin}$ is as
+an object of $\textrm{lin-}\mathbb H_\textrm{type}$.
+
+{{% figure src="/svg/hypergraph-example.svg"
+           width="70%"
+           enlarge="full"
+           caption="Two example hypergraphs. Vertices (labelled with capital letters) are circles and hyperedges (labelled with small letters) span between them. Vertices that are attached to an edge in the black half of the circle correspond to source vertices of the edge; those in the white half correspond to target vertices. The functions $src_i$ and $tgt_j$ map edges to the incident vertices, defining the directed hypergraph. On the left, there are further functions $\textit{use}$ and $\textit{def}$ that map vertices to the unique edge that uses or defines them. This defines a hypergraph with linearity constraints, with $V_\textit{tgt} = \{A_1, A_2\}$ and $V_\textit{src} = \{A_3\}$. These cannot be defined on the graph on the right. On the other hand, the edges `b` and `c` are in $F_{11}$, and are in the domain of functions $in_{11}$ and $out_{11}$, thus defining a child region of a hierarchical graph. Note that it would be invalid to have any edge connecting $i_1$ or $o_1$ to $i_2$ or $o_2$. The $i$ and $o$ vertices also have incidence morphisms, not displayed here." %}}
+
+#### Hierarchical hypergraphs
+
+A final bit of structure that minIR graphs require is a notion of hierarchy
+between regions of the graph. This will be useful to define functions, control
+flow blocks such as `if-else`, or any subroutine that can itself be viewed as an
+operation in the computation.
+
+Hierarchical hypergraphs were first proposed in @Drewes2002 and further
+generalised in @BUSATTO2005 @Palacz2004. However, we opt to use a more
+restrictive definition, closer to the notion of flattened hypergraphs of
+@Drewes2002. The reason for this is twofold. Firstly, hierarchical (hyper)graphs
+are typically defined recursively. It is not obvious under which conditions (and
+if) such definitions form adhesive categories, although progess in this
+direction was made in @Padberg2017 with the introduction of coalgebraic graphs.
+As a result, to the extent that graph transformation results can be applied to
+such structures, it must be done so carefully.
+
+The second, more practical, reason is that the notion of typed graph introduced
+above cannot be directly lifted to the hierarchical graph setting: while some
+subset of the hierarchical relation in minIR should be enforced by the type
+system, the type graph of a nested graph should be identical to the parent's (as
+opposed to being itself nested within the type graph of the parent).
+
+It is therefore more convenient for us to encode hierarchy in directed
+hypergraphs as follows. Note that it is not clear that our definition is
+adhesive either[^itisnot]---but at least it is framed as a subcategory of a base
+category that is.
+
+[^itisnot]:
+    And in fact, we will see in {{% reflink "sec:rewrite-def" %}} that it is
+    not.
+
+<!-- prettier-ignore -->
+{{% definition title="Hierarchical hypergraph" id="def-hier-hypergraph" %}}
+
+The category $\textrm{hier-}\mathbb C$ is the category with objects and arrows
+of $\mathbb C$ along with additional objects $F_{st}$ for $s, t \in \mathbb{N}$
+and arrows:
+
+- $F_{st} \rightarrowtail E_{st}$ that are split monomorphisms,
+- input arrows $F_{st} \xrightarrow{in_{st}} E_{0s}$, and output arrows
+  $F_{st} \xrightarrow{out_{st}} E_{t0}$.
+
+Hierarchical hypergraph are the objects in the full subcategory
+$\textrm{hier-}\mathbb H$ given by objects
+$H_\textrm{hier} \in [\textrm{hier-}\mathbb{C}, \mathrm{Set}]$ such that
+
+- for any edge $e \in \mathbf{E}$ of $H_\textrm{hier}$, the set
+  $P([e]) = \overline{in}^{-1}([e]) \cup \overline{out}^{-1}([e])$ has at most
+  one element.
+- the transitive and reflexive closure of $[e] \preccurlyeq [P([e])]$ for
+  $e \in \mathbf E$ is a partial order on the connected components of
+  $H_\textrm{hier}$.
+
+Here $\overline{in}$ and $\overline{out}$ are the functions with domain
+$\mathbf E$ defined piecewise as $in_{st}$ and $out_{st}$ for all $s, t$ on
+their respective (disjoint) domains of definition.
+
+  <!-- prettier-ignore -->
+
+{{% /definition %}}
+
+The same definition can also be applied to $\textrm{lin-}\mathbb H$ to obtain
+the category of hierarchical directed hypergraphs with linearity constraints
+$\textrm{hier-lin-}\mathbb H$. Similarly, we define the associated category for
+type systems; however, we do not impose any of the two conditions related to
+$P(\cdot)$ for the type category, i.e.
+$\textrm{hier-lin-}\mathbb H_\textrm{type} = [\textrm{hier-lin-}\mathbb C_\textrm{type}, \mathrm{Set}]$
+is the full presheaf category, rather than a subcategory of it.
+
+As with the incidence morphisms $\textit{src}$ and $\textit{tgt}$, we will drop
+the $st$ subscript for the IO arrows $\textit{in}$ and $\textit{out}$ when it
+can be inferred from the domain of definition.
+
+Just as in the discussion of {{% refdefinition "def-linearity" %}}, we interpret
+the split monomorphisms as equivalent to requiring
+$\mathbf{F}_{st} \subseteq \mathbf{E}_{st}$. Taking over terminology from
+@Drewes2002, we call elements $f \in \mathbf{F}_{st}$ the _frames_ of
+$H_\textrm{hier} \in \textrm{hier-}\mathbb H$. For each frame $f$, there is thus
+a unique _input_ edge $in(f)$ and a unique _output_ edge $out(f)$ in
+$H_\textrm{hier}$ that have respectively $s$ targets and zero sources, and $t$
+sources and zero targets.
+
+By the first condition we imposed on $P(\cdot)$, the partial function $parent$
+mapping connected components to their _parent_ edge:
+
+$$
+parent([e]) = \begin{cases}
+p\quad&\textrm{ if there exists } p \in P(e)\\
+\bot&\textrm{ otherwise.}
+\end{cases}
+$$
+
+is well-defined. We call the subgraphs of $H_\textrm{hier}$ that share a same
+parent a _region_ of $H_\textrm{hier}$[^regconnected]. The subgraph of vertices
+and edges without parent is the _root region_ of $H_\textrm{hier}$.
+
+[^regconnected]:
+    Note that a region may not be a connected subgraph. Albeit, it is a simple
+    exercice to convince yourself that any non-root region contains either one
+    or two connected components.
+
+#### The minIR computation graph
 
 In minIR, the vertices are the values of the computation, while the hyperedges
-define the operations. We call values that are target endpoints of an operation
-$o$ the _definitions_ of $o$, and those that are source endpoints its
-_uses_---and hence rename the adjacency functions $\mathit{src}$ and
-$\mathit{tgt}$ to $\mathit{use}$ and $\mathit{def}$ respectively. For a
-hypergraph to be a valid minIR graph, some constraints must further be
-satisfied:
+define the operations. This imposes some constraints for a hypergraph to be a
+valid minIR graph:
 
 - all values in minIR must have a unique operation that _defines_ them;
 - values that are _linear_ must also have a unique operation that _uses_ them;
 - the graph must be acyclic, meaning that no value can be defined in terms of
   itself.
 
-These requirements result in the first three conditions of
-{{% refdefinition "minirdef" %}}. Finally, minIR graphs have a concept of
-_regions_ that create a hierarchy on the set of operations that captures the
-structure the program.
+This can be expressed as a hypergraph with linearity constraints by choosing
+$\mathbf V_\textit{tgt} = \mathbf V$ and $\mathbf V_\textit{src} = \mathbf V_L$,
+where $\mathbf V_L \subseteq \mathbf V$ is the subset of linear values.
 
-Regions are defined by a partial function $parent$. Partial functions
-$f: A \rightharpoonup B$ are functions that may only be defined on a subset of
-$A$, i.e. with a domain of definition $dom(f) \subseteq A$.
+The following definition then comes as no surprise:
 
 <!-- prettier-ignore -->
 {{% definition title="MinIR graph" id="minirdef" %}}
 
-A minIR graph $(V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$ is
-given by a set of values $V$, a subset of which $V_L \subseteq V$ are linear
-values, and a set of operations $O$, along with the (partial) functions
-$$\begin{aligned}\mathit{def}: O \rightarrow V^\ast && \mathit{use}: O \rightarrow V^\ast && \mathit{parent}: O \rightharpoonup O, \end{aligned}$$
-satisfying the constraints
+Let $\Sigma \in \textrm{hier-lin-}\mathbb H_\textrm{type}$ be a type system. A
+minIR graph $H$ typed in $\Sigma$ is an object of $\textrm{hier-lin-}\mathbb H$
+that is $\Sigma$-typed and such that the adjacency relation $\leadsto$ is
+acyclic. We call $\mathbf V_\textit{src} = \mathbf V_L$, the linear values of
+$H$.
 
-- for all $v \in V$, there exists a unique operation $o \in O$ such that
-  $v \in \mathit{def}\,(o)$
-- for all $v \in V_L$, there exists a unique operation $o \in O$ such that
-  $v \in \mathit{use}\,(o)$
-- the relation $\preccurlyeq \, \subseteq O^2$ obtained by the transitive
-  closure of
-  $$\begin{cases}o \preccurlyeq o' &\textrm{if }o \leadsto o'\\ o \preccurlyeq o' &\textrm{if }o = \mathit{parent}(o')\end{cases}$$
-  is a partial order.
-- for all $o, o' \in dom(\mathit{parent}\,)$ such that $o \sim o'$,
-  $\ \mathit{parent}\,(o) = \mathit{parent}\,(o')$.
   <!-- prettier-ignore -->
-  {{% /definition %}}
+
+{{% /definition %}}
 
 In the context of minIR, $\leadsto$ relations encode the data flow of values
-across the computation. The _regions_ of the graph are then given by the sets
+across the computation. The lack of explicit operation ordering differentiates
+minIR (and HUGR) from most classical IRs, which, unless specified otherwise,
+typically assume that instructions may have side effects and thus cannot be
+reordered. All quantum operations (and the classical operations we are
+interested in) are side-effect free, which significantly simplifies our IR.
 
-$$R_p = \{ o \in O \mid \textrm{there exists } o' \sim o \textrm{ with }parent(o') = p \}$$
+#### Input and output values
 
-for all $p \in im(parent)$ in the image of $parent$. We also define the _root_
-region $R_{root}$, containing all operations not in any other region. Regions
-form a tree hierarchy: any non-root region $R_p$ has a _parent_ region, given by
-the region $p$ belongs to. If $R_{p_1}$ is an ancestor of $R_{p_2}$, we say that
-$R_{p_2}$ is nested within $R_{p_1}$. At times, it will be more convenient to
-view regions equivalently as partitions of the _values_ of a minIR graph.
+Notice that in {{% refdefinition "minirdef" %}}, it is not enforced that _every_
+value has a definition, i.e. there might be
+$v \in \mathbf V \setminus \mathbf V_\textrm{tgt}$; nor that every value with a
+linear type is in $\mathbf V_L$, i.e. if $\tau: H \to \Sigma$ is the typing
+morphism and $\mathbf T_L$ are the linear types in the type system, there might
+be $v \in \tau^{-1}(\mathbf T_L) \setminus \mathbf V_L$.
 
-The lack of explicit operation ordering differentiates minIR (and HUGR) from
-most classical IRs, which, unless specified otherwise, typically assume that
-instructions may have side effects and thus cannot be reordered. All quantum
-operations (and the classical operations we are interested in) are side-effect
-free, which significantly simplifies our IR.
+This would be easy to fix: we could on the one hand enforce the equality
+$\mathbf V_\textrm{tgt} = \mathbf V$, thus guaranteeing that every value has a
+unique definition in the graph. On the other hand, we could define $\mathbf V$
+as the coproduct $\mathbf V = \mathbf V_L \sqcup \mathbf V_\textit{NL}$, where
+$V_\textit{NL}$ is a new object introduced to explicitly capture the set of
+non-linear values. Morphisms in this category would guarantee that the linearity
+of values is always preserved, and thus in particular the type morphism would
+map a value to a linear type if and only if it is linear.
+
+Instead, we opt to allow undefined values and unused linear values to be able to
+express rewrite rules that match sugraphs of minIR graphs within the same
+category.
+
+<!-- prettier-ignore -->
+{{% definition title="Inputs and outputs of minIR graphs" id="def-input-output" %}}
+For a minIR graph $H$ with typing morphism $\tau: H \to \Sigma$, we call the set
+$I = \mathbf V \setminus \mathbf V_\textit{tgt}$ the _input values_ of $H$ and
+$O = \tau^{-1}(\mathbf T_L) \setminus \mathbf V_L$ its _output values_, where
+$\mathbf T_L$ are the linear values in $\Sigma$.
+
+If $I = O = \varnothing$, we say that $H$ is IO-free.
+
+<!-- prettier-ignore -->
+{{% /definition %}}
+
+Note that by this definition, an output value in $O$ always has a linear type!
+This is because non-linear values do not need to be treated specially when they
+are outputs: unlike linear values that must always be used in a non-output
+position, non-linear values may have no outgoing edge, in which case they are
+simply discarded in the computation.
 
 ### Structured control flow
 
@@ -126,11 +421,12 @@ program _control flow_, which minIR expresses using regions and so-called
 _structured control flow_.
 
 Using regions, any non-trivial control flow (function calls, conditionals, loops
-etc.) is captured by "black box" operation within the data flow of the program.
-One or several nested regions then define the implementation of the black box,
-such as the branches of the control flow. A simple function call, that
-unconditionally redirects the control flow to the operations within a nested
-region, could for example be represented as follows[^figureconventions]:
+etc.) is captured by a frame, a "black box" operation within the data flow of
+the program. Its implementation is then defined in the nested region of the
+frame. This can be used for function calls, but also for branches of control
+flow. A simple function call, that unconditionally redirects the control flow to
+the operations within a nested region, could for example be represented as
+follows:
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -140,25 +436,50 @@ region, could for example be represented as follows[^figureconventions]:
 %}}
 <!-- prettier-ignore-end -->
 
-[^figureconventions]:
-    In this figure and below, circles are SSA values, with hyperedges spanning
-    between them and labelled with operations. Hyperedges attached to the white
-    half of circles are value definitions, while hyperedges attached to the
-    black half of circles are value uses. Dashed arrows indicate hierarchical
-    dependencies; the dashed rectangles mark the regions of the graph.
+In this figure and below, circles are SSA values (the vertices of the
+hypergraph), while the edges spanning between them are the operations. Edges
+attached to the white half of circles are value definitions, while hyperedges
+attached to the black half of circles are value uses. The `call` and `+`
+operation can be read left to right: for instance, the two values `x` and `y` on
+the left of `call` are inputs (the operation _uses_ those values, and is thus
+attached to the black half of the circles), whereas the `x + y` value on the
+right is the output of the `call` operation (the operation _defines_ this value,
+which is thus attached to the white half of the circle).
 
-Importantly, the outer "black box" `call` operation is connected to _use_ and
-_def_ values which must match the inputs and outputs that the nested region
-expects. Passing function arguments and retrieving returned values in this
-fashion will be very familiar to any computer scientist. Unlike most programming
-languages, this is also how in minIR values are passed to and from _any_ control
-flow constructs we would wish to model. An if-else statement might then look as
-follows:
+Dashed arrows indicate hierarchical dependencies that map the frame edge to the
+two input and output edges in the child region; dashed rectangles mark the
+non-root regions of the graph.
+
+Importantly, the frame edge representing the `call` operation must intuitively
+"forward" all its input values to the `in` operation of the child region, and
+similarly passes on the value at the `out` operation to the output value of the
+`call` output in the parent graph. Passing function arguments and retrieving
+returned values in this fashion will be very familiar to any computer scientist.
+Unlike most programming languages, this is also how in minIR values are passed
+to and from _any_ control flow constructs we would wish to model.
+
+In terms of graph structure, this relation between values in parent and child
+regions means that the arity and types of the inputs and outpus of `call` fix
+the signatures of the child `in` and `out` operations.
+{{% refdefinition "def-hier-hypergraph" %}} already ensures that the input and
+output arities of `in` and `out` are correct. The correct typing of these input
+and output values will be ensured by the type system, which we discuss in a
+separate section below.
+
+To handle constructs that require more than one child region, such as an
+`if-else` statement, we can use frames that have zero input and one output:
+
+{{% figure src="/svg/ifblock.svg" width="30%" nobg=true %}}
+
+The output of the `ifblock` is intuitively a higher-order type representing an
+operation that takes two inputs and ouputs the sum.
+
+An if-else statement might then look as follows:
 
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/ifelse-minir.svg"
-    width="80%"
+    width="65%"
     nobg=true
 %}}
 <!-- prettier-ignore-end -->
@@ -167,15 +488,9 @@ The `if` and `else` blocks must expect the same input and output values. This is
 key to respecting any linearity constraints that values passed to `ifelse` might
 be subject to. By definition, all operations that use or define a value $v$ will
 be in the same region---in other words, values are only available within their
-defining region. This in effect implements "variable scoping", though note that
-in the `ifelse` example above, by introducing multiple code blocks within the
-child region of `ifelse`, we have created the possibility of invalid
-computations: a graph that uses the values of the `if` block in the `else` block
-would be a valid minIR graph. A better approach that scopes different code
-blocks and forbids this is proposed in the expanded example below.
-
-With some imagination, this construction can easily be adapted to model loops,
-complex control flow graphs, or any other control flow structures.
+defining region. This in effect implements "variable scoping". With some
+imagination, this construction can easily be adapted to model loops, complex
+control flow graphs, or any other control flow structures.
 
 #### Why not plain branch statements?
 
@@ -226,34 +541,159 @@ and gives the linearity constraint a much simpler form.
     [this discussion](https://mlir.llvm.org/docs/Rationale/Rationale/#block-arguments-vs-phi-nodes)
     for more arguments on why no phi nodes.
 
+### Type graph
+
+We have seen how minIR graphs impose _some_ structure on the types of
+computations that can be expressed: a linear value cannot be used by two (or
+zero) operations, frames will always have a unique `in` and `out` operation in
+their child region with correct arities, etc.
+
+However, without a "good" type system and associated semantics, it is still
+possible to express nonsensical programs: we have mentioned for instance earlier
+that it is up to the type system to enforce that the types of the `in` and `out`
+operations match the types of the frame. Similarly, it is possible to construct
+programs that break linearity: take the `ifelse` operation discussed in the
+previous section, but now replace its semantics to be `do-in-parallel`, i.e. it
+will execute both the `if-block` and `else-block` in parallel on the inputs that
+it is given. This would violate the linearity of its inputs, but would
+nonetheless be a syntactically valid minIR graph!
+
+To resolve this we present here some typed operations, along with their
+semantics, that can be used to construct well-behaved type systems: programs
+typed in this system model the kind of quantum programs that we are interested
+in expressing and are guaranteed to be valid computations. Categorising all
+valid constructions or an exhaustive enumeration of conditions that type systems
+must satisfy to guarantee the validity of programs is beyond the scope of this
+thesis. It is in practice often straightforward to combine and extend the
+elements presented here to support further custom syntactic constructs and
+types.
+
+#### Basic types and operations
+
+The most elementary types in our computations are `Bit`s and `Qubit`s. The
+former is typically known as a Boolean and represents the purely classical
+values `0` and `1`. The latter is the canonical quantum example of a _linear
+type_. Indeed, just like values in minIR graphs, the type system in
+$\textrm{hier-lin-}\mathbb H_\textrm{type}$ distinguishes between linear and
+non-linear types.
+
+Other typical classical types such as integers, floats, strings, custom
+algebraic data types (ADT) etc could also be introduced as required. In the
+figure below, we for instance introduce the `Angle` type to represent rotation
+angles that parametrise quantum gates. Further examples of linear types, on the
+other hand, include higher-dimensional qudits, but also any ADT that contains a
+linear type within it.
+
+As we saw in {{% reflink "sec:basics" %}}, the number of input qubits in pure
+quantum operations will match the number of output qubits: the single-qubit `h`
+(hadamard gate) and two-qubit `cx` (controlled NOT) operations thus have one or
+two `Qubit`s as both inputs and outputs `rz` (Z rotation) is also a single-qubit
+operation, but it takes an additional input of type `Angle` to specify the
+rotation angle.
+
+On the pure classical side, we are free to add any side-effect free operations
+on our types; in our example we model addition `+` on `Angle`s and negation
+`not` on `Bit`s. In the type system
+$\Sigma \in \textrm{hier-lin-}\mathbb H_\textrm{type}$, each type is represented
+by a single vertex.
+
+In our example, we thus have three vertices:
+
+{{% figure src="/svg/type-simple.svg" width="70%" nobg=true %}}
+
+We introduce a different colour for each type. Operations such as `cx` are
+represented by a hyperedge with two sources on `Qubit` and two targets on
+`Qubit`. As in the previous diagrams, we can distinguish operation inputs from
+outputs by whether they are attached to the dark or light half of the type
+vertex: the `rz` operation thus has one `Qubit` input, one `Angle` input and one
+`Qubit` output.
+
+As you can tell from the diagram, whilst `Qubit` is a linear type in the type
+system, it is not a linear value in the sense of a minIR graph: the `Qubit` type
+has multiple uses and defines in the `cx` operation alone. This is the key
+difference between $\textrm{lin-}\mathbb H_\textrm{type}$ and
+$\textrm{lin-}\mathbb H$.
+
+#### Qubit allocation and measurement
+
+We also introduce non-pure quantum operations `qalloc` and `measure` which
+respectively "create" a qubit (so no input, one `Qubit` output) and "destroy" it
+(one `Qubit` input, one `Bit` output---depending on whether the qubit was
+projected onto the $\ket{0}$ or $\ket{1}$ state). Remember that the reason these
+operations seem to "break" the laws of pure quantum physics is because they
+result from interactions with the classical environment.
+
+{{% figure src="/svg/type-qalloc.svg" width="55%" nobg=true %}}
+
+`measure` is fundamental, as it connects quantum values with classical ones!
+
+#### Region definition and structured control flow
+
+Our type system is so far missing a crucial aspect of minIR: the hierarchical
+structures. For this we need frame types, i.e. frames in the type graph. We must
+introduce a distinct type for each possible type signature of a frame. To keep
+this as simple as possible, we will introduce exactly one type for each
+signature.
+
+If we write $T$ for the set of types in our type system (i.e. `Bit`, `Qubit` and
+`Angle` in our example), then a type signature of an edge is given by a pair
+$(I, O)$ of ordered lists of types $I, O \in T^\ast$. For each such $(I, O)$
+pair, we introduce
+
+- the frame type `regiondef<I, O>`,
+- the in and out types `in<I,O>` and `out<I,O>`,
+- along with a new non-linear type `Region<I, O>`, the higher-order type
+  representing a region with inputs $I$ and outputs $O$.
+
+The `regiondef<I, O>` op takes zero inputs and returns one output
+`Region<I, O>`, whereas `in<I,O>` takes zero inputs and returns values of type
+$I$ and `out<I,O>` takes inputs of type $O$ and returns nothing. For instance,
+for $I = ($`Qubit`, `Qubit`$)$ and $O = ($`Qubit`, `Bit`$)$, we have the
+following type graph.
+
+{{% figure src="/svg/type-regiondef.svg" width="60%" nobg=true %}}
+
+Note that there is an important distinction in
+$\textrm{hier-lin-}\mathbb H_\textrm{type}$ in comparison to
+$\textrm{hier-lin-}\mathbb H$: there is no notion of regions in the type system:
+the `Qubit` and `Bit` types in the above diagram would be in the child region of
+`regiondef<I, O>` if it were a graph in $\textrm{hier-}\mathbb H$, but in the
+type system, they might also be used by other operations in other regions (such
+as `cx`, `rz`, `h` etc. defined earlier).
+
+Using the `Region<I,O>` types, it is then easy to define typed operations for
+any structured control flow of interest, such as the `if-else` example above.
+The following figure gives an overview of the entire type system of our example.
+For display purposes, we have included multiple copies of each type vertex; we
+remind the reader that in the actual type graph, all circles of the same type
+(colour) are one and the same.
+
+<!-- prettier-ignore-start -->
+{{% figure
+    src="/svg/minir-graph-types.svg"
+    width="90%"
+    enlarge="full"
+    caption="A complete minIR type graph, following the example in this section. Value vertices with the same label (and same colour) form a single vertex in the type graph. They have been split into multiple vertices in this representation for better readability. The data types and op types with the `<I,O>` suffix are parametrised on the signature type $(I,O)$ for $I,O \in T^\ast$."
+%}}
+<!-- prettier-ignore-end -->
+
 ### An example minIR program
 
 Taking a step back, let us make the introduced ideas more concrete through an
-example. Instead of defining nested regions on each control flow construct, let
-us simplify our syntax by dedicating the definition of nested region to a single
-operation `regiondef`: it takes no input and returns a single output value---a
-handle to the defined region. This also removes the possibility of invalid
-graphs mentioned in the `ifelse` example above, where operations of distinct
-code blocks, e.g. `if` and `else` blocks, use values that are invalid in their
-branch of control flow.
+example. We demonstrate how a simple program written in textual form can be
+translated and expressed as a minIR graph. All statements are of the form
 
-The value returned by `regiondef` can then be passed as inputs to other control
-flow operations, effectively defining the same data without nested regions on
-the control flow operation[^llvmblock].
+```python
+x, y, ... := op(a, b, c, ...)
+```
 
-[^llvmblock]:
-    This is similar to a label of a code block in LLVM IR. You can also view the
-    handle as akin to a function pointer, though, as defined, the pointer would
-    always reference a fixed block of code, i.e. it would be a known constant at
-    compile time.
-
-As in our previous examples, the region nested within a `regiondef` always has a
-unique `in` and `out` operation corresponding to the input and output values of
-the region. Using curly bracket scopes to define the nested region of a
-`regiondef`, we can easily describe a minIR program in a textual form:
+where `a`, `b`, `c` etc are the SSA values passed to `op` (or _used_ by `op`),
+and `x`, `y` etc are the SSA values returned by `op` (or _defined_ by `op`). We
+use curly bracket to define the child region of a `regiondef` operation. A valid
+minIR program might then look as follows:
 
 ```python {linenos=inline}
-main := regiondef {
+main := regiondef<(Qubit, Qubit), (Qubit, Bit)> {
     q0, q1 := in()
 
     q0_1 := h(q0)
@@ -261,13 +701,13 @@ main := regiondef {
 
     m0 := measure(q0_2)
 
-    ifregion := regiondef {
+    ifregion := regiondef<(Qubit,), (Qubit,)> {
         q1 := in()
         out(q1)
     }
-    elseregion := regiondef {
+    elseregion := regiondef<(Qubit,), (Qubit,)> {
         q1 = in()
-        q1_1 := x(q1)
+        q1_1 := h(q1)
         out(q1_1)
     }
     q1_2 := ifelse(m0, q1_1, ifregion, elseregion)
@@ -276,21 +716,25 @@ main := regiondef {
 }
 ```
 
-<!-- prettier-ignore -->
-It corresponds to the following minIR graph:
+Note that the `in()` and `out(..)` operations are only allowed within nested
+regions (as required by the type system). We have omitted the type parameters on
+these operations, as it mirrors exactly the paremeter of the `regiondef`.
+
+It corresponds to the two minIR graphs on the following page. We use "wiggly
+hyperedges" that stretch between values, as in the first figure. They may look
+unusual if you are used to computation graphs. One can opt to draw the same
+graph with boxes for hyperedges and wires for values, yielding the second
+figure. The two representations are equivalent, but the rewriting semantics are
+most explicit when viewing values as vertices.
 
 <!-- prettier-ignore-start -->
 {{% figure
     src="/svg/minir-graph-2.svg"
-    width="60%"
+    width="55%"
     enlarge="full"
-    caption="An example minIR graph. Coloured (half) circles are values, with hyperedges spanning between them and labelled with operations. Hyperedges attached to lighter half circles are value definitions, while hyperedges attached to the darker half circles are value uses. Dashed arrows indicate hierarchical dependencies; the dashed rectangles mark the regions of the graph. The value colours refer to their types. See below."
+    caption="An example of an IO-free minIR graph. The vertex colours indicate their types in the type system presented in the previous figure. The `main`, `ifregion` and `elseregion` ops are all of op type `regiondef` (with type parameters omitted), labelled here with custom names for clarity. The type parameters of the `ifelse`, `in` and `out` op type have similarly been omitted. All other operation types are given as labels on the edges."
 %}}
 <!-- prettier-ignore-end -->
-
-The wiggly hyperedges stretching between values look unusual, especially when
-you are used to computation graphs. If we opt to draw the same graph with boxes
-for hyperedges and wires for values, we obtain a more familiar representation:
 
 <!-- prettier-ignore-start -->
 {{% figure
@@ -301,106 +745,18 @@ for hyperedges and wires for values, we obtain a more familiar representation:
 %}}
 <!-- prettier-ignore-end -->
 
-The two representations are equivalent, but the rewriting semantics are most
-explicit when viewing values as vertices.
-
-### Type graph
-
-We have started to see operations (`cx`, `ifelse`, `regiondef` etc.) that carry
-semantics, and thus come with additional constraints on the graph in order to be
-well-defined. In the example above, each operation must have a fixed number of
-inputs and outputs, `regiondef` operations must have a nested region with
-exactly one `in` and one `out` operation, etc. This is best captured by a _type
-system_---the last missing part in our graph formalism. Graph-based modelling
-frameworks admit an elegant approach to typing, given by graph morphisms and
-type graphs.
-
-Graph morphisms on hypergraphs are maps of vertices and hyperedges that preserve
-the structure of the graph, i.e. the endpoints of mapped hyperedges must be the
-mapped endpoints of the original hyperedges. We extend this definition to the
-case of minIR graphs by also imposing the preservation of the $parent$ relation.
-The map $\mathit{children}: O \to \mathcal{P}(O)$ refers to all children
-$$\{o' \in O \mid parent(o') = o\}$$
-
-of an operation $o \in O$.
-
-<!-- prettier-ignore -->
-{{% definition title="MinIR graph morphism" id="def-minir-morphism" %}}
-Given two minIR graphs
-
-$$\begin{aligned}G_1 &= (V_1, V_{L,1}, O_1, \mathit{def}_1, \mathit{use}_1, \mathit{parent}_1)\\G_2 &= (V_2, V_{L,2}, O_2, \mathit{def}_2, \mathit{use}_2, \mathit{parent}_2).\end{aligned}$$
-
-A minIR morphism $\varphi: G_1 \to G_2$ is given by maps
-
-$$\begin{aligned}\varphi_V: V_1 \to V_2 \quad&& \varphi_O: O_1 \to O_2,\end{aligned}$$
-
-such that
-
-- $\varphi_V$ preserves linear values, i.e. for all $v \in V_1$,
-  $$v \in V_{L,1} \Leftrightarrow \varphi_V(v) \in V_{L,2},$$
-- $\varphi_V$ and $\varphi_O$ are compatible with the three graph functions,
-  i.e. for all $o \in O_1$, we have
-  $$o \in dom(parent_1) \Leftrightarrow \varphi_O(o) \in dom(parent_2)$$ and the
-  commuting diagrams
-  $$\begin{aligned}\mathit{def}_2(\varphi_O(o)) &= \varphi_V(\mathit{def}_1(o)),\quad\\\mathit{use}_2(\varphi_O(o)) &= \varphi_V(\mathit{use}_1(o)), \quad\\\mathit{parent}_2(\varphi_O(o)) &= \varphi_O(\mathit{parent}_1(o)),\end{aligned}$$
-  where the domain of definition of $\varphi_V$ was expanded to $V^\ast$
-  elementwise.
-- $\varphi_O$ is bijective on all children sets, i.e. for all $o \in O_1$,
-  $$\varphi_O|_{children(o)}: children(o) \to children(\varphi_O(o))$$ is a
-  bijection.
-
-<!-- prettier-ignore -->
-{{% /definition %}}
-
-This definition would be the standard extension of graph morphisms to minIR
-graphs, if it were not for the third constraint that we impose on the
-$\mathit{parent}$ relation. This ensures that the existence (and uniqueness) of
-nested regions of any operation is always preserved by graph morphisms---and we
-will thus be able to make it a property of the type system (e.g. a `regiondef`
-operation _must have a unique_ nested region, with a unique `in` and unique
-`out` operation).
-
-A _type system_ for a minIR graph $G$ is then given by a minIR graph $\Sigma$
-with values $T$ and operations $\Gamma$ along with a graph morphism
-$\mathit{type}: G \to \Sigma$[^slicecat]. The set of values $T$ are called the
-(data) types of $G$ and the set of operations $\Gamma$ the operation types, or
-optypes. A valid type system for our example minIR graph above is the following.
-
-[^slicecat]: A construction known in category theory as the slice category.
-
-<!-- prettier-ignore-start -->
-{{% figure
-    src="/svg/minir-graph-types.svg"
-    width="100%"
-    enlarge="full"
-    caption="The minIR type graph for the example above. Value vertices with the same label (and same colour) form a single vertex in the type graph. They have been split into multiple vertices in this representation for better readability. We used two types for regions differentiated by parameters within `<>`, as well as two region definition operations (`regiondefQB` and `regiondefQQ`). This distinguishes region type signatures, each with their respective nested region as well as separate `in` and `out` operations."
-%}}
-<!-- prettier-ignore-end -->
-
-This type graph encodes all the structure that the example minIR graph above
-requires to be valid.
-
-<!-- prettier-ignore -->
-{{% definition title="$\Sigma$-typed minIR graph" id="def-sigmatyped" %}}
-Consider a minIR graph $\Sigma$ with values $T$, linear values $T_L \subseteq T$
-and operations $\Gamma$.
-A minIR graph $G = (V, V_L, O, \mathit{def}, \mathit{use}, \mathit{parent})$
-is $\Sigma$-typed if there exists a graph morphism
-$type: G \to \Sigma$.
-
-We call $\Sigma$ the type system of $G$, $T$ ($T_L$) the types (linear types) of
-$G$ and $\Gamma$ the optypes of $G$.
-
-<!-- prettier-ignore -->
-{{% /definition %}}
-
-From here onwards, we always consider minIR graphs that are $\Sigma$-typed.
-
 ### Differences to the quantum circuit model
 
 We conclude this presentation of minIR by highlighting the differences between
 this IR-based representation and the quantum circuit model that most quantum
-computing and quantum information scientists are familiar with.
+computing and quantum information scientists are familiar
+with[^circuitspecific].
+
+[^circuitspecific]:
+    Note that these comments apply specifically to characteristics of quantum
+    _circuits_. Other diagrammatic representations of quantum processes in use,
+    such as string diagrams, quantum combs etc may not share the same
+    properties.
 
 When restricted to purely quantum operations and no nested regions, the string
 diagram representation of a minIR graph (i.e. operations as boxes and values as
@@ -461,7 +817,9 @@ ordering on operations across different qubits that must be respected.
 SSA values remove this dependency tracking altogether: the notion of physical
 qubit disappears, and the ordering of statements becomes irrelevant. All that
 matters is connecting each _use_ of a value (i.e. an input to an operation) with
-its _unique_ definition, the output of a previous operation.
+its _unique_ definition, the output of a previous operation. In other words, the
+global ordering imposed by reference semantics is replaced by a causal order on
+the diagram @Kissinger2019.
 
 ---
 

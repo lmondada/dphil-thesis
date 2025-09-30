@@ -39,7 +39,7 @@ transformations.
 {{< proposition title="Path splitting" id="prop-treereduction" >}}
 
 A tree-like graph can be obtained from any connected graph $G$ by applying
-operation splittings. The resulting graph is the path-split graph (PSG) of $G$.
+operation splittings. The resulting graph is a path-split graph (PSG) of $G$.
 
 <!-- prettier-ignore -->
 {{< /proposition >}}
@@ -69,7 +69,11 @@ spanning tree of $\mathcal{I}.$[^spantheo]
 <!-- prettier-ignore -->
 {{% /proof %}}
 
-If $G'$ is the PSG of some graph $G$, then call an operation $o$ of $G$ an
+As we consider typed graph, the splitting of an operation is unique; however the
+choice of spanning tree of $\mathcal I$ is not unique, and thus multiple PSGs
+exist for a given graph $G$.
+
+If $G'$ is a PSG of some graph $G$, then call an operation $o$ of $G$ an
 _anchor_ operation if it is on two linear paths and it is not split in $G'$. The
 set of all anchors operations $\pi \subseteq O$ fully determines the path-split
 graph. We write $G^\pi = G'$ for the PSG of $G$ obtained by anchors $\pi$.
@@ -178,7 +182,8 @@ of matching on trees. Given that the ordering of children of a node in a tree is
 fixed, checking trees for equality is a simple matter of checking node and
 weight equality, one node (and edge) at a time.
 
-We conclude this section with a figure summarising the constructions we have presented.
+We conclude this section with a figure summarising the constructions we have
+presented.
 
 {{% figure src="/svg/tree-decomp.svg" enlarge="full" width="70%"
     caption="A graph $G$, along with the path-split graph $G^\pi$, the contracted path-split graph $c(G^\pi)$ and their rooted dual trees. The anchor operations are $d$ (grey) and $e$ (red). The root of the rooted dual trees is $e$." %}}

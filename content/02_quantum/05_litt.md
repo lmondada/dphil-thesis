@@ -38,7 +38,7 @@ The idea caught on, and soon, software tools were created to facilitate building
 such diagrams. The Quantum Computation Language (QCL) was one of the first
 @Oemer2000. Quantum software[^actuallyclassical] has since proliferated,
 especially as the possibility of actually _performing_ these thought experiments
-on quantum hardware became more tangible. The result was software packages for
+on quantum hardware became more tangible. The result were software packages for
 quantum computing, designed for the automatic transformation and _optimisation_
 of quantum computations for execution on real hardware @JavadiAbhari2024
 @CirqDevelopers2024 @Steiger_2018 @Sivarajah2020&#x200B;---we called them

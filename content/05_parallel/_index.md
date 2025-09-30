@@ -6,12 +6,19 @@ layout = "chapter"
 slug = "chap:parallel"
 +++
 
-This chapter proposes a new data structure for graph rewriting which
-significantly speeds up compilation in certain use cases. Mutable data
-structures are typically _ephemeral_: modifying the data structure overwrites
-information and invalidates any references to the old data. In contrast, a
-_persistent_ data structure applies changes to the data so that both the old and
-new versions remain accessible---a famous example of this are
+This chapter leverages another construction from graph rewriting theory that
+finds a direct application in quantum compilation: the unfolding of graph
+transformation systems @Baldan1999a @Winskel1987. Whereas most applications to
+date have focused on using unfolding for model verification (see
+{{% reflink "sec:sota_parallel" %}} for a review), we will use the same
+techniques to instead speed up optimisation problems over the space of reachable
+graphs in a GTS.
+
+In the unfolding, graph rewrites are expressed as _persistent_ modifications of
+the graph. Mutable data structures are typically _ephemeral_: modifying the data
+structure overwrites information and invalidates any references to the old data.
+In contrast, a persistent data structure applies changes to the data so that
+both the old and new versions remain accessible---a famous example of this are
 [version control systems such as git](https://martinfowler.com/bliki/VersionControlTools.html).
 
 A data structure is _fully_ persistent if modifications can be applied not only
@@ -73,7 +80,7 @@ $$r(G) = (G_C \sqcup G_R) / \sim_\mu.$$
 
 obtained from the union of $G_C$ and $G_R$ by merging all vertices within the
 same class in the equivalence relation $\sim_\mu$ that is the closure of $\mu$.
-We refer to {{% reflink "sec:graph-defs" %}} for more details and an
+We refer to {{% reflink "sec:rewrite-operational" %}} for more details and an
 illustration of glueings and rewrites.
 
 In this chapter, we will consider sequences of multiple rewrites. We will use
