@@ -1,6 +1,4 @@
-# CHANGELOG
-
-### Thesis corrections
+# Thesis corrections (30.09.2025)
 
 ### Chapter 1
 
